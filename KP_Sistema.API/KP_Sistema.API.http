@@ -1,0 +1,6 @@
+@KP_Sistema.API_HostAddress = http://localhost:5259
+
+GET {{KP_Sistema.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
