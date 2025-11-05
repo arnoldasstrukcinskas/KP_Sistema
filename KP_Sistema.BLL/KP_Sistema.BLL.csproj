@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\KP_Sistema.DATA\KP_Sistema.DATA.csproj" />
+  </ItemGroup>
+
 </Project>

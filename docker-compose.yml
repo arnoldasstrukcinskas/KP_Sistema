@@ -1,3 +1,4 @@
+version: '2.4'
 services:
   kp_sistema.client:
     image: nginx:alpine
@@ -7,6 +8,9 @@ services:
         - "8081:80" 
     volumes:
         - ./KP_Sistema.CLIENT/publish/wwwroot:/usr/share/nginx/html
+    depends_on:
+        kp_sistema.database:
+            condition: service_healthy
 
   kp_sistema.api:
     image: ${DOCKER_REGISTRY-}kpsistemaapi
@@ -23,7 +27,7 @@ services:
   
   kp_sistema.database:
       image: mysql:9.1
-      container_name: kp_sistema.database
+      container_name: kp_sistemaDB
       environment:
           MYSQL_ROOT_PASSWORD: root 
           MYSQL_DATABASE: kpsistema   
