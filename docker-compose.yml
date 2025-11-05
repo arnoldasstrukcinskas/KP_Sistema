@@ -1,0 +1,42 @@
+services:
+  kp_sistema.client:
+    image: nginx:alpine
+    container_name: kp_sistema.client
+    working_dir: /app
+    ports:
+        - "8081:80" 
+    volumes:
+        - ./KP_Sistema.CLIENT/publish/wwwroot:/usr/share/nginx/html
+
+  kp_sistema.api:
+    image: ${DOCKER_REGISTRY-}kpsistemaapi
+    build:
+      context: .
+      dockerfile: KP_Sistema.API/Dockerfile
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+    ports:
+      - "8080:8080"
+    depends_on:
+        kp_sistema.database:
+            condition: service_healthy
+  
+  kp_sistema.database:
+      image: mysql:9.1
+      container_name: kp_sistema.database
+      environment:
+          MYSQL_ROOT_PASSWORD: root 
+          MYSQL_DATABASE: kpsistema   
+          MYSQL_USER: kpsistema     
+          MYSQL_PASSWORD: root  
+      # volumes:
+        # - ./KP_Sistema.API/database/kpsistema_dump.sql:/docker-entrypoint-initdb.d/kpsistema_dump.sql
+      ports:
+        - "3306:3306"
+      healthcheck:
+        test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot || exit 1"]
+        interval: 5s
+        timeout: 5s
+        retries: 5
+
+
