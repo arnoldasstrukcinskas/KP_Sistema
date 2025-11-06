@@ -1,5 +1,9 @@
-﻿using KP_Sistema.DATA;
+﻿using AutoMapper;
+using KP_Sistema.BLL.Mappings;
+using KP_Sistema.DATA;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Reflection;
@@ -9,9 +13,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+//Repositories
+
+//Services
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// AutoMapper Configurations
+builder.Services.AddAutoMapper(typeof(Program));
+
 
 // Configure of swagger documentation
 builder.Services.AddSwaggerGen(c =>
