@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace KP_Sistema.DATA.Repositories.Interfaces
 {
-    internal interface IUtilityTaskRepository
+    public interface IUtilityTaskRepository
     {
-        Task<UtilityTask> AddTask(UtilityTask utilityTask);
+        Task<UtilityTask> AddUtilityTaskAsync(UtilityTask utilityTask);
         Task<UtilityTask?> FindUtilityTaskByName(string name);
         Task<UtilityTask> EditUtilityTask(UtilityTask utilityTask);
         Task<UtilityTask> DeleteUtilityTask(UtilityTask utilityTask);

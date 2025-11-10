@@ -17,7 +17,7 @@ namespace KP_Sistema.DATA.Repositories.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task<UtilityTask> AddTask(UtilityTask utilityTask)
+        public async Task<UtilityTask> AddUtilityTaskASync(UtilityTask utilityTask)
         {
             //#1 Option
             //await _dbContext.UtilityTasks.AddAsync(utilityTask);

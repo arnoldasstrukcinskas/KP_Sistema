@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace KP_Sistema.DATA.Repositories.Interfaces
 {
-    internal interface ICommunityRepository
+    public interface ICommunityRepository
     {
         Task<Community> AddCommunityAsync(Community community);
         Task<Community> EditCommunityAsync(Community community);

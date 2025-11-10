@@ -10,7 +10,7 @@ namespace KP_Sistema.BLL.DTO.CommunityDTO
 {
     public class CommunityCreateDTO
     {
-        public string name { get; set; }
+        public string Name { get; set; }
         public List<UtilityTask>? UtilityTasks { get; set; }
         public List<User>? Users { get; set; }
     }
