@@ -17,7 +17,7 @@ namespace KP_Sistema.DATA.Repositories.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task<UtilityTask> AddUtilityTaskASync(UtilityTask utilityTask)
+        public async Task<UtilityTask> AddUtilityTaskAsync(UtilityTask utilityTask)
         {
             //#1 Option
             //await _dbContext.UtilityTasks.AddAsync(utilityTask);
@@ -34,17 +34,18 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             return utilityTask;
         }
 
-        public async Task<UtilityTask> DeleteUtilityTask(UtilityTask utilityTask)
+        public async Task<UtilityTask?> FindUtilityTaskByName(string name)
         {
             //Option #1
-            //_dbContext.UtilityTasks.Remove(utilityTask);
-            //await _dbContext.SaveChangesAsync();
+            //var utilityTask = await _dbContext.UtilityTasks.FirstOrDefaultAsync(utilityTask => utilityTask.Name.Equals(name));
+
 
             //Option #2
-            await _dbContext.Database.ExecuteSqlAsync(
+            var utilityTask = await _dbContext.UtilityTasks.FromSqlInterpolated(
                 $"""
-                DELETE FROM utilityTasks WHERE id={utilityTask.Id}
-                """);
+                SELECT * FROM utilityTasks WHERE name={name}
+                """
+                ).FirstOrDefaultAsync();
 
             return utilityTask;
         }
@@ -66,18 +67,17 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             return utilityTask;
         }
 
-        public async Task<UtilityTask?> FindUtilityTaskByName(string name)
+        public async Task<UtilityTask> DeleteUtilityTask(UtilityTask utilityTask)
         {
             //Option #1
-            //var utilityTask = await _dbContext.UtilityTasks.FirstOrDefaultAsync(utilityTask => utilityTask.Name.Equals(name));
-
+            //_dbContext.UtilityTasks.Remove(utilityTask);
+            //await _dbContext.SaveChangesAsync();
 
             //Option #2
-            var utilityTask = await _dbContext.UtilityTasks.FromSqlInterpolated(
+            await _dbContext.Database.ExecuteSqlAsync(
                 $"""
-                SELECT * FROM utilityTasks WHERE name={name}
-                """
-                ).FirstOrDefaultAsync();
+                DELETE FROM utilityTasks WHERE id={utilityTask.Id}
+                """);
 
             return utilityTask;
         }
