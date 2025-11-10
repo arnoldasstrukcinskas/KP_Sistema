@@ -14,6 +14,7 @@ namespace KP_Sistema.BLL.Mappings
         public UserMapper()
         {
             CreateMap<UserCreateDTO, User>();
+            CreateMap<User, UserCreateDTO>();
             CreateMap<UserLoginDTO, User>();
             CreateMap<User, UserReturnDTO>();
         }

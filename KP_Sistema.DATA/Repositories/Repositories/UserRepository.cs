@@ -70,7 +70,7 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             //Option #2
             var user = await _dbContext.Users.FromSqlInterpolated(
                 $"""
-                SELECT * FROM Users WHERE name={username}
+                SELECT * FROM Users WHERE username={username}
                 """).FirstOrDefaultAsync();
 
             return user;
