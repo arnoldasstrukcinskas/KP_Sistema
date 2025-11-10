@@ -22,9 +22,9 @@ namespace KP_Sistema.BLL.Services
             _communityRepository = communityRepository;
             _mapper = mapper;
         }
-        public async Task<CommunityReturnDTO> AddCommunityAsync(CommunityCreateDTO communityCreateDTO)
+        public async Task<CommunityReturnDTO> AddCommunityAsync(CommunityTransferDTO communityTransferDTO)
         {
-            var community = _mapper.Map<Community>(communityCreateDTO);
+            var community = _mapper.Map<Community>(communityTransferDTO);
             
             var createdCommunity = await _communityRepository.AddCommunityAsync(community);
 
@@ -40,13 +40,13 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<CommunityReturnDTO>(deletedCommunity);
         }
 
-        public async Task<CommunityReturnDTO> EditCommunityAsync(CommunityCreateDTO communityCreateDTO)
+        public async Task<CommunityTransferDTO> EditCommunityAsync(CommunityTransferDTO communityTransferDTO)
         {
-            var community = _mapper.Map<Community>(communityCreateDTO);
+            var community = _mapper.Map<Community>(communityTransferDTO);
 
             var editedCommunity = await _communityRepository.EditCommunityAsync(community);
 
-            return _mapper.Map<CommunityReturnDTO>(editedCommunity);
+            return _mapper.Map<CommunityTransferDTO>(editedCommunity);
         }
 
         public async Task<List<CommunityReturnDTO>?> GetAllCommunities()
@@ -60,11 +60,11 @@ namespace KP_Sistema.BLL.Services
             return communitiesList;
         }
 
-        public async Task<CommunityReturnDTO?> GetCommynityByNameAsync(string name)
+        public async Task<CommunityTransferDTO?> GetCommynityByNameAsync(string name)
         {
             var foundCommunity = await _communityRepository.FindCommunityByName(name);
 
-            return _mapper.Map<CommunityReturnDTO>(foundCommunity);
+            return _mapper.Map<CommunityTransferDTO>(foundCommunity);
         }
     }
 }

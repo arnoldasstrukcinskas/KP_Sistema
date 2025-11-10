@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace KP_Sistema.BLL.DTO.UtilityTaskDTO
 {
-    public class UtilityTaskCreateDTO
+    public class UtilityTaskTransferDTO
     {
         public string Name { get; set; }
         public string? Description { get; set; }

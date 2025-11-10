@@ -9,9 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KP_Sistema.BLL.Services
+namespace KP_Sistema.BLL.Services.Users
 {
-    internal class UserService : IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
@@ -30,6 +30,13 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<UserReturnDTO>(createdUser);
         }
 
+        public async Task<UserReturnDTO> GetUserByUsername(string username)
+        {
+            var foundUser = await _userRepository.GetUserByUsername(username);
+
+            return _mapper.Map<UserReturnDTO>(foundUser);
+        }
+
         public async Task<UserReturnDTO> DeleteUser(string userName)
         {
             var user = await _userRepository.GetUserByUsername(userName);
@@ -43,13 +50,6 @@ namespace KP_Sistema.BLL.Services
             var editedUser = await _userRepository.EditUser(user);
 
             return _mapper.Map<UserReturnDTO>(editedUser);
-        }
-
-        public async Task<UserReturnDTO> GetUserByUsername(string username)
-        {
-            var foundUser = await _userRepository.GetUserByUsername(username);
-
-            return _mapper.Map<UserReturnDTO>(foundUser);
         }
     }
 }

@@ -71,7 +71,9 @@ namespace KP_Sistema.DATA.Repositories.Repositories
 
             //Option #2
             var community = await _dbContext.Communities.FromSqlInterpolated(
-                $"SELECT * FROM Communities WHERE name={name}").FirstOrDefaultAsync();
+                $"SELECT * FROM Communities WHERE name={name}")
+                .Include(community => community.Users)
+                .FirstOrDefaultAsync();
 
             return community;
 

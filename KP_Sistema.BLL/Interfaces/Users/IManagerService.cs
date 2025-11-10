@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KP_Sistema.BLL.DTO.UtilityTaskDTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace KP_Sistema.BLL.Interfaces.Users
 {
     public interface IManagerService
     {
+        Task<UtilityTaskReturnDTO> AddTaskToCommunity(string taskName, string communityName, string currentUser);
     }
 }

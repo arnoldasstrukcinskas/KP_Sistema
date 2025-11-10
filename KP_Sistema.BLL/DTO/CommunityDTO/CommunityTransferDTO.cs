@@ -2,13 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace KP_Sistema.BLL.DTO.CommunityDTO
 {
-    public class CommunityCreateDTO
+    public class CommunityTransferDTO
     {
         public string Name { get; set; }
         public List<UtilityTask>? UtilityTasks { get; set; }

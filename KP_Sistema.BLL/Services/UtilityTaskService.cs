@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace KP_Sistema.BLL.Services
 {
-    public class UtilityTaskService : IUtitilityTaskService
+    public class UtilityTaskService : IUtilityTaskService
     {
         private readonly IUtilityTaskRepository _utilityTaskRepository;
         private readonly ICommunityRepository _communityRepository;
@@ -26,7 +26,7 @@ namespace KP_Sistema.BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<UtilityTaskReturnDTO> CreateTaskAsync(UtilityTaskCreateDTO utilityTaskCreateDTO)
+        public async Task<UtilityTaskReturnDTO> CreateTaskAsync(UtilityTaskTransferDTO utilityTaskCreateDTO)
         {
             var utilityTask = _mapper.Map<UtilityTask>(utilityTaskCreateDTO);
 
@@ -44,7 +44,7 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<UtilityTaskReturnDTO>(deletedUtilityTask);
         }
 
-        public async Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(UtilityTaskCreateDTO utilityTaskCreateDTO)
+        public async Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(UtilityTaskTransferDTO utilityTaskCreateDTO)
         {
             var utilityTAsk = _mapper.Map<UtilityTask>(utilityTaskCreateDTO);
 
@@ -53,11 +53,11 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<UtilityTaskReturnDTO>(editedUtilityTask);
         }
 
-        public async Task<UtilityTaskReturnDTO?> FindUtilityTaskByNameAsync(string name)
+        public async Task<UtilityTaskTransferDTO?> FindUtilityTaskByNameAsync(string name)
         {
             var foundUtilityTask = await _utilityTaskRepository.FindUtilityTaskByName(name);
 
-            return _mapper.Map<UtilityTaskReturnDTO>(foundUtilityTask);
+            return _mapper.Map<UtilityTaskTransferDTO>(foundUtilityTask);
         }
 
         public async Task<List<UtilityTaskReturnDTO>?> GetAllUtilityTasksByCommunityAsync(string communityName)

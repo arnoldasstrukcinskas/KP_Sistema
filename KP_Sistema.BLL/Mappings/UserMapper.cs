@@ -16,7 +16,9 @@ namespace KP_Sistema.BLL.Mappings
             CreateMap<UserCreateDTO, User>();
             CreateMap<User, UserCreateDTO>();
             CreateMap<UserLoginDTO, User>();
-            CreateMap<User, UserReturnDTO>();
+            CreateMap<User, UserReturnDTO>()
+                .ForMember(destination => destination.Role, option => option.MapFrom(source => source.Role.Name));
+            CreateMap<CurrentUserDTO, UserReturnDTO>();
         }
     }
 }

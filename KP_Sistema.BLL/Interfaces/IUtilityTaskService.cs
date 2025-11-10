@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace KP_Sistema.BLL.Interfaces
 {
-    public interface IUtitilityTaskService
+    public interface IUtilityTaskService
     {
-        Task<UtilityTaskReturnDTO> CreateTaskAsync(UtilityTaskCreateDTO utilityTaskCreateDTO);
-        Task<UtilityTaskReturnDTO?> FindUtilityTaskByNameAsync(string name);
-        Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(UtilityTaskCreateDTO utilityTaskCreateDTO);
+        Task<UtilityTaskReturnDTO> CreateTaskAsync(UtilityTaskTransferDTO utilityTaskCreateDTO);
+        Task<UtilityTaskTransferDTO?> FindUtilityTaskByNameAsync(string name);
+        Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(UtilityTaskTransferDTO utilityTaskCreateDTO);
         Task<UtilityTaskReturnDTO> DeleteUtilityTaskAsync(string name);
         Task<List<UtilityTaskReturnDTO>?> GetAllUtilityTasksByCommunityAsync(string communityName);
     }

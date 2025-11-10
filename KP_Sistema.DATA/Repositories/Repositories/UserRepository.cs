@@ -71,7 +71,9 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             var user = await _dbContext.Users.FromSqlInterpolated(
                 $"""
                 SELECT * FROM Users WHERE username={username}
-                """).FirstOrDefaultAsync();
+                """).Include(user => user.Community)
+                .Include(user => user.Role)
+                .FirstOrDefaultAsync();
 
             return user;
         }

@@ -13,7 +13,8 @@ namespace KP_Sistema.BLL.Mappings
     {
         public UtilityTaskMapper()
         {
-            CreateMap<UtilityTaskCreateDTO, UtilityTask>();
+            CreateMap<UtilityTaskTransferDTO, UtilityTask>();
+            CreateMap<UtilityTask, UtilityTaskTransferDTO>();
             CreateMap<UtilityTask, UtilityTaskReturnDTO>();
         }
     }
