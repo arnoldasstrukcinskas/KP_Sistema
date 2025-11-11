@@ -1,6 +1,7 @@
 ﻿using KP_Sistema.BLL.DTO.CommunityDTO;
 using KP_Sistema.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace KP_Sistema.API.Controllers
 {
@@ -16,10 +17,10 @@ namespace KP_Sistema.API.Controllers
         }
 
         /// <summary>
-        /// Adds Discount to postgreSql database.
+        /// Adds community to database.
         /// </summary>
-        /// <param discount="Enter discoutn data">Name, percentage, min q of discount to create.</param>
-        /// <returns>Added DTO of discount with ID, discount name, percentage and minimum quantity.</returns>
+        /// <param name="community">Add community name</param>
+        /// <returns>Added community with ID and community name</returns>
         [HttpPost]
         public async Task<IActionResult> CreateCommunity([FromBody] CommunityCreateDTO communityCreateDTO)
         {
@@ -31,7 +32,19 @@ namespace KP_Sistema.API.Controllers
             var community = await _communityService.AddCommunityAsync(communityCreateDTO);
 
             return Ok(community);
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> GetCommunityByName(string name)
+        {
+            if(name.IsNullOrEmpty())
+            {
+                return BadRequest("Controller: name is not given.");
+            }
+
+            var community = await _communityService.GetCommunityByNameAsync<CommunityReturnDTO>(name);
+
+            return Ok(community);
         }
     }
 }

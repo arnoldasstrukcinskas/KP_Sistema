@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using KP_Sistema.BLL.DTO.CommunityDTO;
 using KP_Sistema.BLL.DTO.UtilityTaskDTO;
 using KP_Sistema.BLL.Interfaces;
 using KP_Sistema.DATA.Entities;
@@ -46,7 +47,7 @@ namespace KP_Sistema.BLL.Services
 
         public async Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(UtilityTaskTransferDTO utilityTaskTransferDTO)
         {
-            var community = await _communityService.GetCommunityByIdAsync(utilityTaskTransferDTO.Id);
+            var community = await _communityService.GetCommunityByIdAsync<CommunityTransferDTO>(utilityTaskTransferDTO.Id);
 
             var utilityTask = _mapper.Map<UtilityTask>(utilityTaskTransferDTO);
             utilityTask.CommunityId = community.Id;
@@ -66,7 +67,7 @@ namespace KP_Sistema.BLL.Services
 
         public async Task<List<UtilityTaskReturnDTO>?> GetAllUtilityTasksByCommunityAsync(string communityName)
         {
-            var communityTransferDTO = await _communityService.GetCommynityByNameAsync(communityName);
+            var communityTransferDTO = await _communityService.GetCommunityByNameAsync<CommunityTransferDTO>(communityName);
 
             var community = _mapper.Map<Community>(communityTransferDTO);
 

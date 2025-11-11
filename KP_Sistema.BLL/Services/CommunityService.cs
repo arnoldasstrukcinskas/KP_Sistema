@@ -31,18 +31,20 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<CommunityReturnDTO>(createdCommunity);
         }
 
-        public async Task<CommunityTransferDTO> GetCommunityByIdAsync(int id)
+        public async Task<TDto?> GetCommunityByIdAsync<TDto>(int id)
         {
+            //check to avoid null
             var foundCommunity = await _communityRepository.GetCommunityById(id);
 
-            return _mapper.Map<CommunityTransferDTO>(foundCommunity);
+            return _mapper.Map<TDto>(foundCommunity);
         }
 
-        public async Task<CommunityTransferDTO?> GetCommynityByNameAsync(string name)
+        public async Task<TDto?> GetCommunityByNameAsync<TDto>(string name)
         {
+            //check to avoid null
             var foundCommunity = await _communityRepository.GetCommunityByName(name);
 
-            return _mapper.Map<CommunityTransferDTO>(foundCommunity);
+            return _mapper.Map<TDto>(foundCommunity);
         }
 
         public async Task<CommunityTransferDTO> EditCommunityAsync(CommunityTransferDTO communityTransferDTO)

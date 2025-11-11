@@ -42,7 +42,7 @@ namespace KP_Sistema.BLL.Services.Users
                 throw new UnauthorizedAccessException("Only managers can add Task to Community!");
             }
 
-            var community = await _communityService.GetCommynityByNameAsync(communityName);
+            var community = await _communityService.GetCommunityByNameAsync<CommunityTransferDTO>(communityName);
 
             var utilityTransferTask = await _utilityTaskService.FindUtilityTaskByNameAsync(taskName);
 

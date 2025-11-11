@@ -10,8 +10,8 @@ namespace KP_Sistema.BLL.Interfaces
     public interface ICommunityService
     {
         Task<CommunityReturnDTO> AddCommunityAsync(CommunityCreateDTO communityCreateDTO);
-        Task<CommunityTransferDTO> GetCommunityByIdAsync(int id);
-        Task<CommunityTransferDTO?> GetCommynityByNameAsync(string name);
+        Task<TDto> GetCommunityByIdAsync<TDto>(int id);        // "Dto" is just description for T generic, can be any descriptione like TEntity etc...
+        Task<TDto> GetCommunityByNameAsync<TDto>(string name);
         Task<CommunityTransferDTO> EditCommunityAsync(CommunityTransferDTO communityTransferDTO);
         Task<CommunityReturnDTO> DeleteCommunityAsync(string name);
         Task<List<CommunityReturnDTO>?> GetAllCommunities();
