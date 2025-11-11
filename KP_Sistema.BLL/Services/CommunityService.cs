@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using KP_Sistema.BLL.DTO.CommunityDTO;
+using KP_Sistema.BLL.Exceptions;
 using KP_Sistema.BLL.Interfaces;
 using KP_Sistema.DATA.Entities;
 using KP_Sistema.DATA.Repositories.Interfaces;
@@ -25,7 +26,12 @@ namespace KP_Sistema.BLL.Services
         public async Task<CommunityReturnDTO> AddCommunityAsync(CommunityCreateDTO communityCreateDTO)
         {
             var community = _mapper.Map<Community>(communityCreateDTO);
-            
+
+            if (community == null || community.Name.Equals(""))
+            {
+                throw new CommunityException("There is no data for creating community.");
+            }
+
             var createdCommunity = await _communityRepository.AddCommunityAsync(community);
 
             return _mapper.Map<CommunityReturnDTO>(createdCommunity);
@@ -35,6 +41,11 @@ namespace KP_Sistema.BLL.Services
         {
             //check to avoid null
             var foundCommunity = await _communityRepository.GetCommunityById(id);
+            
+            if(foundCommunity == null)
+            {
+                throw new CommunityNotFoundException(id);
+            }
 
             return _mapper.Map<TDto>(foundCommunity);
         }
@@ -43,6 +54,11 @@ namespace KP_Sistema.BLL.Services
         {
             //check to avoid null
             var foundCommunity = await _communityRepository.GetCommunityByName(name);
+
+            if (foundCommunity == null)
+            {
+                throw new CommunityNotFoundException(name);
+            }
 
             return _mapper.Map<TDto>(foundCommunity);
         }

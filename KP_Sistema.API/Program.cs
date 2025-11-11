@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using KP_Sistema.API.Middlewares;
 using KP_Sistema.BLL.Interfaces;
 using KP_Sistema.BLL.Interfaces.Users;
 using KP_Sistema.BLL.Mappings;
@@ -109,6 +110,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.MapControllers();
 
