@@ -32,6 +32,7 @@ builder.Services.AddScoped<IAdministratorService, AdministratorService>();
 builder.Services.AddScoped<IManagerService, ManagerService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 // Configure of swagger documentation
@@ -50,7 +51,10 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // AutoMapper Configurations
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(
+    typeof(CommunityMapper).Assembly,
+    typeof(UtilityTaskMapper).Assembly,
+    typeof(UserMapper).Assembly);
 
 // Enabling healthcheck
 builder.Services.AddHealthChecks();

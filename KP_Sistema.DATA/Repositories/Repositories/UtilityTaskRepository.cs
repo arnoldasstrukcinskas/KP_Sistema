@@ -26,15 +26,17 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             //Option#2
             await _dbContext.Database.ExecuteSqlAsync(
                 $"""
-                INSERT INTO utilityTasks (name, description, price, comunityId, community)
+                INSERT INTO UtilityTasks (name, description, price, communityId)
                 VALUES ({utilityTask.Name}, {utilityTask.Description}, {utilityTask.Price}, 
-                {utilityTask.CommunityId}, {utilityTask.Community})
+                {utilityTask.CommunityId})
                 """);
 
-            return utilityTask;
+            var createdUtilityTask = await GetUtilityTaskByName(utilityTask.Name);
+
+            return createdUtilityTask;
         }
 
-        public async Task<UtilityTask?> FindUtilityTaskByName(string name)
+        public async Task<UtilityTask?> GetUtilityTaskByName(string name)
         {
             //Option #1
             //var utilityTask = await _dbContext.UtilityTasks.FirstOrDefaultAsync(utilityTask => utilityTask.Name.Equals(name));
@@ -43,9 +45,10 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             //Option #2
             var utilityTask = await _dbContext.UtilityTasks.FromSqlInterpolated(
                 $"""
-                SELECT * FROM utilityTasks WHERE name={name}
+                SELECT * FROM UtilityTasks WHERE name={name}
                 """
-                ).FirstOrDefaultAsync();
+                ).Include(utilityTask => utilityTask.Community)
+                .FirstOrDefaultAsync();
 
             return utilityTask;
         }
@@ -59,7 +62,7 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             //Option #2
             await _dbContext.Database.ExecuteSqlAsync(
                 $"""
-                UPDATE utilityTasks SET name={utilityTask.Name}, description={utilityTask.Description},
+                UPDATE UtilityTasks SET name={utilityTask.Name}, description={utilityTask.Description},
                 price={utilityTask.Price}, communityId={utilityTask.CommunityId}, community={utilityTask.Community}
                 """
                 );

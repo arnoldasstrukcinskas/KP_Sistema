@@ -21,14 +21,14 @@ namespace KP_Sistema.API.Controllers
         /// <param discount="Enter discoutn data">Name, percentage, min q of discount to create.</param>
         /// <returns>Added DTO of discount with ID, discount name, percentage and minimum quantity.</returns>
         [HttpPost]
-        public async Task<IActionResult> CreateCommunity(CommunityCreateDTO communityCraeeteDTO)
+        public async Task<IActionResult> CreateCommunity([FromBody] CommunityCreateDTO communityCreateDTO)
         {
-            if(communityCraeeteDTO == null)
+            if(communityCreateDTO == null)
             {
                 return BadRequest("Controller: community is empty");
             }
 
-            var community = await _communityService.AddCommunityAsync(communityCraeeteDTO);
+            var community = await _communityService.AddCommunityAsync(communityCreateDTO);
 
             return Ok(community);
 

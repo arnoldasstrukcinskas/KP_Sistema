@@ -29,9 +29,6 @@ namespace KP_Sistema.BLL.Services
         public async Task<UtilityTaskReturnDTO> CreateTaskAsync(UtilityTaskCreateDTO utilityTaskCreateDTO)
         {
             var utilityTask = _mapper.Map<UtilityTask>(utilityTaskCreateDTO);
-            var community = _communityService.GetCommunityByIdAsync(utilityTask.CommunityId);
-
-            utilityTask.Community = _mapper.Map<Community>(community);
 
             var createedUtilityTask = await _utilityTaskRepository.AddUtilityTaskAsync(utilityTask);
 
@@ -40,7 +37,7 @@ namespace KP_Sistema.BLL.Services
 
         public async Task<UtilityTaskReturnDTO> DeleteUtilityTaskAsync(string name)
         {
-            var utilityTask = await _utilityTaskRepository.FindUtilityTaskByName(name);
+            var utilityTask = await _utilityTaskRepository.GetUtilityTaskByName(name);
 
             var deletedUtilityTask = await _utilityTaskRepository.DeleteUtilityTask(utilityTask);
 
@@ -62,7 +59,7 @@ namespace KP_Sistema.BLL.Services
 
         public async Task<UtilityTaskTransferDTO?> FindUtilityTaskByNameAsync(string name)
         {
-            var foundUtilityTask = await _utilityTaskRepository.FindUtilityTaskByName(name);
+            var foundUtilityTask = await _utilityTaskRepository.GetUtilityTaskByName(name);
 
             return _mapper.Map<UtilityTaskTransferDTO>(foundUtilityTask);
         }

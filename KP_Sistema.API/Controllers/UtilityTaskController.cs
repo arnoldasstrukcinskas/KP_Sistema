@@ -24,7 +24,7 @@ namespace KP_Sistema.API.Controllers
         /// <param name="utilityTaskCreateDTO">Data create object containing the details of the new UtilityTask (name, description, price, community id).</param>
         /// <returns>Added utility taskt object with name, description, price, community id</returns>
         [HttpPost]
-        public async Task<IActionResult> AddUtilityTask(UtilityTaskCreateDTO utilityTaskCreateDTO)
+        public async Task<IActionResult> AddUtilityTask([FromBody] UtilityTaskCreateDTO utilityTaskCreateDTO)
         {
             if(utilityTaskCreateDTO == null)
             {

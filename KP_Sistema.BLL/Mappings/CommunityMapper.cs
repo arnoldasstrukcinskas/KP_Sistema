@@ -15,6 +15,7 @@ namespace KP_Sistema.BLL.Mappings
         {
             CreateMap<CommunityCreateDTO, Community>();
             CreateMap<Community, CommunityTransferDTO>();
+            CreateMap<Community, CommunityReturnDTO>();
             CreateMap<CommunityTransferDTO, Community>();
             CreateMap<CommunityTransferDTO, CommunityReturnDTO>();
         }

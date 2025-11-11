@@ -33,14 +33,14 @@ namespace KP_Sistema.BLL.Services
 
         public async Task<CommunityTransferDTO> GetCommunityByIdAsync(int id)
         {
-            var foundCommunity = await _communityRepository.FindCommunityById(id);
+            var foundCommunity = await _communityRepository.GetCommunityById(id);
 
             return _mapper.Map<CommunityTransferDTO>(foundCommunity);
         }
 
         public async Task<CommunityTransferDTO?> GetCommynityByNameAsync(string name)
         {
-            var foundCommunity = await _communityRepository.FindCommunityByName(name);
+            var foundCommunity = await _communityRepository.GetCommunityByName(name);
 
             return _mapper.Map<CommunityTransferDTO>(foundCommunity);
         }
@@ -56,7 +56,7 @@ namespace KP_Sistema.BLL.Services
 
         public async Task<CommunityReturnDTO> DeleteCommunityAsync(string name)
         {
-            var community = await _communityRepository.FindCommunityByName(name);
+            var community = await _communityRepository.GetCommunityByName(name);
 
             var deletedCommunity = await _communityRepository.DeleteCommunityAsync(community);
 

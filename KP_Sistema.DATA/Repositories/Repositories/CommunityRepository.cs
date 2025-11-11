@@ -26,13 +26,22 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             //await _dbContext.SaveChangesAsync();
 
             //Option #2
-            await _dbContext.Database.ExecuteSqlAsync(
+            //var createdCommunity =  await _dbContext.Database.ExecuteSqlAsync(
+            //    $"""
+            //    INSERT INTO Communities (Name) 
+            //    VALUES ({community.Name})
+            //    RETURNING Id, Name
+            //    """);
+
+           await _dbContext.Database.ExecuteSqlAsync(
                 $"""
-                INSERT INTO Communities (Name, UtilityTasks, Users) 
-                VALUES({community.Name}, {community.UtilityTasks}, {community.Users})
+                INSERT INTO Communities (Name) 
+                VALUES ({community.Name})
                 """);
-            
-              return community;
+
+            var createdCommunity = await GetCommunityByName(community.Name);
+
+            return createdCommunity;
         }
 
         public async Task<Community> DeleteCommunityAsync(Community community)
@@ -63,7 +72,7 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             return community;
         }
 
-        public async Task<Community?> FindCommunityById(int id)
+        public async Task<Community?> GetCommunityById(int id)
         {
             //Option #1
             //var community = await _dbContext.Communities
@@ -72,7 +81,7 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             //Option #2
             var community = await _dbContext.Communities.FromSqlInterpolated(
                 $"""
-                SELECT * FROM communities WHERE id={id}
+                SELECT * FROM Communities WHERE id={id}
                 """
                 ).Include(community => community.UtilityTasks)
                 .Include(community => community.Users)
@@ -81,7 +90,7 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             return community;
         }
 
-        public async Task<Community?> FindCommunityByName(string name)
+        public async Task<Community?> GetCommunityByName(string name)
         {
             //Option #1
             //var community = _dbContext.Communities
@@ -89,7 +98,7 @@ namespace KP_Sistema.DATA.Repositories.Repositories
 
             //Option #2
             var community = await _dbContext.Communities.FromSqlInterpolated(
-                $"SELECT * FROM communities WHERE name={name}")
+                $"SELECT * FROM Communities WHERE name={name}")
                 .Include(community => community.UtilityTasks)
                 .Include(community => community.Users)
                 .FirstOrDefaultAsync();
