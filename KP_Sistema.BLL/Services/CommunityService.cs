@@ -22,9 +22,9 @@ namespace KP_Sistema.BLL.Services
             _communityRepository = communityRepository;
             _mapper = mapper;
         }
-        public async Task<CommunityReturnDTO> AddCommunityAsync(CommunityTransferDTO communityTransferDTO)
+        public async Task<CommunityReturnDTO> AddCommunityAsync(CommunityCreateDTO communityCreateDTO)
         {
-            var community = _mapper.Map<Community>(communityTransferDTO);
+            var community = _mapper.Map<Community>(communityCreateDTO);
             
             var createdCommunity = await _communityRepository.AddCommunityAsync(community);
 

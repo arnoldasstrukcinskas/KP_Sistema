@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KP_Sistema.API.Controllers
 {
-    [Route("controller")]
+    [Route("[controller]")]
     [ApiController]
     public class UtilityTaskController : ControllerBase
     {
@@ -23,7 +23,7 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="utilityTaskCreateDTO">Data create object containing the details of the new UtilityTask (name, description, price, community id).</param>
         /// <returns>Added utility taskt object with name, description, price, community id</returns>
-        [HttpPost("addUtilityTask")]
+        [HttpPost]
         public async Task<IActionResult> AddUtilityTask(UtilityTaskCreateDTO utilityTaskCreateDTO)
         {
             if(utilityTaskCreateDTO == null)

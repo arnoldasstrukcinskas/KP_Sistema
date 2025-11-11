@@ -34,12 +34,6 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// AutoMapper Configurations
-builder.Services.AddAutoMapper(typeof(Program));
-
-
 // Configure of swagger documentation
 builder.Services.AddSwaggerGen(c =>
 {
@@ -54,6 +48,9 @@ builder.Services.AddSwaggerGen(c =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
 });
+
+// AutoMapper Configurations
+builder.Services.AddAutoMapper(typeof(Program));
 
 // Enabling healthcheck
 builder.Services.AddHealthChecks();
