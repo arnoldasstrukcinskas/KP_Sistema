@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace KP_Sistema.DATA.Repositories.Repositories
 {
-    internal class CommunityRepository : ICommunityRepository
+    public class CommunityRepository : ICommunityRepository
     {
         private readonly AppDbContext _dbContext;
 
@@ -63,6 +63,24 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             return community;
         }
 
+        public async Task<Community?> FindCommunityById(int id)
+        {
+            //Option #1
+            //var community = await _dbContext.Communities
+            //.FirstOrDefaultAsync(community => community.Id == id);
+
+            //Option #2
+            var community = await _dbContext.Communities.FromSqlInterpolated(
+                $"""
+                SELECT * FROM communities WHERE id={id}
+                """
+                ).Include(community => community.UtilityTasks)
+                .Include(community => community.Users)
+                .FirstOrDefaultAsync();
+
+            return community;
+        }
+
         public async Task<Community?> FindCommunityByName(string name)
         {
             //Option #1
@@ -71,7 +89,8 @@ namespace KP_Sistema.DATA.Repositories.Repositories
 
             //Option #2
             var community = await _dbContext.Communities.FromSqlInterpolated(
-                $"SELECT * FROM Communities WHERE name={name}")
+                $"SELECT * FROM communities WHERE name={name}")
+                .Include(community => community.UtilityTasks)
                 .Include(community => community.Users)
                 .FirstOrDefaultAsync();
 

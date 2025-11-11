@@ -15,20 +15,23 @@ namespace KP_Sistema.BLL.Services
     public class UtilityTaskService : IUtilityTaskService
     {
         private readonly IUtilityTaskRepository _utilityTaskRepository;
-        private readonly ICommunityRepository _communityRepository;
+        private readonly ICommunityService _communityService;
         private readonly IMapper _mapper;
 
-        public UtilityTaskService(IUtilityTaskRepository utilityTaskRepository, ICommunityRepository communityRepository,
+        public UtilityTaskService(IUtilityTaskRepository utilityTaskRepository, ICommunityService communityService,
             IMapper mapper)
         {
             _utilityTaskRepository = utilityTaskRepository;
-            _communityRepository = communityRepository;
+            _communityService = communityService;
             _mapper = mapper;
         }
 
-        public async Task<UtilityTaskReturnDTO> CreateTaskAsync(UtilityTaskTransferDTO utilityTaskCreateDTO)
+        public async Task<UtilityTaskReturnDTO> CreateTaskAsync(UtilityTaskCreateDTO utilityTaskCreateDTO)
         {
             var utilityTask = _mapper.Map<UtilityTask>(utilityTaskCreateDTO);
+            var community = _communityService.GetCommunityByIdAsync(utilityTask.CommunityId);
+
+            utilityTask.Community = _mapper.Map<Community>(community);
 
             var createedUtilityTask = await _utilityTaskRepository.AddUtilityTaskAsync(utilityTask);
 
@@ -44,11 +47,15 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<UtilityTaskReturnDTO>(deletedUtilityTask);
         }
 
-        public async Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(UtilityTaskTransferDTO utilityTaskCreateDTO)
+        public async Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(UtilityTaskTransferDTO utilityTaskTransferDTO)
         {
-            var utilityTAsk = _mapper.Map<UtilityTask>(utilityTaskCreateDTO);
+            var community = await _communityService.GetCommunityByIdAsync(utilityTaskTransferDTO.Id);
 
-            var editedUtilityTask = await _utilityTaskRepository.EditUtilityTask(utilityTAsk);
+            var utilityTask = _mapper.Map<UtilityTask>(utilityTaskTransferDTO);
+            utilityTask.CommunityId = community.Id;
+            utilityTask.Community = _mapper.Map<Community>(community);
+
+            var editedUtilityTask = await _utilityTaskRepository.EditUtilityTask(utilityTask);
 
             return _mapper.Map<UtilityTaskReturnDTO>(editedUtilityTask);
         }
@@ -62,7 +69,9 @@ namespace KP_Sistema.BLL.Services
 
         public async Task<List<UtilityTaskReturnDTO>?> GetAllUtilityTasksByCommunityAsync(string communityName)
         {
-            var community = await _communityRepository.FindCommunityByName(communityName);
+            var communityTransferDTO = await _communityService.GetCommynityByNameAsync(communityName);
+
+            var community = _mapper.Map<Community>(communityTransferDTO);
 
             var utilityTasks = await _utilityTaskRepository.GetAllUtilityTasksByCommunity(community);
 

@@ -31,13 +31,18 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<CommunityReturnDTO>(createdCommunity);
         }
 
-        public async Task<CommunityReturnDTO> DeleteCommunityAsync(string name)
+        public async Task<CommunityTransferDTO> GetCommunityByIdAsync(int id)
         {
-            var community = await _communityRepository.FindCommunityByName(name);
+            var foundCommunity = await _communityRepository.FindCommunityById(id);
 
-            var deletedCommunity = await _communityRepository.DeleteCommunityAsync(community);
+            return _mapper.Map<CommunityTransferDTO>(foundCommunity);
+        }
 
-            return _mapper.Map<CommunityReturnDTO>(deletedCommunity);
+        public async Task<CommunityTransferDTO?> GetCommynityByNameAsync(string name)
+        {
+            var foundCommunity = await _communityRepository.FindCommunityByName(name);
+
+            return _mapper.Map<CommunityTransferDTO>(foundCommunity);
         }
 
         public async Task<CommunityTransferDTO> EditCommunityAsync(CommunityTransferDTO communityTransferDTO)
@@ -49,6 +54,15 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<CommunityTransferDTO>(editedCommunity);
         }
 
+        public async Task<CommunityReturnDTO> DeleteCommunityAsync(string name)
+        {
+            var community = await _communityRepository.FindCommunityByName(name);
+
+            var deletedCommunity = await _communityRepository.DeleteCommunityAsync(community);
+
+            return _mapper.Map<CommunityReturnDTO>(deletedCommunity);
+        }
+
         public async Task<List<CommunityReturnDTO>?> GetAllCommunities()
         {
             var communities = await _communityRepository.GetAllCommunities();
@@ -58,13 +72,6 @@ namespace KP_Sistema.BLL.Services
                 .ToList();
 
             return communitiesList;
-        }
-
-        public async Task<CommunityTransferDTO?> GetCommynityByNameAsync(string name)
-        {
-            var foundCommunity = await _communityRepository.FindCommunityByName(name);
-
-            return _mapper.Map<CommunityTransferDTO>(foundCommunity);
         }
     }
 }

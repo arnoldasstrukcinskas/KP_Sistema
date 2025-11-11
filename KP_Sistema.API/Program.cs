@@ -1,6 +1,12 @@
 ﻿using AutoMapper;
+using KP_Sistema.BLL.Interfaces;
+using KP_Sistema.BLL.Interfaces.Users;
 using KP_Sistema.BLL.Mappings;
+using KP_Sistema.BLL.Services;
+using KP_Sistema.BLL.Services.Users;
 using KP_Sistema.DATA;
+using KP_Sistema.DATA.Repositories.Interfaces;
+using KP_Sistema.DATA.Repositories.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -15,8 +21,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 //Repositories
+builder.Services.AddScoped<IUtilityTaskRepository, UtilityTaskRepository>();
+builder.Services.AddScoped<ICommunityRepository, CommunityRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 //Services
+builder.Services.AddScoped<IUtilityTaskService, UtilityTaskService>();
+builder.Services.AddScoped<ICommunityService, CommunityService>();
+builder.Services.AddScoped<IAdministratorService, AdministratorService>();
+builder.Services.AddScoped<IManagerService, ManagerService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

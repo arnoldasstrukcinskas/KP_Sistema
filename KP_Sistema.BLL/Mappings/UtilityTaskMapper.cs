@@ -13,9 +13,14 @@ namespace KP_Sistema.BLL.Mappings
     {
         public UtilityTaskMapper()
         {
+            CreateMap<UtilityTaskCreateDTO, UtilityTask>();
+            CreateMap<UtilityTask, UtilityTaskTransferDTO>()
+                .ForMember(destination => destination.CommunityName, option => option.MapFrom(source => source.Community.Name));
+            CreateMap<UtilityTask, UtilityTaskReturnDTO>()
+                .ForMember(destination => destination.CommunityName, option => option.MapFrom(source => source.Community.Name));
+            CreateMap<UtilityTaskTransferDTO, UtilityTaskReturnDTO>();
             CreateMap<UtilityTaskTransferDTO, UtilityTask>();
-            CreateMap<UtilityTask, UtilityTaskTransferDTO>();
-            CreateMap<UtilityTask, UtilityTaskReturnDTO>();
+            
         }
     }
 }

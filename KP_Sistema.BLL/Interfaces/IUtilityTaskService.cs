@@ -10,7 +10,7 @@ namespace KP_Sistema.BLL.Interfaces
 {
     public interface IUtilityTaskService
     {
-        Task<UtilityTaskReturnDTO> CreateTaskAsync(UtilityTaskTransferDTO utilityTaskCreateDTO);
+        Task<UtilityTaskReturnDTO> CreateTaskAsync(UtilityTaskCreateDTO utilityTaskCreateDTO);
         Task<UtilityTaskTransferDTO?> FindUtilityTaskByNameAsync(string name);
         Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(UtilityTaskTransferDTO utilityTaskCreateDTO);
         Task<UtilityTaskReturnDTO> DeleteUtilityTaskAsync(string name);

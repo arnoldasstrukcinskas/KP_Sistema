@@ -13,11 +13,10 @@ namespace KP_Sistema.BLL.Mappings
     {
         public CommunityMapper()
         {
-            CreateMap<CommunityTransferDTO, Community>();
-            CreateMap<CommunityTransferDTO, CommunityTransferDTO>();
-            CreateMap<CommunityTransferDTO, CommunityReturnDTO>();
+            CreateMap<CommunityCreateDTO, Community>();
             CreateMap<Community, CommunityTransferDTO>();
             CreateMap<CommunityTransferDTO, Community>();
+            CreateMap<CommunityTransferDTO, CommunityReturnDTO>();
         }
     }
 }

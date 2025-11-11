@@ -90,8 +90,10 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             //Option #2
             var utilityTasks = await _dbContext.UtilityTasks.FromSqlInterpolated(
                 $"""
-                SELECT * FROM utilityLTasks;
-                """).ToListAsync();
+                SELECT * FROM utilityTasks WHERE communityId = {community.Id};
+                """)
+                .Include(UtilityTask => UtilityTask.Community)
+                .ToListAsync();
 
             return utilityTasks;
         }

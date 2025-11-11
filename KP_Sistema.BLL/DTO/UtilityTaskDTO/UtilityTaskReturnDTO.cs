@@ -12,6 +12,6 @@ namespace KP_Sistema.BLL.DTO.UtilityTaskDTO
    {
         public int Id { get; set; }
         public string Name { get; set; }
-        public Community Community { get; set; }
+        public string CommunityName { get; set; }
    }
 }
