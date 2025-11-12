@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using KP_Sistema.BLL.DTO.CommunityDTO;
 using KP_Sistema.BLL.Exceptions;
+using KP_Sistema.BLL.Exceptions.Community;
 using KP_Sistema.BLL.Interfaces;
 using KP_Sistema.DATA.Entities;
 using KP_Sistema.DATA.Repositories.Interfaces;
@@ -52,7 +53,6 @@ namespace KP_Sistema.BLL.Services
 
         public async Task<TDto?> GetCommunityByNameAsync<TDto>(string name)
         {
-            //check to avoid null
             var foundCommunity = await _communityRepository.GetCommunityByName(name);
 
             if (foundCommunity == null)
@@ -63,18 +63,28 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<TDto>(foundCommunity);
         }
 
-        public async Task<CommunityTransferDTO> EditCommunityAsync(CommunityTransferDTO communityTransferDTO)
+        public async Task<CommunityReturnDTO> EditCommunityAsync(CommunityTransferDTO communityTransferDTO)
         {
+            if(communityTransferDTO == null)
+            {
+                throw new CommunityNotFoundException(communityTransferDTO.Name);
+            }    
+
             var community = _mapper.Map<Community>(communityTransferDTO);
 
             var editedCommunity = await _communityRepository.EditCommunityAsync(community);
 
-            return _mapper.Map<CommunityTransferDTO>(editedCommunity);
+            return _mapper.Map<CommunityReturnDTO>(editedCommunity);
         }
 
-        public async Task<CommunityReturnDTO> DeleteCommunityAsync(string name)
+        public async Task<CommunityReturnDTO> DeleteCommunityAsync(int id)
         {
-            var community = await _communityRepository.GetCommunityByName(name);
+            var community = await GetCommunityByIdAsync(id);
+
+            if(community == null)
+            {
+                throw new CommunityNotFoundException(id);
+            }
 
             var deletedCommunity = await _communityRepository.DeleteCommunityAsync(community);
 
@@ -85,11 +95,29 @@ namespace KP_Sistema.BLL.Services
         {
             var communities = await _communityRepository.GetAllCommunities();
 
+            if(communities == null)
+            {
+                throw new CommunityException("Something wrong with getting communities");
+            }
+
             var communitiesList = communities
                 .Select(community => _mapper.Map<CommunityReturnDTO>(community))
                 .ToList();
 
             return communitiesList;
+        }
+
+        //Method for internal use
+        private async Task<Community> GetCommunityByIdAsync(int id)
+        {
+            var foundCommunity = await _communityRepository.GetCommunityById(id);
+
+            if (foundCommunity == null)
+            {
+                throw new CommunityNotFoundException(id);
+            }
+
+            return foundCommunity;
         }
     }
 }

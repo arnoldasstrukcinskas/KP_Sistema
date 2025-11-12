@@ -44,19 +44,6 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             return createdCommunity;
         }
 
-        public async Task<Community> DeleteCommunityAsync(Community community)
-        {
-            //Option #1
-            //_dbContext.Communities.Remove(community);
-            //await _dbContext.SaveChangesAsync();
-
-            //Option #2
-            await _dbContext.Database.ExecuteSqlAsync(
-                $"DELETE FROM Communities WHERE id={community.Id}");
-
-            return community;
-        }
-
         public async Task<Community> EditCommunityAsync(Community community)
         {
             //Option #1
@@ -68,7 +55,22 @@ namespace KP_Sistema.DATA.Repositories.Repositories
                 $"""
                 UPDATE Communities SET name={community.Name}, utilityTasks={community.UtilityTasks}, users={community.Users} WHERE id={community.Id}
                 """);
-                
+
+            var editedCommunity = await GetCommunityByName(community.Name);
+
+            return editedCommunity;
+        }
+
+        public async Task<Community> DeleteCommunityAsync(Community community)
+        {
+            //Option #1
+            //_dbContext.Communities.Remove(community);
+            //await _dbContext.SaveChangesAsync();
+
+            //Option #2
+            await _dbContext.Database.ExecuteSqlAsync(
+                $"DELETE FROM Communities WHERE id={community.Id}");
+
             return community;
         }
 
