@@ -1,4 +1,5 @@
 ﻿using KP_Sistema.BLL.DTO.CommunityDTO;
+using KP_Sistema.BLL.Exceptions.Community;
 using KP_Sistema.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -106,6 +107,20 @@ namespace KP_Sistema.API.Controllers
             var community = await _communityService.DeleteCommunityAsync(id);
 
             return Ok(community);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllCommunities()
+        {
+            var communities = await _communityService.GetAllCommunities();
+
+            if(communities == null)
+            {
+                throw new CommunityException("Could get communities");
+            }
+
+            return Ok(communities);
+
         }
     }
 
