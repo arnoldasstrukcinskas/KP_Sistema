@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using KP_Sistema.BLL.DTO.CommunityDTO;
 using KP_Sistema.BLL.DTO.UtilityTaskDTO;
+using KP_Sistema.BLL.Exceptions.Community;
+using KP_Sistema.BLL.Exceptions.UtilityTasks;
 using KP_Sistema.BLL.Interfaces;
 using KP_Sistema.DATA.Entities;
 using KP_Sistema.DATA.Repositories.Interfaces;
@@ -27,8 +29,14 @@ namespace KP_Sistema.BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<UtilityTaskReturnDTO> CreateTaskAsync(UtilityTaskCreateDTO utilityTaskCreateDTO)
+        public async Task<UtilityTaskReturnDTO> AddUtilityTaskAsync(UtilityTaskCreateDTO utilityTaskCreateDTO)
         {
+
+            if(utilityTaskCreateDTO == null)
+            {
+                throw new UtilityTaskException("Utility task is empty");
+            }
+
             var utilityTask = _mapper.Map<UtilityTask>(utilityTaskCreateDTO);
 
             var createedUtilityTask = await _utilityTaskRepository.AddUtilityTaskAsync(utilityTask);
@@ -36,20 +44,55 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<UtilityTaskReturnDTO>(createedUtilityTask);
         }
 
-        public async Task<UtilityTaskReturnDTO> DeleteUtilityTaskAsync(string name)
+        public async Task<TDto?> GetUtilityTaskByIdAsync<TDto>(int id)
         {
-            var utilityTask = await _utilityTaskRepository.GetUtilityTaskByName(name);
+            var foundUtilityTask = await _utilityTaskRepository.GetUtilityTaskById(id);
 
-            var deletedUtilityTask = await _utilityTaskRepository.DeleteUtilityTask(utilityTask);
+            if(foundUtilityTask == null)
+            {
+                throw new UtilityTaskNotFoundException(id);
+            }
 
-            return _mapper.Map<UtilityTaskReturnDTO>(deletedUtilityTask);
+            return _mapper.Map<TDto>(foundUtilityTask);
+        }
+
+        public async Task<TDto?> GetUtilityTaskByNameAsync<TDto>(string name)
+        {
+            var foundUtilityTask = await _utilityTaskRepository.GetUtilityTaskByName(name);
+
+            if(foundUtilityTask == null)
+            {
+                throw new UtilityTaskNotFoundException(name);
+            }
+
+            return _mapper.Map<TDto>(foundUtilityTask);
         }
 
         public async Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(UtilityTaskTransferDTO utilityTaskTransferDTO)
         {
-            var community = await _communityService.GetCommunityByIdAsync<CommunityTransferDTO>(utilityTaskTransferDTO.Id);
+
+            if (utilityTaskTransferDTO == null)
+            {
+                throw new UtilityTaskException("Utility task is empty");
+            }
+
+            bool exists = await GetUtilityTaskByIdAsync<UtilityTaskTransferDTO>(utilityTaskTransferDTO.Id) != null;
+
+            if (!exists)
+            {
+                throw new UtilityTaskNotFoundException(utilityTaskTransferDTO.Id);
+            }
+
+            var community = await _communityService.GetCommunityByIdAsync<CommunityTransferDTO>(utilityTaskTransferDTO.CommunityId);
+            
+            if(community == null)
+            {
+                throw new CommunityNotFoundException(utilityTaskTransferDTO.CommunityId);
+            }
 
             var utilityTask = _mapper.Map<UtilityTask>(utilityTaskTransferDTO);
+
+
             utilityTask.CommunityId = community.Id;
             utilityTask.Community = _mapper.Map<Community>(community);
 
@@ -58,16 +101,27 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<UtilityTaskReturnDTO>(editedUtilityTask);
         }
 
-        public async Task<UtilityTaskTransferDTO?> FindUtilityTaskByNameAsync(string name)
+        public async Task<UtilityTaskReturnDTO> DeleteUtilityTaskAsync(int id)
         {
-            var foundUtilityTask = await _utilityTaskRepository.GetUtilityTaskByName(name);
+            var utilityTask = await GetUtilityTaskByIdAsync(id);
+            if(utilityTask == null)
+            {
+                throw new UtilityTaskNotFoundException(id);
+            }
 
-            return _mapper.Map<UtilityTaskTransferDTO>(foundUtilityTask);
+            var deletedUtilityTask = await _utilityTaskRepository.DeleteUtilityTask(utilityTask);
+
+            return _mapper.Map<UtilityTaskReturnDTO>(deletedUtilityTask);
         }
 
         public async Task<List<UtilityTaskReturnDTO>?> GetAllUtilityTasksByCommunityAsync(string communityName)
         {
             var communityTransferDTO = await _communityService.GetCommunityByNameAsync<CommunityTransferDTO>(communityName);
+
+            if(communityTransferDTO == null)
+            {
+                throw new CommunityNotFoundException(communityName);
+            }
 
             var community = _mapper.Map<Community>(communityTransferDTO);
 
@@ -78,6 +132,19 @@ namespace KP_Sistema.BLL.Services
                 .ToList();
 
             return returnUtilityTasks;
+        }
+
+        //method for internal use
+        private async Task<UtilityTask> GetUtilityTaskByIdAsync(int id)
+        {
+            var foundUtilityTask = await _utilityTaskRepository.GetUtilityTaskById(id);
+
+            if (foundUtilityTask == null)
+            {
+                throw new UtilityTaskNotFoundException(id);
+            }
+
+            return foundUtilityTask;
         }
     }
 }

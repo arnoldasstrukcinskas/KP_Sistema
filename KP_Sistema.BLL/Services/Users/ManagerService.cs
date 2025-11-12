@@ -45,7 +45,7 @@ namespace KP_Sistema.BLL.Services.Users
 
             var community = await _communityService.GetCommunityByNameAsync<CommunityTransferDTO>(communityName);
 
-            var utilityTransferTask = await _utilityTaskService.FindUtilityTaskByNameAsync(taskName);
+            var utilityTransferTask = await _utilityTaskService.GetUtilityTaskByNameAsync<UtilityTaskTransferDTO>(taskName);
 
             community.UtilityTasks.Add(utilityTransferTask);
 

@@ -59,7 +59,7 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="name">Write community name</param>
         /// <returns>Returns found community data: id, name </returns>
-        [HttpGet("/{name}")]
+        [HttpGet("Community/{name}")]
         public async Task<IActionResult> GetCommunityByName([FromRoute] string name)
         {
             if(name.IsNullOrEmpty())

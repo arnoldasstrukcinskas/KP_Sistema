@@ -10,6 +10,7 @@ namespace KP_Sistema.DATA.Repositories.Interfaces
     public interface IUtilityTaskRepository
     {
         Task<UtilityTask> AddUtilityTaskAsync(UtilityTask utilityTask);
+        Task<UtilityTask?> GetUtilityTaskById(int id);
         Task<UtilityTask?> GetUtilityTaskByName(string name);
         Task<UtilityTask> EditUtilityTask(UtilityTask utilityTask);
         Task<UtilityTask> DeleteUtilityTask(UtilityTask utilityTask);

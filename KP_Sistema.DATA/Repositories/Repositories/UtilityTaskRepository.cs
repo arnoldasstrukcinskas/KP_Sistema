@@ -36,6 +36,18 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             return createdUtilityTask;
         }
 
+        public async Task<UtilityTask?> GetUtilityTaskById(int id)
+        {
+            var utilityTask = await _dbContext.UtilityTasks.FromSqlInterpolated(
+                $"""
+                    SELECT * FROM UtilityTasks WHERE id={id}
+                """)
+                .Include(utilityTask => utilityTask.Community)
+                .FirstOrDefaultAsync();
+
+            return utilityTask;
+        }
+
         public async Task<UtilityTask?> GetUtilityTaskByName(string name)
         {
             //Option #1
@@ -63,11 +75,14 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             await _dbContext.Database.ExecuteSqlAsync(
                 $"""
                 UPDATE UtilityTasks SET name={utilityTask.Name}, description={utilityTask.Description},
-                price={utilityTask.Price}, communityId={utilityTask.CommunityId}, community={utilityTask.Community}
+                price={utilityTask.Price}, communityId={utilityTask.CommunityId} 
+                WHERE id={utilityTask.Id}
                 """
                 );
 
-            return utilityTask;
+            var editedUtilityTask = await GetUtilityTaskById(utilityTask.Id);
+
+            return editedUtilityTask;
         }
 
         public async Task<UtilityTask> DeleteUtilityTask(UtilityTask utilityTask)
@@ -79,7 +94,7 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             //Option #2
             await _dbContext.Database.ExecuteSqlAsync(
                 $"""
-                DELETE FROM utilityTasks WHERE id={utilityTask.Id}
+                DELETE FROM UtilityTasks WHERE id={utilityTask.Id}
                 """);
 
             return utilityTask;
@@ -93,7 +108,7 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             //Option #2
             var utilityTasks = await _dbContext.UtilityTasks.FromSqlInterpolated(
                 $"""
-                SELECT * FROM utilityTasks WHERE communityId = {community.Id};
+                SELECT * FROM UtilityTasks WHERE communityId = {community.Id}
                 """)
                 .Include(UtilityTask => UtilityTask.Community)
                 .ToListAsync();
