@@ -16,7 +16,9 @@ namespace KP_Sistema.BLL.Mappings
             CreateMap<CommunityCreateDTO, Community>();
             CreateMap<Community, CommunityTransferDTO>();
             CreateMap<Community, CommunityReturnDTO>();
-            CreateMap<CommunityTransferDTO, Community>();
+            CreateMap<CommunityTransferDTO, Community>()
+                .ForMember(destination => destination.Users, option => option.Ignore())
+                .ForMember(destination => destination.UtilityTasks, option => option.Ignore());
             CreateMap<CommunityTransferDTO, CommunityReturnDTO>();
         }
     }

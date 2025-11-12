@@ -11,7 +11,7 @@ namespace KP_Sistema.BLL.Interfaces.Users
     {
         Task<UserReturnDTO> AddUser(UserCreateDTO userCreateDTO);
         Task<UserReturnDTO> GetUserByUsername(string username);
-        Task<UserReturnDTO> EditUser(UserEditDTO userEditDTO);
+        Task<UserReturnDTO> EditUser(UserTransferDTO userEditDTO);
         Task<UserReturnDTO> DeleteUser(string username);
     }
 }

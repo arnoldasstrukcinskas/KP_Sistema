@@ -41,7 +41,7 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="Id">Write community id</param>
         /// <returns>Returns found community data: id, name </returns>
-        [HttpGet]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetCommunityById(int id)
         {
             if(id < 1)
@@ -59,8 +59,8 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="name">Write community name</param>
         /// <returns>Returns found community data: id, name </returns>
-        [HttpGet]
-        public async Task<IActionResult> GetCommunityByName(string name)
+        [HttpGet("/{name}")]
+        public async Task<IActionResult> GetCommunityByName([FromRoute] string name)
         {
             if(name.IsNullOrEmpty())
             {
@@ -109,12 +109,17 @@ namespace KP_Sistema.API.Controllers
             return Ok(community);
         }
 
+        /// <summary>
+        /// Get all communities.
+        /// </summary>
+        /// <param name="Id">Write community Id</param>
+        /// <returns>Returns all communities in database</returns>
         [HttpGet]
         public async Task<IActionResult> GetAllCommunities()
         {
             var communities = await _communityService.GetAllCommunities();
 
-            if(communities == null)
+            if (communities == null)
             {
                 throw new CommunityException("Could get communities");
             }

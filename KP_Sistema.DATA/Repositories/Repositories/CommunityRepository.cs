@@ -25,14 +25,6 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             //await _dbContext.Communities.AddAsync(community);
             //await _dbContext.SaveChangesAsync();
 
-            //Option #2
-            //var createdCommunity =  await _dbContext.Database.ExecuteSqlAsync(
-            //    $"""
-            //    INSERT INTO Communities (Name) 
-            //    VALUES ({community.Name})
-            //    RETURNING Id, Name
-            //    """);
-
            await _dbContext.Database.ExecuteSqlAsync(
                 $"""
                 INSERT INTO Communities (Name) 
@@ -47,14 +39,14 @@ namespace KP_Sistema.DATA.Repositories.Repositories
         public async Task<Community> EditCommunityAsync(Community community)
         {
             //Option #1
-            //_dbContext.Communities.Update(community);
-            //await _dbContext.SaveChangesAsync();
+            _dbContext.Communities.Update(community);
+            await _dbContext.SaveChangesAsync();
 
-            //Option #2
-            await _dbContext.Database.ExecuteSqlAsync(
-                $"""
-                UPDATE Communities SET name={community.Name}, utilityTasks={community.UtilityTasks}, users={community.Users} WHERE id={community.Id}
-                """);
+            ////Option #2  needs to add each utility and User manually
+            //await _dbContext.Database.ExecuteSqlAsync(
+            //    $"""
+            //    UPDATE Communities SET name={community.Name}, utilityTasks={community.UtilityTasks}, users={community.Users} WHERE id={community.Id}
+            //    """);
 
             var editedCommunity = await GetCommunityByName(community.Name);
 

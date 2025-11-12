@@ -15,8 +15,9 @@ namespace KP_Sistema.DATA.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        [Required]
         public string Name { get; set; }
-        public List<UtilityTask> UtilityTasks { get; set; } = new List<UtilityTask>();
-        public List<User> Users { get; set; } = new List<User>();
+        public ICollection<UtilityTask> UtilityTasks { get; set; } = new List<UtilityTask>();
+        public ICollection<User> Users { get; set; } = new List<User>();
     }
 }

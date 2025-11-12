@@ -2,6 +2,7 @@
 using KP_Sistema.BLL.DTO.CommunityDTO;
 using KP_Sistema.BLL.DTO.UserDTO;
 using KP_Sistema.BLL.DTO.UtilityTaskDTO;
+using KP_Sistema.BLL.Exceptions.UtilityTasks;
 using KP_Sistema.BLL.Interfaces;
 using KP_Sistema.BLL.Interfaces.Users;
 using KP_Sistema.DATA.Entities;
@@ -39,20 +40,18 @@ namespace KP_Sistema.BLL.Services.Users
             var user = await GetUserByUsername(currentUser);
             if(!IsManager(currentUser))
             {
-                throw new UnauthorizedAccessException("Only managers can add Task to Community!");
+                throw new UtilityTaskUnauthorizedAccessException(user.Id);
             }
 
             var community = await _communityService.GetCommunityByNameAsync<CommunityTransferDTO>(communityName);
 
             var utilityTransferTask = await _utilityTaskService.FindUtilityTaskByNameAsync(taskName);
 
-            var utilityTask = _mapper.Map<UtilityTask>(utilityTransferTask);
-
-            community.UtilityTasks.Add(utilityTask);
+            community.UtilityTasks.Add(utilityTransferTask);
 
             var editedCommunity = await _communityService.EditCommunityAsync(community);
 
-            return _mapper.Map<UtilityTaskReturnDTO>(utilityTask);
+            return _mapper.Map<UtilityTaskReturnDTO>(utilityTransferTask);
         }
 
         private bool IsManager(string role)

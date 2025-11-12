@@ -30,7 +30,7 @@ namespace KP_Sistema.BLL.Services.Users
             _mapper = mapper;
         }
 
-        public async Task<UserReturnDTO> EditUserRole(UserEditDTO userEditDto, string currentUserUsername)
+        public async Task<UserReturnDTO> EditUserRole(UserTransferDTO userEditDto, string currentUserUsername)
         {
             await InitializeCurrentUserAsync(currentUserUsername);
             if (!IsAdmin())

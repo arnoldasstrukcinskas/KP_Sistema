@@ -44,7 +44,7 @@ namespace KP_Sistema.BLL.Services.Users
             return _mapper.Map<UserReturnDTO>(user);
         }
 
-        public async Task<UserReturnDTO> EditUser(UserEditDTO userEditDTO)
+        public async Task<UserReturnDTO> EditUser(UserTransferDTO userEditDTO)
         {
             var user = _mapper.Map<User>(EditUser);
             var editedUser = await _userRepository.EditUser(user);

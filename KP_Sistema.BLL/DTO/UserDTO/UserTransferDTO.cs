@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace KP_Sistema.BLL.DTO.UserDTO
 {
-    public class UserEditDTO
+    public class UserTransferDTO
     {
         public int Id { get; set; }
         public string Username { get; set; }
+        public string Mail { get; set; }
+        public string CommunityName { get; set; }
         public string Role { get; set; }
     }
 }
