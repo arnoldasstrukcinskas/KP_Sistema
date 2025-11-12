@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KP_Sistema.BLL.Exceptions
+namespace KP_Sistema.BLL.Exceptions.Community
 {
     public class CommunityUnauthorizedAccessException : CommunityException
     {

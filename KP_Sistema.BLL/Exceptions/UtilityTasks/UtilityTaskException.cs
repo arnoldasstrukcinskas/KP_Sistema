@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KP_Sistema.BLL.Exceptions
+namespace KP_Sistema.BLL.Exceptions.UtilityTasks
 {
-    public class CommunityException : Exception
+    public class UtilityTaskException : Exception
     {
-        public CommunityException(string message) 
+        public UtilityTaskException(string message)
             : base(message) { }
     }
 }

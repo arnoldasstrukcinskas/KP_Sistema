@@ -1,4 +1,5 @@
-﻿using KP_Sistema.BLL.Exceptions;
+﻿using KP_Sistema.BLL.Exceptions.Community;
+using KP_Sistema.BLL.Exceptions.UtilityTasks;
 using KP_Sistema.BLL.Services;
 
 namespace KP_Sistema.API.Middlewares
@@ -30,7 +31,9 @@ namespace KP_Sistema.API.Middlewares
                     CommunityException => StatusCodes.Status400BadRequest,
 
                     //UtilityTasks exceptions
-
+                    UtilityTaskNotFoundException => StatusCodes.Status404NotFound,
+                    UtilityTaskUnauthorizedAccessException => StatusCodes.Status401Unauthorized,
+                    UtilityTaskException => StatusCodes.Status400BadRequest,
 
                     //Default exception
                     _ => StatusCodes.Status500InternalServerError
