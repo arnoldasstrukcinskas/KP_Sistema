@@ -1,0 +1,18 @@
+﻿@media (max-width: 768px) {
+    .horizontal-menu {
+        height: 60px;
+    }
+
+    main {
+        padding-top: 60px; /* push main content below navbar */
+    }
+
+    .sidebar {
+        top: 60px;
+        height: calc(100vh - 60px);
+    }
+
+    .horizontal-menu .navbar-brand {
+        font-size: 1.1rem; /* smaller on mobile */
+    }
+}
