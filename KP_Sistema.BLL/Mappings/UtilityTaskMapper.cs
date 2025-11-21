@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using KP_Sistema.BLL.DTO.UtilityTaskDTO;
+using KP_Sistema.CONTRACTS.DTO.UtilityTaskDTO;
 using KP_Sistema.DATA.Entities;
 using System;
 using System.Collections.Generic;

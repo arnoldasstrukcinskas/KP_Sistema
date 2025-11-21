@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KP_Sistema.BLL.DTO.CommunityDTO
+namespace KP_Sistema.CONTRACTS.DTO.CommunityDTO
 {
     public class CommunityReturnDTO
     {

@@ -1,6 +1,8 @@
-﻿using KP_Sistema.BLL.Exceptions.Community;
+﻿using KP_Sistema.BLL.Exceptions.Authentication;
+using KP_Sistema.BLL.Exceptions.Community;
 using KP_Sistema.BLL.Exceptions.UtilityTasks;
 using KP_Sistema.BLL.Services;
+using System.Security.Authentication;
 
 namespace KP_Sistema.API.Middlewares
 {
@@ -30,10 +32,15 @@ namespace KP_Sistema.API.Middlewares
                     CommunityUnauthorizedAccessException => StatusCodes.Status401Unauthorized,
                     CommunityException => StatusCodes.Status400BadRequest,
 
-                    //UtilityTasks exceptions
+                    //UtilityTasks Exceptions
                     UtilityTaskNotFoundException => StatusCodes.Status404NotFound,
                     UtilityTaskUnauthorizedAccessException => StatusCodes.Status401Unauthorized,
                     UtilityTaskException => StatusCodes.Status400BadRequest,
+
+                    //Authentication Exceptions
+                    UserAuthenticationNotFoundException => StatusCodes.Status404NotFound,
+                    UserAuthenticationRegistrationFailedException => StatusCodes.Status406NotAcceptable,
+                    UserAuthenticationException => StatusCodes.Status403Forbidden,
 
                     //Default exception
                     _ => StatusCodes.Status500InternalServerError

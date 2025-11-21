@@ -16,8 +16,8 @@ namespace KP_Sistema.DATA.Entities
         public string Email { get; set; }
         [Required]
         public string PasswordHash { get; set; }
-        public int CommunityId { get; set; }
-        public Community Community { get; set; }
+        public int? CommunityId { get; set; }
+        public Community? Community { get; set; }
         public int RoleId { get; set; }
         public Role Role { get; set; }
     }

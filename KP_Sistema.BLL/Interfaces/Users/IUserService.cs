@@ -1,4 +1,4 @@
-﻿using KP_Sistema.BLL.DTO.UserDTO;
+﻿using KP_Sistema.CONTRACTS.DTO.UserDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;

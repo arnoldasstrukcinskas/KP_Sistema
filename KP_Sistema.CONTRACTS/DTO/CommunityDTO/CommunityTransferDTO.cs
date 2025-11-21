@@ -1,13 +1,12 @@
-﻿using KP_Sistema.BLL.DTO.UserDTO;
-using KP_Sistema.BLL.DTO.UtilityTaskDTO;
-using KP_Sistema.DATA.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KP_Sistema.CONTRACTS.DTO.UserDTO;
+using KP_Sistema.CONTRACTS.DTO.UtilityTaskDTO;
 
-namespace KP_Sistema.BLL.DTO.CommunityDTO
+namespace KP_Sistema.CONTRACTS.DTO.CommunityDTO
 {
     public class CommunityTransferDTO
     {

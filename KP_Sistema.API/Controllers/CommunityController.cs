@@ -1,4 +1,4 @@
-﻿using KP_Sistema.BLL.DTO.CommunityDTO;
+﻿using KP_Sistema.CONTRACTS.DTO.CommunityDTO;
 using KP_Sistema.BLL.Exceptions.Community;
 using KP_Sistema.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -59,8 +59,8 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="name">Write community name</param>
         /// <returns>Returns found community data: id, name </returns>
-        [HttpGet("Community/{name}")]
-        public async Task<IActionResult> GetCommunityByName([FromRoute] string name)
+        [HttpGet("name")]
+        public async Task<IActionResult> GetCommunityByName([FromQuery] string name)
         {
             if(name.IsNullOrEmpty())
             {

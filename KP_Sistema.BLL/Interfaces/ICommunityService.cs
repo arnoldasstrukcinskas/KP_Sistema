@@ -1,4 +1,4 @@
-﻿using KP_Sistema.BLL.DTO.CommunityDTO;
+﻿using KP_Sistema.CONTRACTS.DTO.CommunityDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;

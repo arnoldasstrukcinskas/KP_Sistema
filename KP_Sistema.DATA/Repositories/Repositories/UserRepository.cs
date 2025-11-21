@@ -30,7 +30,10 @@ namespace KP_Sistema.DATA.Repositories.Repositories
                 VALUES({user.Username}, {user.PasswordHash}, {user.CommunityId}, {user.Community}, {user.RoleId}, {user.Role})
                 """
                 );
-            return user;
+
+            var createdUser = await GetUserByUsername(user.Username);
+
+            return createdUser;
         }
 
         public async Task<User> DeleteUser(User user)
@@ -43,7 +46,9 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             await _dbContext.Database.ExecuteSqlAsync(
                 $" DELETE FROM Users WHERE userid={user.Id} ");
 
-            return user;
+            var deletedUser = await GetUserById(user.Id);
+
+            return deletedUser;
         }
 
         public async Task<User> EditUser(User user)
@@ -64,13 +69,29 @@ namespace KP_Sistema.DATA.Repositories.Repositories
 
         public async Task<User?> GetUserByUsername(string username)
         {
-            //Option #2
+            //Option #1
             //var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.Username.Equals(username));
 
             //Option #2
             var user = await _dbContext.Users.FromSqlInterpolated(
                 $"""
                 SELECT * FROM Users WHERE username={username}
+                """).Include(user => user.Community)
+                .Include(user => user.Role)
+                .FirstOrDefaultAsync();
+
+            return user;
+        }
+
+        public async Task<User?> GetUserById(int id)
+        {
+            //Option #1
+            //var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.Id == id);
+
+            //Option@= #2
+            var user = await _dbContext.Users.FromSqlInterpolated(
+                $"""
+                SELECT * FROM users WHERE id={id}
                 """).Include(user => user.Community)
                 .Include(user => user.Role)
                 .FirstOrDefaultAsync();

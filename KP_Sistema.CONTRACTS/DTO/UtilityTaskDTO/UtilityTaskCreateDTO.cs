@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace KP_Sistema.BLL.DTO.UtilityTaskDTO
+﻿namespace KP_Sistema.CONTRACTS.DTO.UtilityTaskDTO
 {
     public class UtilityTaskCreateDTO
     {

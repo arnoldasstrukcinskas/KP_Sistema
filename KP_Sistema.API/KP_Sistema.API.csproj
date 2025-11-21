@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\KP_Sistema.BLL\KP_Sistema.BLL.csproj" />
+    <ProjectReference Include="..\KP_Sistema.CONTRACTS\KP_Sistema.CONTRACTS.csproj" />
   </ItemGroup>
 
 </Project>

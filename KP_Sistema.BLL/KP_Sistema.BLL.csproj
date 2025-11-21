@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\KP_Sistema.CONTRACTS\KP_Sistema.CONTRACTS.csproj" />
     <ProjectReference Include="..\KP_Sistema.DATA\KP_Sistema.DATA.csproj" />
   </ItemGroup>
 

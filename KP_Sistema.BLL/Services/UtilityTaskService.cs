@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using KP_Sistema.BLL.DTO.CommunityDTO;
-using KP_Sistema.BLL.DTO.UtilityTaskDTO;
+using KP_Sistema.CONTRACTS.DTO.CommunityDTO;
 using KP_Sistema.BLL.Exceptions.Community;
 using KP_Sistema.BLL.Exceptions.UtilityTasks;
 using KP_Sistema.BLL.Interfaces;
+using KP_Sistema.CONTRACTS.DTO.UtilityTaskDTO;
 using KP_Sistema.DATA.Entities;
 using KP_Sistema.DATA.Repositories.Interfaces;
 using System;

@@ -8,6 +8,7 @@ services:
         - "8081:80" 
     volumes:
         - ./KP_Sistema.CLIENT/publish/wwwroot:/usr/share/nginx/html
+        - ./KP_Sistema.CLIENT/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
         kp_sistema.database:
             condition: service_healthy

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using KP_Sistema.BLL.DTO.UtilityTaskDTO;
 using KP_Sistema.BLL.Interfaces;
+using KP_Sistema.CONTRACTS.DTO.UtilityTaskDTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 

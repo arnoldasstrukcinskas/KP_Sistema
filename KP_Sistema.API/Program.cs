@@ -17,6 +17,18 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+//Enable cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowClient", policy =>
+    {
+        policy.WithOrigins("http://localhost:8081") // your client origin
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -97,6 +109,8 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine($"❌ Database migration failed: {ex.Message}");
     }
 }
+
+app.UseCors("AllowClient");
 
 app.MapHealthChecks("/health");
 

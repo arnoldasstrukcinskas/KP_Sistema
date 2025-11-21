@@ -1,4 +1,4 @@
-﻿using KP_Sistema.BLL.DTO.UtilityTaskDTO;
+﻿using KP_Sistema.CONTRACTS.DTO.UtilityTaskDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
