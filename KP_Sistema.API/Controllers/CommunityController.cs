@@ -72,6 +72,25 @@ namespace KP_Sistema.API.Controllers
             return Ok(community);
         }
 
+
+        /// <summary>
+        /// Search community by name.
+        /// </summary>
+        /// <param search="name">Write community name</param>
+        /// <returns>Returns found communities data: id, name, users and tasks </returns>
+        [HttpGet("search")]
+        public async Task<IActionResult> GetCommunitiesByName([FromQuery] string name)
+        {
+            if(name.IsNullOrEmpty())
+            {
+                return BadRequest("Controller: name is not given.");
+            }
+
+            var communities = await _communityService.GetCommunitiesByNameAsync<CommunityTransferDTO>(name);
+
+            return Ok(communities);
+        }
+
         /// <summary>
         /// Find community by name.
         /// </summary>

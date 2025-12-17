@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -87,7 +88,7 @@ namespace KP_Sistema.DATA.Repositories.Repositories
         public async Task<Community?> GetCommunityByName(string name)
         {
             //Option #1
-            //var community = _dbContext.Communities
+            //var community = await Communities
             //    .FirstOrDefaultAsync(community => community.Name.Equals(name));
 
             //Option #2
@@ -98,6 +99,18 @@ namespace KP_Sistema.DATA.Repositories.Repositories
                 .FirstOrDefaultAsync();
 
             return community;
+
+        }
+
+        public async Task<List<Community>> GetCommunitiesByName(string name)
+        {
+            var communities = await _dbContext.Communities
+                .Where(community => community.Name.Contains(name))
+                .Include(community => community.UtilityTasks)
+                .Include(community => community.Users)
+                .ToListAsync();
+
+            return communities;
 
         }
 

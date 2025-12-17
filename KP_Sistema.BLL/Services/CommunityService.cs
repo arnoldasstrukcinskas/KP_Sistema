@@ -63,6 +63,18 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<TDto>(foundCommunity);
         }
 
+        public async Task<List<TDto>> GetCommunitiesByNameAsync<TDto>(string name)
+        {
+            var foundCommunities = await _communityRepository.GetCommunitiesByName(name);
+
+            if(foundCommunities == null)
+            {
+                throw new CommunityNotFoundException(name);
+            }
+
+            return _mapper.Map<List<TDto>>(foundCommunities);
+        }
+
         public async Task<CommunityReturnDTO> EditCommunityAsync(CommunityTransferDTO communityTransferDTO)
         {
             if(communityTransferDTO == null)
