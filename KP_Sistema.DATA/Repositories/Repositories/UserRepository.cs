@@ -26,8 +26,8 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             //Option #2
             await _dbContext.Database.ExecuteSqlAsync(
                 $"""
-                INSERT INTO Users (username, passwordHash, communityId, community, roleId, role) 
-                VALUES({user.Username}, {user.PasswordHash}, {user.CommunityId}, {user.Community}, {user.RoleId}, {user.Role})
+                INSERT INTO Users (username, email, passwordHash, communityId, roleId) 
+                VALUES({user.Username}, {user.Email}, {user.PasswordHash}, {user.CommunityId}, {user.RoleId})
                 """
                 );
 

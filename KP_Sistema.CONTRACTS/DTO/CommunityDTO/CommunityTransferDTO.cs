@@ -12,6 +12,7 @@ namespace KP_Sistema.CONTRACTS.DTO.CommunityDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Address { get; set; }
         public ICollection<UtilityTaskTransferDTO>? UtilityTasks { get; set; }
         public ICollection<UserTransferDTO>? Users { get; set; }
     }

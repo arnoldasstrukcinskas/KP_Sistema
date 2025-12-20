@@ -13,5 +13,6 @@ namespace KP_Sistema.BLL.Interfaces.Users
         Task<UserReturnDTO> GetUserByUsername(string username);
         Task<UserReturnDTO> EditUser(UserTransferDTO userEditDTO);
         Task<UserReturnDTO> DeleteUser(string username);
+        Task<String> GetUserPassword(string username);
     }
 }

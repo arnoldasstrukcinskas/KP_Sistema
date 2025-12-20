@@ -1,4 +1,5 @@
 ﻿@page "/communities/edit"
+@inject HttpClient Http
 
 <PageTitle>Edit Community - Community Utility Services</PageTitle>
 
@@ -24,267 +25,119 @@
                         <div class="mb-4">
                             <h4 class="text-primary mb-3">
                                 <i class="bi bi-info-circle me-2"></i>
-                                Basic Information
+                                Find community
                             </h4>
                             <hr class="mb-4">
 
-                            <div class="row">
+                            <div class="col">
                                 <div class="col-md-6 mb-3">
                                     <label for="communityName" class="form-label">
                                         Community Name <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text"
+                                    <input 
+                                           type="text"
+                                           @bind="input"
                                            class="form-control"
                                            id="communityName"
                                            placeholder="e.g., Greenwood Estates"
                                            required>
                                 </div>
-
-                                @*         <div class="col-md-6 mb-3">
-                                    <label for="communityCode" class="form-label">
-                                        Community Code <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text"
-                                           class="form-control"
-                                           id="communityCode"
-                                           placeholder="e.g., GRW-EST-001"
-                                           required>
-                                    <div class="form-text">Unique identifier for the community</div>
+                                <div class="col-md-6 mb-3">
+                                    <button type="button" class="btn btn-primary w-50" @onclick=LoadData">
+                                        <i class="bi bi-check-circle me-1"></i> Find
+                                    </button>
                                 </div>
                             </div>
-
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Description</label>
-                                <textarea class="form-control"
-                                          id="description"
-                                          rows="3"
-                                          placeholder="Enter a brief description of the community"></textarea>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label for="communityType" class="form-label">
-                                        Community Type <span class="text-danger">*</span>
-                                    </label>
-                                    <select class="form-select" id="communityType" required>
-                                        <option value="">Select type...</option>
-                                        <option value="residential">Residential</option>
-                                        <option value="commercial">Commercial</option>
-                                        <option value="mixed">Mixed Use</option>
-                                        <option value="industrial">Industrial</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <label for="totalUnits" class="form-label">
-                                        Total Units <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="number"
-                                           class="form-control"
-                                           id="totalUnits"
-                                           placeholder="e.g., 150"
-                                           min="1"
-                                           required>
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <label for="establishedDate" class="form-label">
-                                        Established Date
-                                    </label>
-                                    <input type="date"
-                                           class="form-control"
-                                           id="establishedDate">
-                                </div>
-                            </div>
-                        </div> 
-
+                        </div>
+                               
                         <!-- Location Information Section -->
                         <div class="mb-4">
                             <h4 class="text-primary mb-3">
                                 <i class="bi bi-geo-alt me-2"></i>
-                                Location Information
+                                Edit community with Id - @community.Id
                             </h4>
                             <hr class="mb-4">
 
-                            <div class="mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label for="address" class="form-label">
-                                    Street Address <span class="text-danger">*</span>
+                                    Community Name <span class="text-danger">*</span>
                                 </label>
                                 <input type="text"
+                                       @bind="communityName"
                                        class="form-control"
-                                       id="address"
+                                       id="communityName"
                                        placeholder="e.g., 123 Main Street"
                                        required>
                             </div>
 
-                            <div class="row">
+                            <div class="col">
                                 <div class="col-md-6 mb-3">
                                     <label for="city" class="form-label">
-                                        City <span class="text-danger">*</span>
+                                        Address <span class="text-danger">*</span>
                                     </label>
                                     <input type="text"
+                                        @bind="communityAddress"
                                            class="form-control"
-                                           id="city"
-                                           placeholder="e.g., Springfield"
+                                           id="address"
+                                           placeholder="e.g., Kaunas, Gatviu g. 1-5"
                                            required>
                                 </div>
+                                <div class="container mb-4">
+                                    <div class="card communities-table border-0 shadow-sm">
+                                        <div class="card-header bg-white py-3">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h5 class="mb-0">
+                                                    <i class="bi bi-gear-fill text-primary me-2"></i>
+                                                    @community.Name Users
+                                                </h5>
+                                            </div>
+                                        </div>
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover mb-0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Id</th>
+                                                                <th>Username</th>
+                                                                <th>Email</th>
+                                                                <th>Role</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
 
-                                <div class="col-md-3 mb-3">
-                                    <label for="state" class="form-label">
-                                        State/Province <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text"
-                                           class="form-control"
-                                           id="state"
-                                           placeholder="e.g., CA"
-                                           required>
-                                </div>
-
-                                <div class="col-md-3 mb-3">
-                                    <label for="zipCode" class="form-label">
-                                        ZIP/Postal Code <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text"
-                                           class="form-control"
-                                           id="zipCode"
-                                           placeholder="e.g., 12345"
-                                           required>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="country" class="form-label">
-                                    Country <span class="text-danger">*</span>
-                                </label>
-                                <select class="form-select" id="country" required>
-                                    <option value="">Select country...</option>
-                                    <option value="US">United States</option>
-                                    <option value="CA">Canada</option>
-                                    <option value="UK">United Kingdom</option>
-                                    <option value="AU">Australia</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Contact Information Section -->
-                        <div class="mb-4">
-                            <h4 class="text-primary mb-3">
-                                <i class="bi bi-telephone me-2"></i>
-                                Contact Information
-                            </h4>
-                            <hr class="mb-4">
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="contactName" class="form-label">
-                                        Contact Person Name <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text"
-                                           class="form-control"
-                                           id="contactName"
-                                           placeholder="e.g., John Smith"
-                                           required>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="contactEmail" class="form-label">
-                                        Contact Email <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="email"
-                                           class="form-control"
-                                           id="contactEmail"
-                                           placeholder="e.g., contact@community.com"
-                                           required>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="contactPhone" class="form-label">
-                                        Phone Number <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="tel"
-                                           class="form-control"
-                                           id="contactPhone"
-                                           placeholder="e.g., (555) 123-4567"
-                                           required>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="altPhone" class="form-label">
-                                        Alternative Phone
-                                    </label>
-                                    <input type="tel"
-                                           class="form-control"
-                                           id="altPhone"
-                                           placeholder="e.g., (555) 987-6543">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Additional Settings Section -->
-                        <div class="mb-4">
-                            <h4 class="text-primary mb-3">
-                                <i class="bi bi-gear me-2"></i>
-                                Additional Settings
-                            </h4>
-                            <hr class="mb-4">
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="managementCompany" class="form-label">
-                                        Management Company
-                                    </label>
-                                    <input type="text"
-                                           class="form-control"
-                                           id="managementCompany"
-                                           placeholder="e.g., ABC Management Inc.">
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="taxId" class="form-label">
-                                        Tax ID / EIN
-                                    </label>
-                                    <input type="text"
-                                           class="form-control"
-                                           id="taxId"
-                                           placeholder="e.g., 12-3456789">
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input"
-                                           type="checkbox"
-                                           id="isActive"
-                                           checked>
-                                    <label class="form-check-label" for="isActive">
-                                        <strong>Active Status</strong>
-                                        <div class="form-text">Community is active and accepting new residents</div>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input"
-                                           type="checkbox"
-                                           id="allowOnlinePayments"
-                                           checked>
-                                    <label class="form-check-label" for="allowOnlinePayments">
-                                        <strong>Allow Online Payments</strong>
-                                        <div class="form-text">Enable residents to pay bills online</div>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="notes" class="form-label">Internal Notes</label>
-                                <textarea class="form-control"
-                                          id="notes"
-                                          rows="3"
-                                          placeholder="Add any internal notes or comments about this community"></textarea>
+                                                        @if (community != null && community.Users.Any())
+                                                        {
+                                                            foreach (var user in community.Users)
+                                                            {
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>@user.Id</td>
+                                                                        <td>
+                                                                            <i class="bi bi-droplet-fill text-primary me-2"></i>
+                                                                            <strong>@user.Username</strong>
+                                                                        </td>
+                                                                        <td><span class="badge bg-success">@user.Mail</span></td>
+                                                                        <td><span class="badge bg-success">@user.Role</span></td>
+                                                                        <td>
+                                                                            <button @onclick=" () => RemoveUserById(user.Id)" class="btn btn-sm btn-outline-danger">Delete</button>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <tbody>
+                                                                <tr>
+                                                                    <p class="text-warning mb-0"> Communities not found or missing name </p>
+                                                                </tr>
+                                                            </tbody>
+                                                        }
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                  </div>
                             </div>
                         </div>
 
@@ -299,31 +152,62 @@
                                 </button>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="bi bi-check-circle me-1"></i> Save Community
-                                </button> *@
+                                </button>
                             </div>
                         </div>
                     </form>
                 </div>
-            </div>
-
-            @* <!-- Help Card -->
-            <div class="card border-0 shadow-sm mt-4 bg-light">
-                <div class="card-body">
-                    <div class="d-flex align-items-start">
-                        <div class="me-3">
-                            <i class="bi bi-info-circle-fill text-primary" style="font-size: 2rem;"></i>
-                        </div>
-                        <div>
-                            <h5 class="mb-2">Need Help?</h5>
-                            <p class="text-muted mb-0">
-                                Fields marked with <span class="text-danger">*</span> are required.
-                                Make sure all information is accurate before saving.
-                                You can edit this information later from the community management page.
-                            </p>
+                @if (!string.IsNullOrWhiteSpace(alertMessage))
+                {
+                    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center alert-bg">
+                        <div class="bg-white rounded shadow p-4" style="max-width: 500px; width: 90%;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>@alertMessage</span>
+                                <button type="button" class="btn btn-primary" @onclick="() => LoadData()">Close</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div> *@
+                }
+            </div>
         </div>
     </div>
 </div>
+
+@code{
+    private string input;
+    private string communityName;
+    private string communityAddress;
+    private string? alertMessage;
+    private CommunityTransferDTO? community = new CommunityTransferDTO
+    {
+        Id = 0,
+        Name = "",
+        Address = "",
+        Users = new List<UserTransferDTO>(),
+        UtilityTasks = new List<UtilityTaskTransferDTO>()
+    };
+
+    async Task LoadData()
+    {
+        alertMessage = null;
+
+        var response = await Http.GetFromJsonAsync<CommunityTransferDTO>($"/Community/name?name={input}");
+
+        if(community == null)
+        {
+            alertMessage = $"There are no users in this community.";
+        } else
+        {
+            community = response;
+            communityName = community.Name;
+            communityAddress = community.Address;
+        }
+    }
+
+    async Task RemoveUserById(int id)
+    {
+        alertMessage = null;
+
+
+    }
+}

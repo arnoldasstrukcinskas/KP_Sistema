@@ -16,5 +16,6 @@ namespace KP_Sistema.DATA
         public DbSet<Community> Communities { get; set; }
         public DbSet<UtilityTask> UtilityTasks { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
     }
 }

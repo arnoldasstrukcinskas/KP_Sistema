@@ -24,8 +24,16 @@ namespace KP_Sistema.BLL.Services.Users
 
         public async Task<UserReturnDTO> AddUser(UserCreateDTO userCreateDTO)
         {
-            var user = _mapper.Map<User>(userCreateDTO);
-            var createdUser = await _userRepository.AddUser(user);
+            User newUser = new User
+            {
+                Username = userCreateDTO.Username,
+                PasswordHash = userCreateDTO.Password,
+                Email = userCreateDTO.Mail,
+                CommunityId = null,
+                RoleId = 1,
+            };
+
+            var createdUser = await _userRepository.AddUser(newUser);
 
             return _mapper.Map<UserReturnDTO>(createdUser);
         }
@@ -50,6 +58,13 @@ namespace KP_Sistema.BLL.Services.Users
             var editedUser = await _userRepository.EditUser(user);
 
             return _mapper.Map<UserReturnDTO>(editedUser);
+        }
+
+        public async Task<String> GetUserPassword(string username)
+        {
+            var user = await _userRepository.GetUserByUsername(username);
+
+            return user.PasswordHash;
         }
     }
 }

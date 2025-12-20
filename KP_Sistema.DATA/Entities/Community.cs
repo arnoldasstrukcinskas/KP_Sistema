@@ -17,6 +17,7 @@ namespace KP_Sistema.DATA.Entities
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
+        public string Address { get; set; }
         public ICollection<UtilityTask> UtilityTasks { get; set; } = new List<UtilityTask>();
         public ICollection<User> Users { get; set; } = new List<User>();
     }

@@ -28,8 +28,8 @@ namespace KP_Sistema.DATA.Repositories.Repositories
 
            await _dbContext.Database.ExecuteSqlAsync(
                 $"""
-                INSERT INTO Communities (Name) 
-                VALUES ({community.Name})
+                INSERT INTO Communities (Name, Address) 
+                VALUES ({community.Name}, {community.Address})
                 """);
 
             var createdCommunity = await GetCommunityByName(community.Name);

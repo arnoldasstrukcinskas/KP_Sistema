@@ -29,6 +29,10 @@ namespace KP_Sistema.DATA.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -46,12 +50,13 @@ namespace KP_Sistema.DATA.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Name")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role");
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("KP_Sistema.DATA.Entities.User", b =>
@@ -62,7 +67,7 @@ namespace KP_Sistema.DATA.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CommunityId")
+                    b.Property<int?>("CommunityId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -122,9 +127,7 @@ namespace KP_Sistema.DATA.Migrations
                 {
                     b.HasOne("KP_Sistema.DATA.Entities.Community", "Community")
                         .WithMany("Users")
-                        .HasForeignKey("CommunityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CommunityId");
 
                     b.HasOne("KP_Sistema.DATA.Entities.Role", "Role")
                         .WithMany()

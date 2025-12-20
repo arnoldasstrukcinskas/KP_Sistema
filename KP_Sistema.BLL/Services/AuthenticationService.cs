@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using KP_Sistema.BLL.Exceptions.Authentication;
 using KP_Sistema.BLL.Interfaces;
+using KP_Sistema.BLL.Interfaces.Users;
 using KP_Sistema.CONTRACTS.DTO.UserDTO;
 using KP_Sistema.DATA.Entities;
-using KP_Sistema.DATA.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,18 +15,18 @@ namespace KP_Sistema.BLL.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public AuthenticationService(IUserRepository userRepository, IMapper mapper)
+        public AuthenticationService(IUserService userService, IMapper mapper)
         {
-            _userRepository = userRepository;
+            _userService = userService;
             _mapper = mapper;
         }
 
         public async Task<UserReturnDTO?> Login(string username, string password)
         {
-            User? user = await _userRepository.GetUserByUsername(username);
+            UserReturnDTO? user = await _userService.GetUserByUsername(username);
 
             if(user == null)
             {
@@ -34,8 +34,9 @@ namespace KP_Sistema.BLL.Services
             }
 
             string hash = HashPassword(password);
+            string userPassword = await _userService.GetUserPassword(user.Username);
 
-            if(!user.PasswordHash.Equals(hash))
+            if(!userPassword.Equals(hash))
             {
                 throw new UserAuthenticationException("Authentication forbidden, wrong username or password");
             }
@@ -47,26 +48,17 @@ namespace KP_Sistema.BLL.Services
 
         public async Task<UserReturnDTO> Register(UserCreateDTO userCreateDTO)
         {
-            User? user = await _userRepository.GetUserByUsername(userCreateDTO.Username);
+            UserReturnDTO? user = await _userService.GetUserByUsername(userCreateDTO.Username);
 
             if (user != null)
             {
                 throw new UserAuthenticationRegistrationFailedException("Registration failed, something went wront.");
             }
+            userCreateDTO.Password = HashPassword(userCreateDTO.Password);
 
-            User newUser = new User
-            {
-                Username = userCreateDTO.Username,
-                PasswordHash = HashPassword(userCreateDTO.Password),
-                Email = userCreateDTO.Username,
-                CommunityId = null,
-                Community = null,
-                RoleId = 1,
-                Role = new Role { Id = 1, Name = "User"}
-            };
-            var createdUser = await _userRepository.AddUser(user);
+            var createdUser = await _userService.AddUser(userCreateDTO);
 
-            return _mapper.Map<UserReturnDTO>(createdUser);
+            return createdUser;
         }
 
         private string HashPassword(string password)
