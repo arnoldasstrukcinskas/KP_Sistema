@@ -34,8 +34,8 @@ services:
           MYSQL_DATABASE: kpsistema   
           MYSQL_USER: kpsistema     
           MYSQL_PASSWORD: root  
-      # volumes:
-        # - ./KP_Sistema.API/database/kpsistema_dump.sql:/docker-entrypoint-initdb.d/kpsistema_dump.sql
+      volumes:
+        - ./KP_Sistema.API/database/kp_sistema_dump.sql:/docker-entrypoint-initdb.d/kp_sistema_dump.sql
       ports:
         - "3306:3306"
       healthcheck:
