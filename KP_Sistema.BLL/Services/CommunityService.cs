@@ -33,6 +33,13 @@ namespace KP_Sistema.BLL.Services
                 throw new CommunityException("There is no data for creating community.");
             }
 
+            var foundCommunity = await GetCommunityByNameAsync<CommunityReturnDTO>(communityCreateDTO.Name);
+            
+            if(foundCommunity != null)
+            {
+                throw new CommunityException($"Community with name {communityCreateDTO.Name} already exists.");
+            }
+
             var createdCommunity = await _communityRepository.AddCommunityAsync(community);
 
             return _mapper.Map<CommunityReturnDTO>(createdCommunity);
