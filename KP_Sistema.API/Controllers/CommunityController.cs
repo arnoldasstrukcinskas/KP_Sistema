@@ -184,6 +184,84 @@ namespace KP_Sistema.API.Controllers
 
             return Ok(community);
         }
+
+        /// <summary>
+        /// Adds utility task to specified community.
+        /// </summary>
+        /// <param name="communityId">Write community Id</param>
+        /// <param name="taskId">Write Task Id</param>
+        /// <returns>Returns community where was added Task</returns>
+        [HttpPost("AddTask/{communityId}/{taskId}")]
+        public async Task<IActionResult> AddUtilityTaskToCommunity(int communityId, int taskId)
+        {
+            var community = await _communityService.AddUtilityTaskToCommunity(communityId, taskId);
+
+            if(community == null)
+            {
+                return BadRequest("Controller: Failed to add utilityTask to communtiy.");
+            }
+
+            return Ok(community);
+        }
+
+        /// <summary>
+        /// Deletes task from specified community.
+        /// </summary>
+        /// <param name="communityId">Write community Id</param>
+        /// <param name="taskId">Write Task Id</param>
+        /// <returns>Returns community where was deleted Task</returns>
+        [HttpPost("RemoveTask/{communityId}/{taskId}")]
+        public async Task<IActionResult> RemoveUtilityTaskFromCommunity(int communityId, int taskId)
+        {
+            var community = await _communityService.DeleteUtilityTaskFromCommunity(communityId, taskId);
+
+            if(community == null)
+            {
+                return BadRequest("Controller: Failed to remove utility task from community");
+            }
+
+            return Ok(community);
+        }
+
+        /// <summary>
+        /// Gets users in specific community
+        /// </summary>
+        /// <param name="Id">Write community id</param>
+        /// <returns>Returns Users from specific community</returns>
+        [HttpGet("Users/{id:int}")]
+        public async Task<IActionResult> GetUsersFromCommunity(int userId)
+        {
+            var communtiy = await _communityService.GetCommunityByIdAsync<CommunityTransferDTO>(userId);
+
+            var users = communtiy.Users;
+
+            if (users.IsNullOrEmpty())
+            {
+                return BadRequest($"There are no users in {communtiy.Name}!");
+            }
+
+            return Ok(users);
+        }
+
+        /// <summary>
+        /// Returns all tasks from database by community Id
+        /// </summary>
+        /// <param name="communityId">Id of community</param>
+        /// <returns>Returns list of Utility Tasks in specified community</returns>
+        [HttpGet("Tasks/{id:int}")]
+        public async Task<IActionResult> GetUtilityTasksFromCommunityById(int communityId)
+        {
+            var community = await _communityService.GetCommunityByIdAsync<CommunityTransferDTO>(communityId);
+
+            var tasks = community.UtilityTasks;
+
+            if (tasks == null)
+            {
+                return BadRequest("Controller: There are no tasks");
+            }
+
+            return Ok(tasks);
+        }
     }
 
 }

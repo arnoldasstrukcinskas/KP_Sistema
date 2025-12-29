@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using KP_Sistema.BLL.Interfaces;
+using KP_Sistema.CONTRACTS.DTO.CommunityDTO;
 using KP_Sistema.CONTRACTS.DTO.UtilityTaskDTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -39,15 +40,15 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="Id">Id of utility task.</param>
         /// <returns>Data transfer object of found utility task</returns>
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetUtilityTaskById(int id)
+        [HttpGet("Task/{id:int}")]
+        public async Task<IActionResult> GetUtilityTaskByTaskId(int taskId)
         {
-            if(id < 1)
+            if(taskId < 1)
             {
                 return BadRequest("Controller: There is problem with given id");
             }
 
-            var utilityTask = await _utilityTaskService.GetUtilityTaskByIdAsync<UtilityTaskReturnDTO>(id);
+            var utilityTask = await _utilityTaskService.GetUtilityTaskByIdAsync<UtilityTaskReturnDTO>(taskId);
 
             return Ok(utilityTask);
         }
@@ -106,17 +107,21 @@ namespace KP_Sistema.API.Controllers
             return Ok(utilityTask);
         }
 
-        [HttpGet("community/{communityName}")]
-        public async Task<IActionResult> GetAllUtilityTasksByCommunityName(string communityName)
+        /// <summary>
+        /// Returns all tasks from database
+        /// </summary>
+        /// <returns>Returns list of Utility Tasks in database</returns>
+        [HttpGet("Tasks")]
+        public async Task<IActionResult> GetAllUtilityTasks()
         {
-            if(communityName.IsNullOrEmpty())
+            var tasks = _utilityTaskService.GetAllUtilityTasks();
+            
+            if(tasks == null)
             {
-                return BadRequest("\"Controller: name is not given.\"");
+                return BadRequest("Controller: Something wrong with getting tasks");
             }
 
-            var utilityTasks = await _utilityTaskService.GetAllUtilityTasksByCommunityAsync(communityName);
-
-            return Ok(utilityTasks);
+            return Ok(tasks);
         }
     }
 }

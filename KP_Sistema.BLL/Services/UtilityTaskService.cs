@@ -114,24 +114,16 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<UtilityTaskReturnDTO>(deletedUtilityTask);
         }
 
-        public async Task<List<UtilityTaskReturnDTO>?> GetAllUtilityTasksByCommunityAsync(string communityName)
+        public async Task<List<UtilityTaskReturnDTO>> GetAllUtilityTasks()
         {
-            var communityTransferDTO = await _communityService.GetCommunityByNameAsync<CommunityTransferDTO>(communityName);
+            var tasks = await _utilityTaskRepository.GetAllUtilityTasks();
 
-            if(communityTransferDTO == null)
+            if(tasks != null || tasks.Any())
             {
-                throw new CommunityNotFoundException(communityName);
+                throw new UtilityTaskException("There is no tasks in database");
             }
 
-            var community = _mapper.Map<Community>(communityTransferDTO);
-
-            var utilityTasks = await _utilityTaskRepository.GetAllUtilityTasksByCommunity(community);
-
-            var returnUtilityTasks = utilityTasks
-                .Select(utilityTask => _mapper.Map<UtilityTaskReturnDTO>(utilityTask))
-                .ToList();
-
-            return returnUtilityTasks;
+            return _mapper.Map<List<UtilityTaskReturnDTO>>(tasks);
         }
 
         //method for internal use

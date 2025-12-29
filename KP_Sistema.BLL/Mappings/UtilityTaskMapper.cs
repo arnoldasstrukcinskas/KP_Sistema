@@ -17,7 +17,7 @@ namespace KP_Sistema.BLL.Mappings
             CreateMap<UtilityTask, UtilityTaskTransferDTO>()
                 .ForMember(destination => destination.CommunityName, option => option.MapFrom(source => source.Community.Name));
             CreateMap<UtilityTask, UtilityTaskReturnDTO>()
-                .ForMember(destination => destination.CommunityName, option => option.MapFrom(source => source.Community.Name));
+                .ForMember(destination => destination.Name, option => option.MapFrom(source => source.Community.Name));
             CreateMap<UtilityTaskTransferDTO, UtilityTaskReturnDTO>();
             CreateMap<UtilityTaskTransferDTO, UtilityTask>();
             

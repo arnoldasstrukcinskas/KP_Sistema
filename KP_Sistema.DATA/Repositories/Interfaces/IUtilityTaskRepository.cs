@@ -14,6 +14,6 @@ namespace KP_Sistema.DATA.Repositories.Interfaces
         Task<UtilityTask?> GetUtilityTaskByName(string name);
         Task<UtilityTask> EditUtilityTask(UtilityTask utilityTask);
         Task<UtilityTask> DeleteUtilityTask(UtilityTask utilityTask);
-        Task<List<UtilityTask>> GetAllUtilityTasksByCommunity(Community community);
+        Task<List<UtilityTask>> GetAllUtilityTasks();
     }
 }

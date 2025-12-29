@@ -168,6 +168,40 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<CommunityReturnDTO>(editedCommunity);
         }
 
+        public async Task<CommunityReturnDTO> AddUtilityTaskToCommunity(int communityId, int taskId)
+        {
+            var community = await GetCommunityByIdAsync(communityId);
+            Community editedCommunity;
+
+            if(!community.UtilityTasks.Any(task => task.Id == taskId))
+            {
+                editedCommunity = await _communityRepository.AddUtilityTaskToCommunity(communityId, taskId);
+            }
+            else
+            {
+                throw new CommunityException($"Such task with id: {taskId} already added.");
+            }
+
+            return _mapper.Map<CommunityReturnDTO>(editedCommunity);
+        }
+
+        public async Task<CommunityReturnDTO> DeleteUtilityTaskFromCommunity(int communityId, int taskId)
+        {
+            var community = await GetCommunityByIdAsync(communityId);
+            Community editedCommunity;
+
+            if(community.UtilityTasks.Any(task => task.Id == taskId))
+            {
+                editedCommunity = await _communityRepository.DeleteUtilityTaskFromCommunity(communityId, taskId);
+            }
+            else
+            {
+                throw new CommunityException($"There is no such task with id: {taskId}");
+            }
+
+            return _mapper.Map<CommunityReturnDTO>(editedCommunity);
+        }
+
         //Method for internal use
         private async Task<Community> GetCommunityByIdAsync(int id)
         {

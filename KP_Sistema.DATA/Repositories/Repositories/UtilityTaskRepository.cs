@@ -100,20 +100,11 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             return utilityTask;
         }
 
-        public async Task<List<UtilityTask>> GetAllUtilityTasksByCommunity(Community community)
+        public async Task<List<UtilityTask>> GetAllUtilityTasks()
         {
-            //Option #1
-            //var utilityTasks = await _dbContext.UtilityTasks.ToListAsync();
+            var tasks = await _dbContext.UtilityTasks.ToListAsync();
 
-            //Option #2
-            var utilityTasks = await _dbContext.UtilityTasks.FromSqlInterpolated(
-                $"""
-                SELECT * FROM UtilityTasks WHERE communityId = {community.Id}
-                """)
-                .Include(UtilityTask => UtilityTask.Community)
-                .ToListAsync();
-
-            return utilityTasks;
+            return tasks;
         }
     }
 }

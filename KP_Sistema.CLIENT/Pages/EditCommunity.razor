@@ -96,7 +96,7 @@
                         </div>
                     </form>
                     @* Form Ends *@
-                    @* Start of Table? *@
+                    @* Start of Users Table *@
                     <div class="container mb-4">
                         <div class="card communities-table border-0 shadow-sm">
                             <div class="card-header bg-white py-3">
@@ -180,6 +180,92 @@
                             </div>
                         </div>
                     </div>
+                    @* End of Users Table *@
+                    @* Start of UtilityServices Table *@
+                    <div class="container mb-4">
+                        <div class="card communities-table border-0 shadow-sm">
+                            <div class="card-header bg-white py-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <i class="bi bi-gear-fill text-primary me-2"></i>
+                                        Services - @taskFlag
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Name</th>
+                                                <th>Description</th>
+                                                <th>Price</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+
+                                        @if (utilityTasks != null && utilityTasks.Any())
+                                        {
+                                            foreach (var task in utilityTasks)
+                                            {
+                                                <tbody>
+                                                    <tr>
+                                                        <td>@task.Id</td>
+                                                        <td>
+                                                            <i class="bi bi-droplet-fill text-primary me-2"></i>
+                                                            <strong>@task.Name</strong>
+                                                        </td>
+                                                        <td><span class="badge bg-success">@task.Description</span></td>
+                                                        <td><span class="badge bg-success">@task.Price $</span></td>
+                                                        <td>
+                                                            @if (taskFlag == "community")
+                                                            {
+                                                                <button @onclick=" () => RemoveUtilityTaskFromCommunity(community.Id, task.Id)" class="btn btn-sm btn-outline-danger">
+                                                                    Remove
+                                                                </button>
+                                                            }
+                                                            else if (taskFlag == "all")
+                                                            {
+                                                                <button @onclick=" () => AddUtilityTaskToCommunity(community.Id ,task.Id)" class="btn btn-sm btn-outline-success">
+                                                                    Add
+                                                                </button>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tbody>
+                                                <tr>
+                                                    <p class="text-warning mb-0"> Task not found or missing name </p>
+                                                </tr>
+                                            </tbody>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-6 text-center">
+                                        <button class="btn btn-primary w-75"
+                                                @onclick=" () => LoadAllTasks()">
+                                            All Tasks
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <button class="btn btn-primary w-75"
+                                                @onclick=" () => LoadCommunityTasks(community.Id)">
+                                            Community Tasks
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @* End of UtilityServices Table *@
                 </div>
                 @if (!string.IsNullOrWhiteSpace(alertMessage))
                 {
@@ -203,8 +289,9 @@
     private string communityAddress;
     private string? alertMessage;
     private string? usersFlag;
-    private string? tableText;
+    private string? taskFlag;
     private List<UserTransferDTO> users;
+    private List<UtilityTaskReturnDTO> utilityTasks;
     private CommunityTransferDTO? community = new CommunityTransferDTO
     {
         Id = 0,
@@ -232,6 +319,26 @@
         }
     }
 
+    async Task ChangeCommunityData(int communityId)
+    {
+        CommunityEditDTO communityEditDto = new CommunityEditDTO
+        {
+            Name = communityName,
+            Address = communityAddress
+        };
+
+        var response = await Http.PutAsJsonAsync($"/Community/id?id={communityId}", communityEditDto);
+
+        if (response.IsSuccessStatusCode)
+        {
+            alertMessage = $"Community with id: {communityId} succesfully edited";
+        }
+        else
+        {
+            alertMessage = $"Failed to edit community with id: {communityId}";
+        }
+    }
+
     async Task RemoveUserById(int id)
     {
         alertMessage = null;
@@ -247,12 +354,10 @@
         if (response != null && response.Any())
         {
             users = response;
-            tableText = "All Users";
         }
         else
         {
             alertMessage = "There are no users";
-            tableText = "";
 
         }
     }
@@ -261,17 +366,15 @@
     {
         usersFlag = "community";
         users = null;
-        var response = await Http.GetFromJsonAsync<List<UserTransferDTO>>($"/User/{id}");
+        var response = await Http.GetFromJsonAsync<List<UserTransferDTO>>($"/Community/Users/{id}");
 
         if (response != null && response.Any())
         {
             users = response;
-            tableText = $"Users - {community.Name}";
         }
         else
         {
             alertMessage = "There are no users";
-            tableText = "";
         }
     }
 
@@ -310,23 +413,73 @@
         await LoadCommunityUsers(communityId);
     }
 
-    async Task ChangeCommunityData(int communityId)
+    async Task LoadAllTasks()
     {
-        CommunityEditDTO communityEditDto = new CommunityEditDTO
-            {
-                Name = communityName,
-                Address = communityAddress
-            };
+        taskFlag = "all";
+        utilityTasks = null;
 
-        var response = await Http.PutAsJsonAsync($"/Community/id?id={communityId}", communityEditDto);
+        var response = await Http.GetFromJsonAsync<List<UtilityTaskReturnDTO>>($"/UtilityTask/Tasks");
 
-        if(response.IsSuccessStatusCode)
+        if(response != null)
         {
-            alertMessage = $"Community with id: {communityId} succesfully edited";
+            utilityTasks = response;
         }
-        else 
+        else
         {
-            alertMessage = $"Failed to edit community with id: {communityId}";
+            alertMessage = "There are no Utility Services";
         }
     }
+
+    async Task LoadCommunityTasks(int communityId)
+    {
+        taskFlag = "community";
+        utilityTasks = null;
+
+        var response = await Http.GetFromJsonAsync<List<UtilityTaskReturnDTO>>($"/Community/Tasks/id?id={communityId}");
+
+        if(response != null)
+        {
+            utilityTasks = response;
+        }
+        else
+        {
+            alertMessage = $"There are no Utility Services in community with id: {communityId}";
+        }
+    }
+
+    async Task AddUtilityTaskToCommunity(int communityId, int taskId)
+    {
+        utilityTasks = null;
+        var response = await Http.PostAsJsonAsync<CommunityReturnDTO>($"/Community/AddTask/{communityId}/{taskId}", null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            alertMessage = $"Task with id: {taskId} succesfulyl added";
+        }
+        else
+        {
+            alertMessage = "Failed to add Task";
+        }
+
+        await LoadAllTasks();
+    }
+
+    async Task RemoveUtilityTaskFromCommunity(int communityId, int taskId)
+    {
+        utilityTasks = null;
+        var response = await Http.PostAsJsonAsync<CommunityReturnDTO>($"/Community/RemoveTask/{communityId}/{taskId}", null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            alertMessage = $"Task with id: {taskId} succesfully deleted";
+        }
+        else
+        {
+            alertMessage = "Failed to delete Task";
+        }
+
+        await LoadCommunityTasks(communityId);
+    }
+
+   
 }

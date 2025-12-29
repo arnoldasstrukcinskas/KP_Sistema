@@ -19,5 +19,7 @@ namespace KP_Sistema.BLL.Interfaces
 
         Task<CommunityReturnDTO> AddUserToCommunity(int communityId, int userId);
         Task<CommunityReturnDTO> DeleteUserFromCommunity(int communityId, int userId);
+        Task<CommunityReturnDTO> AddUtilityTaskToCommunity(int communityId, int taskId);
+        Task<CommunityReturnDTO> DeleteUtilityTaskFromCommunity(int communityId, int taskId);
     }
 }

@@ -11,12 +11,10 @@ namespace KP_Sistema.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ICommunityService _communityService;
 
-        public UserController(IUserService userService, ICommunityService communityService)
+        public UserController(IUserService userService)
         {
             _userService = userService;
-            _communityService = communityService;
         }
 
         /// <summary>
@@ -31,26 +29,6 @@ namespace KP_Sistema.API.Controllers
             if (users == null)
             {
                 return BadRequest("There are no users!");
-            }
-
-            return Ok(users);
-        }
-
-        /// <summary>
-        /// Gets users in specific community
-        /// </summary>
-        /// <param name="Id">Write community id</param>
-        /// <returns>Returns Users from specific community</returns>
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetUsersFromCommunity(int id)
-        {
-            var communtiy = await _communityService.GetCommunityByIdAsync<CommunityTransferDTO>(id);
-
-            var users = communtiy.Users;
-
-            if(users.IsNullOrEmpty())
-            {
-                return BadRequest($"There are no users in {communtiy.Name}!");
             }
 
             return Ok(users);
