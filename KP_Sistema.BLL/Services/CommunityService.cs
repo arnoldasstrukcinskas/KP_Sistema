@@ -75,14 +75,22 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<List<TDto>>(foundCommunities);
         }
 
-        public async Task<CommunityReturnDTO> EditCommunityAsync(CommunityTransferDTO communityTransferDTO)
+        public async Task<CommunityReturnDTO> EditCommunityAsync(int id, CommunityEditDTO communityEditDTO)
         {
-            if(communityTransferDTO == null)
+            if(communityEditDTO == null)
             {
-                throw new CommunityNotFoundException(communityTransferDTO.Name);
+                throw new CommunityException("There is no or not enough data.");
             }    
 
-            var community = _mapper.Map<Community>(communityTransferDTO);
+            var community = await GetCommunityByIdAsync(id);
+
+            if(community == null)
+            {
+                throw new CommunityNotFoundException("No such community.");
+            }
+
+            community.Name = communityEditDTO.Name;
+            community.Address = communityEditDTO.Address;
 
             var editedCommunity = await _communityRepository.EditCommunityAsync(community);
 
@@ -117,6 +125,40 @@ namespace KP_Sistema.BLL.Services
                 .ToList();
 
             return communitiesList;
+        }
+
+        public async Task<CommunityReturnDTO> AddUserToCommunity(int communityId, int userId)
+        {
+            var community = await GetCommunityByIdAsync(communityId);
+            Community editedCommunity;
+
+            if (!community.Users.Any(user => user.Id == userId))
+            {
+                editedCommunity = await _communityRepository.AddUserToCommunity(communityId, userId);
+            }
+            else
+            {
+                throw new CommunityException($"Such user with id:{userId} already added");
+            }
+
+            return _mapper.Map<CommunityReturnDTO>(editedCommunity);
+        }
+
+        public async Task<CommunityReturnDTO> DeleteUserFromCommunity(int communityId, int userId)
+        {
+            var community = await GetCommunityByIdAsync(communityId);
+            Community editedCommunity;
+
+            if(community.Users.Any(user => user.Id == userId))
+            {
+                editedCommunity = await _communityRepository.DeleteUserFromCommunity(communityId, userId);
+            }
+            else
+            {
+                throw new CommunityException($"There is no such user with id:{userId}");
+            }
+
+            return _mapper.Map<CommunityReturnDTO>(editedCommunity);
         }
 
         //Method for internal use

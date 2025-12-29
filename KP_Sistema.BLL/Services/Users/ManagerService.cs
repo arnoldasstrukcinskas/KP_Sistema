@@ -49,7 +49,7 @@ namespace KP_Sistema.BLL.Services.Users
 
             community.UtilityTasks.Add(utilityTransferTask);
 
-            var editedCommunity = await _communityService.EditCommunityAsync(community);
+            //var editedCommunity = await _communityService.EditCommunityAsync(community);
 
             return _mapper.Map<UtilityTaskReturnDTO>(utilityTransferTask);
         }

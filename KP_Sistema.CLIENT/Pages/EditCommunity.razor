@@ -34,8 +34,7 @@
                                     <label for="communityName" class="form-label">
                                         Community Name <span class="text-danger">*</span>
                                     </label>
-                                    <input 
-                                           type="text"
+                                    <input type="text"
                                            @bind="input"
                                            class="form-control"
                                            id="communityName"
@@ -49,7 +48,7 @@
                                 </div>
                             </div>
                         </div>
-                               
+
                         <!-- Location Information Section -->
                         <div class="mb-4">
                             <h4 class="text-primary mb-3">
@@ -76,86 +75,111 @@
                                         Address <span class="text-danger">*</span>
                                     </label>
                                     <input type="text"
-                                        @bind="communityAddress"
+                                           @bind="communityAddress"
                                            class="form-control"
                                            id="address"
                                            placeholder="e.g., Kaunas, Gatviu g. 1-5"
                                            required>
                                 </div>
-                                <div class="container mb-4">
-                                    <div class="card communities-table border-0 shadow-sm">
-                                        <div class="card-header bg-white py-3">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <h5 class="mb-0">
-                                                    <i class="bi bi-gear-fill text-primary me-2"></i>
-                                                    @community.Name Users
-                                                </h5>
-                                            </div>
-                                        </div>
-                                            <div class="card-body">
-                                                <div class="table-responsive">
-                                                    <table class="table table-hover mb-0">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Id</th>
-                                                                <th>Username</th>
-                                                                <th>Email</th>
-                                                                <th>Role</th>
-                                                                <th>Action</th>
-                                                            </tr>
-                                                        </thead>
-
-                                                        @if (community != null && community.Users.Any())
-                                                        {
-                                                            foreach (var user in community.Users)
-                                                            {
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>@user.Id</td>
-                                                                        <td>
-                                                                            <i class="bi bi-droplet-fill text-primary me-2"></i>
-                                                                            <strong>@user.Username</strong>
-                                                                        </td>
-                                                                        <td><span class="badge bg-success">@user.Mail</span></td>
-                                                                        <td><span class="badge bg-success">@user.Role</span></td>
-                                                                        <td>
-                                                                            <button @onclick=" () => RemoveUserById(user.Id)" class="btn btn-sm btn-outline-danger">Delete</button>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            <tbody>
-                                                                <tr>
-                                                                    <p class="text-warning mb-0"> Communities not found or missing name </p>
-                                                                </tr>
-                                                            </tbody>
-                                                        }
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                  </div>
-                            </div>
-                        </div>
-
-                        <!-- Form Actions -->
-                        <div class="border-top pt-4 mt-4">
-                            <div class="d-flex gap-2 justify-content-end">
-                                <a href="/communities" class="btn btn-outline-secondary">
-                                    <i class="bi bi-x-circle me-1"></i> Cancel
-                                </a>
-                                <button type="reset" class="btn btn-outline-primary">
-                                    <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
-                                </button>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-check-circle me-1"></i> Save Community
-                                </button>
+                                <!-- Form Actions -->
+                                <div class="border-top pt-4 mt-4">
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <button type="reset" class="btn btn-outline-primary">
+                                            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                                        </button>
+                                        <button type="button" class="btn btn-primary" @onclick="() => ChangeCommunityData(community.Id)">
+                                            <i class="bi bi-check-circle me-1"></i> Save Community
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>
+                    @* Form Ends *@
+                    @* Start of Table? *@
+                    <div class="container mb-4">
+                        <div class="card communities-table border-0 shadow-sm">
+                            <div class="card-header bg-white py-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <i class="bi bi-gear-fill text-primary me-2"></i>
+                                        Users - @community.Name
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Username</th>
+                                                <th>Email</th>
+                                                <th>Role</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+
+                                        @if (users != null && users.Any())
+                                        {
+                                            foreach (var user in users)
+                                            {
+                                                <tbody>
+                                                    <tr>
+                                                        <td>@user.Id</td>
+                                                        <td>
+                                                            <i class="bi bi-droplet-fill text-primary me-2"></i>
+                                                            <strong>@user.Username</strong>
+                                                        </td>
+                                                        <td><span class="badge bg-success">@user.Mail</span></td>
+                                                        <td><span class="badge bg-success">@user.Role</span></td>
+                                                        <td>
+                                                            @if (usersFlag == "community")
+                                                            {
+                                                                <button @onclick=" () => RemoveUserFromCommunity(community.Id, user.Id)" class="btn btn-sm btn-outline-danger">
+                                                                    Remove
+                                                                </button>
+                                                            }
+                                                            else if (usersFlag == "all")
+                                                            {
+                                                                <button @onclick=" () => AddUserToCommunity(community.Id ,user.Id)" class="btn btn-sm btn-outline-success">
+                                                                    Add
+                                                                </button>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tbody>
+                                                <tr>
+                                                    <p class="text-warning mb-0"> Users not found or missing name </p>
+                                                </tr>
+                                            </tbody>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-6 text-center">
+                                        <button class="btn btn-primary w-75"
+                                                @onclick=" () => LoadAllUsers()">
+                                            All Users
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <button class="btn btn-primary w-75"
+                                                @onclick=" () => LoadCommunityUsers(community.Id)">
+                                            Community Users
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 @if (!string.IsNullOrWhiteSpace(alertMessage))
                 {
@@ -163,7 +187,7 @@
                         <div class="bg-white rounded shadow p-4" style="max-width: 500px; width: 90%;">
                             <div class="d-flex justify-content-between align-items-center">
                                 <span>@alertMessage</span>
-                                <button type="button" class="btn btn-primary" @onclick="() => LoadData()">Close</button>
+                                <button type="button" class="btn btn-primary" @onclick="() => alertMessage = null">Close</button>
                             </div>
                         </div>
                     </div>
@@ -173,11 +197,14 @@
     </div>
 </div>
 
-@code{
+@code {
     private string input;
     private string communityName;
     private string communityAddress;
     private string? alertMessage;
+    private string? usersFlag;
+    private string? tableText;
+    private List<UserTransferDTO> users;
     private CommunityTransferDTO? community = new CommunityTransferDTO
     {
         Id = 0,
@@ -193,10 +220,11 @@
 
         var response = await Http.GetFromJsonAsync<CommunityTransferDTO>($"/Community/name?name={input}");
 
-        if(community == null)
+        if (response == null)
         {
             alertMessage = $"There are no users in this community.";
-        } else
+        }
+        else
         {
             community = response;
             communityName = community.Name;
@@ -208,6 +236,97 @@
     {
         alertMessage = null;
 
+    }
 
+    async Task LoadAllUsers()
+    {
+        usersFlag = "all";
+        users = null;
+        var response = await Http.GetFromJsonAsync<List<UserTransferDTO>>($"/User/Users");
+
+        if (response != null && response.Any())
+        {
+            users = response;
+            tableText = "All Users";
+        }
+        else
+        {
+            alertMessage = "There are no users";
+            tableText = "";
+
+        }
+    }
+
+    async Task LoadCommunityUsers(int id)
+    {
+        usersFlag = "community";
+        users = null;
+        var response = await Http.GetFromJsonAsync<List<UserTransferDTO>>($"/User/{id}");
+
+        if (response != null && response.Any())
+        {
+            users = response;
+            tableText = $"Users - {community.Name}";
+        }
+        else
+        {
+            alertMessage = "There are no users";
+            tableText = "";
+        }
+    }
+
+    async Task AddUserToCommunity(int communityId, int userId)
+    {
+        users = null;
+        var response = await Http.PostAsJsonAsync<CommunityReturnDTO>($"/Community/AddUser/{communityId}/{userId}", null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            alertMessage = $"User with id: {userId} succesfulyl added";
+        }
+        else
+        {
+            alertMessage = "Failed to add user";
+        }
+
+        await LoadAllUsers();
+    }
+
+    async Task RemoveUserFromCommunity(int communityId, int userId)
+    {
+        users = null;
+        var response = await Http.PostAsJsonAsync<CommunityReturnDTO>($"/Community/RemoveUser/{communityId}/{userId}", null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            alertMessage = $"User with id: {userId} succesfully deleted";
+        }
+        else
+        {
+            alertMessage = "Failed to delete user";
+        }
+
+
+        await LoadCommunityUsers(communityId);
+    }
+
+    async Task ChangeCommunityData(int communityId)
+    {
+        CommunityEditDTO communityEditDto = new CommunityEditDTO
+            {
+                Name = communityName,
+                Address = communityAddress
+            };
+
+        var response = await Http.PutAsJsonAsync($"/Community/id?id={communityId}", communityEditDto);
+
+        if(response.IsSuccessStatusCode)
+        {
+            alertMessage = $"Community with id: {communityId} succesfully edited";
+        }
+        else 
+        {
+            alertMessage = $"Failed to edit community with id: {communityId}";
+        }
     }
 }

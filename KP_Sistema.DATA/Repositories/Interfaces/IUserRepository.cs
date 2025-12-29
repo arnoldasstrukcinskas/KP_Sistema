@@ -14,5 +14,6 @@ namespace KP_Sistema.DATA.Repositories.Interfaces
         Task<User> EditUser(User user);
         Task<User> DeleteUser(User user);
         Task<User?> GetUserById(int id);
+        Task<List<User>> GetAllUsers();
     }
 }

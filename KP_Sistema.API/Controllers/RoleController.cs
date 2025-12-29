@@ -5,7 +5,7 @@ using System.Net.WebSockets;
 
 namespace KP_Sistema.API.Controllers
 {
-    [Route("controller")]
+    [Route("[controller]")]
     [ApiController]
     public class RoleController : ControllerBase
     {

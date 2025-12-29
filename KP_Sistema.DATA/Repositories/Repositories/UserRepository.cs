@@ -98,5 +98,12 @@ namespace KP_Sistema.DATA.Repositories.Repositories
 
             return user;
         }
+
+        public async Task<List<User>> GetAllUsers()
+        {
+            var users = await _dbContext.Users.ToListAsync();
+
+            return users;
+        }
     }
 }

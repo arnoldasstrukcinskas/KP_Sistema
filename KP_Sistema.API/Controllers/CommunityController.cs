@@ -26,7 +26,7 @@ namespace KP_Sistema.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCommunity([FromBody] CommunityCreateDTO communityCreateDTO)
         {
-            if(communityCreateDTO == null)
+            if (communityCreateDTO == null)
             {
                 return BadRequest("Controller: community is empty");
             }
@@ -44,7 +44,7 @@ namespace KP_Sistema.API.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetCommunityById(int id)
         {
-            if(id < 1)
+            if (id < 1)
             {
                 return BadRequest("Controller: There is problem with given id");
             }
@@ -62,7 +62,7 @@ namespace KP_Sistema.API.Controllers
         [HttpGet("name")]
         public async Task<IActionResult> GetCommunityByName([FromQuery] string name)
         {
-            if(name.IsNullOrEmpty())
+            if (name.IsNullOrEmpty())
             {
                 return BadRequest("Controller: name is not given.");
             }
@@ -81,7 +81,7 @@ namespace KP_Sistema.API.Controllers
         [HttpGet("search")]
         public async Task<IActionResult> GetCommunitiesByName([FromQuery] string name)
         {
-            if(name.IsNullOrEmpty())
+            if (name.IsNullOrEmpty())
             {
                 return BadRequest("Controller: name is not given.");
             }
@@ -96,15 +96,15 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="communityTransferDTO">Write community: id, name, UtilityTasks list, Users list</param>
         /// <returns>Returns found community data: id, name </returns>
-        [HttpPut]
-        public async Task<IActionResult> EditCommunity([FromBody] CommunityTransferDTO communityTransferDTO)
+        [HttpPut("id")]
+        public async Task<IActionResult> EditCommunity(int id, [FromBody] CommunityEditDTO communityEditDTO)
         {
-            if (communityTransferDTO == null)
+            if (communityEditDTO == null)
             {
                 return BadRequest("Controller: There is no data for editing community");
             }
 
-            var community = await _communityService.EditCommunityAsync(communityTransferDTO);
+            var community = await _communityService.EditCommunityAsync(id, communityEditDTO);
 
             return Ok(community);
 
@@ -140,11 +140,49 @@ namespace KP_Sistema.API.Controllers
 
             if (communities == null)
             {
-                throw new CommunityException("Could get communities");
+                return BadRequest("Could not get communities");
             }
 
             return Ok(communities);
 
+        }
+
+        /// <summary>
+        /// Adds user to specified community.
+        /// </summary>
+        /// <param name="communityId">Write community Id</param>
+        /// <param name="userId">Write User Id</param>
+        /// <returns>Returns community where was added User</returns>
+        [HttpPost("AddUser/{communityId}/{userId}")]
+        public async Task<IActionResult> AddUserToCommunity(int communityId, int userId)
+        {
+            var community = await _communityService.AddUserToCommunity(communityId, userId);
+
+            if(community == null)
+            {
+                return BadRequest("Controller: Failed to add user");
+            }
+
+            return Ok(community);
+        }
+
+        /// <summary>
+        /// Deletes user from specified community.
+        /// </summary>
+        /// <param name="communityId">Write community Id</param>
+        /// <param name="userId">Write User Id</param>
+        /// <returns>Returns community where was deleted User</returns>
+        [HttpPost("RemoveUser/{communityId}/{userId}")]
+        public async Task<IActionResult> RemoveUserFromCommunity(int communityId, int userId)
+        {
+            var community = await _communityService.DeleteUserFromCommunity(communityId, userId);
+
+            if(community == null)
+            {
+                return BadRequest("Controller: Failed to remove user from community");
+            }
+
+            return Ok(community);
         }
     }
 

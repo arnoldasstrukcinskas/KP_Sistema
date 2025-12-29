@@ -125,5 +125,66 @@ namespace KP_Sistema.DATA.Repositories.Repositories
 
             return communities;
         }
+
+        public async Task<Community> AddUserToCommunity(int communityId, int userId)
+        {
+            var community = await GetCommunityById(communityId);
+            var user = await GetUser(userId);
+
+            community.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
+
+            return community;
+            
+        }
+
+        public async Task<Community> DeleteUserFromCommunity(int communityId, int userId)
+        {
+            var community = await GetCommunityById(communityId);
+            var user = await GetUser(userId);
+            community.Users.Remove(user);
+
+            await _dbContext.SaveChangesAsync();
+
+            return community;
+        }
+
+        public async Task<Community> AddUtilityTaskToCommunity(int communityId, int taskId)
+        {
+            var community = await GetCommunityById(communityId);
+            var utilityTask = await GetUtlityTask(taskId);
+
+            community.UtilityTasks.Add(utilityTask);
+
+            await _dbContext.SaveChangesAsync();
+
+            return community;
+        }
+
+        public async Task<Community> DeleteUtilityTaskFromCommunity(int communityId, int taskId)
+        {
+            var community = await GetCommunityById(communityId);
+            var utilityTask = await GetUtlityTask(taskId);
+
+            community.UtilityTasks.Remove(utilityTask);
+
+            await _dbContext.SaveChangesAsync();
+
+            return community;
+        }
+
+        private async Task<User> GetUser(int userId)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.Id == userId);
+
+            return user;
+        }
+
+        private async Task<UtilityTask> GetUtlityTask(int taskId)
+        {
+            var utilityTask = await _dbContext.UtilityTasks.FirstOrDefaultAsync(uTask => uTask.Id == taskId);
+
+            return utilityTask;
+        }
     }
 }
