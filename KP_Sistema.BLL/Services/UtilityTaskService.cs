@@ -37,6 +37,13 @@ namespace KP_Sistema.BLL.Services
                 throw new UtilityTaskException("Utility task is empty");
             }
 
+            var demoTask = await _utilityTaskRepository.GetUtilityTaskByName(utilityTaskCreateDTO.Name);
+
+            if (demoTask != null)
+            {
+                throw new UtilityTaskException($"Task with name {utilityTaskCreateDTO.Name} already exists.");
+            }
+
             var utilityTask = _mapper.Map<UtilityTask>(utilityTaskCreateDTO);
 
             var createedUtilityTask = await _utilityTaskRepository.AddUtilityTaskAsync(utilityTask);
