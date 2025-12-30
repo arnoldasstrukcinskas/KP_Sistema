@@ -41,14 +41,14 @@ namespace KP_Sistema.API.Controllers
         /// <param name="Id">Id of utility task.</param>
         /// <returns>Data transfer object of found utility task</returns>
         [HttpGet("Task/{id:int}")]
-        public async Task<IActionResult> GetUtilityTaskByTaskId(int taskId)
+        public async Task<IActionResult> GetUtilityTaskByTaskId(int id)
         {
-            if(taskId < 1)
+            if(id < 1)
             {
-                return BadRequest("Controller: There is problem with given id");
+                return BadRequest($"Controller: There is problem with given id: {id}");
             }
 
-            var utilityTask = await _utilityTaskService.GetUtilityTaskByIdAsync<UtilityTaskReturnDTO>(taskId);
+            var utilityTask = await _utilityTaskService.GetUtilityTaskByIdAsync<UtilityTaskReturnDTO>(id);
 
             return Ok(utilityTask);
         }
@@ -77,16 +77,16 @@ namespace KP_Sistema.API.Controllers
         /// <param name="utilityTask">Data of utility transfer object: id, name, description, price, community id, community name</param>
         /// <returns>Returns edited utility task id, name, and community name it belonged</returns>
         [HttpPut]
-        public async Task<IActionResult> EditUtilityTask([FromBody] UtilityTaskTransferDTO utilityTaskTransferDTO)
+        public async Task<IActionResult> EditUtilityTask([FromBody] UtilityTaskEditDTO utilityTaskEditDTO)
         {
-            if(utilityTaskTransferDTO == null)
+            if(utilityTaskEditDTO == null)
             {
                 return BadRequest("Controller: Utility task is empty");
             }
 
-            var utilityTask = await _utilityTaskService.EditUtilityTaskAsync(utilityTaskTransferDTO);
+            var utilityTask = await _utilityTaskService.EditUtilityTaskAsync(utilityTaskEditDTO);
 
-            return Ok(utilityTaskTransferDTO);
+            return Ok(utilityTaskEditDTO);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace KP_Sistema.API.Controllers
         [HttpGet("Tasks")]
         public async Task<IActionResult> GetAllUtilityTasks()
         {
-            var tasks = _utilityTaskService.GetAllUtilityTasks();
+            var tasks = await _utilityTaskService.GetAllUtilityTasks();
             
             if(tasks == null)
             {

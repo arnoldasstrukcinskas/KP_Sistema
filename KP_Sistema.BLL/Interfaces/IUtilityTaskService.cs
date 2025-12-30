@@ -13,7 +13,7 @@ namespace KP_Sistema.BLL.Interfaces
         Task<UtilityTaskReturnDTO> AddUtilityTaskAsync(UtilityTaskCreateDTO utilityTaskCreateDTO);
         Task<TDto?> GetUtilityTaskByIdAsync<TDto>(int id);
         Task<TDto?> GetUtilityTaskByNameAsync<TDto>(string name);
-        Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(UtilityTaskTransferDTO utilityTaskCreateDTO);
+        Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(UtilityTaskEditDTO utilityTaskEditDTO);
         Task<UtilityTaskReturnDTO> DeleteUtilityTaskAsync(int id);
         Task<List<UtilityTaskReturnDTO>> GetAllUtilityTasks();
     }

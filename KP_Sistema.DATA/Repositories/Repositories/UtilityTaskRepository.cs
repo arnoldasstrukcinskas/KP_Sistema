@@ -20,16 +20,15 @@ namespace KP_Sistema.DATA.Repositories.Repositories
         public async Task<UtilityTask> AddUtilityTaskAsync(UtilityTask utilityTask)
         {
             //#1 Option
-            //await _dbContext.UtilityTasks.AddAsync(utilityTask);
-            //await _dbContext.SaveChangesAsync();
+            await _dbContext.UtilityTasks.AddAsync(utilityTask);
+            await _dbContext.SaveChangesAsync();
 
             //Option#2
-            await _dbContext.Database.ExecuteSqlAsync(
-                $"""
-                INSERT INTO UtilityTasks (name, description, price, communityId)
-                VALUES ({utilityTask.Name}, {utilityTask.Description}, {utilityTask.Price}, 
-                {utilityTask.CommunityId})
-                """);
+            //await _dbContext.Database.ExecuteSqlAsync(
+            //    $"""
+            //    INSERT INTO UtilityTasks (Name, Description, Price)
+            //    VALUES ({utilityTask.Name}, {utilityTask.Description}, {utilityTask.Price})
+            //    """);
 
             var createdUtilityTask = await GetUtilityTaskByName(utilityTask.Name);
 
@@ -102,7 +101,12 @@ namespace KP_Sistema.DATA.Repositories.Repositories
 
         public async Task<List<UtilityTask>> GetAllUtilityTasks()
         {
+            //Option #1
             var tasks = await _dbContext.UtilityTasks.ToListAsync();
+
+            ////Option #2
+            //var tasks = await _dbContext.UtilityTasks.FromSqlInterpolated(
+            //    $"SELECT * FROM UtilityTasks").ToListAsync();
 
             return tasks;
         }

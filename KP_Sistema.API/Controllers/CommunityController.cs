@@ -228,10 +228,10 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="Id">Write community id</param>
         /// <returns>Returns Users from specific community</returns>
-        [HttpGet("Users/{id:int}")]
-        public async Task<IActionResult> GetUsersFromCommunity(int userId)
+        [HttpGet("Users/{taskId:int}")]
+        public async Task<IActionResult> GetUsersFromCommunity(int taskId)
         {
-            var communtiy = await _communityService.GetCommunityByIdAsync<CommunityTransferDTO>(userId);
+            var communtiy = await _communityService.GetCommunityByIdAsync<CommunityTransferDTO>(taskId);
 
             var users = communtiy.Users;
 
@@ -248,7 +248,7 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="communityId">Id of community</param>
         /// <returns>Returns list of Utility Tasks in specified community</returns>
-        [HttpGet("Tasks/{id:int}")]
+        [HttpGet("Tasks/{communityId:int}")]
         public async Task<IActionResult> GetUtilityTasksFromCommunityById(int communityId)
         {
             var community = await _communityService.GetCommunityByIdAsync<CommunityTransferDTO>(communityId);

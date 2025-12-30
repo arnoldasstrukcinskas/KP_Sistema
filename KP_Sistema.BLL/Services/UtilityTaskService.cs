@@ -68,33 +68,23 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<TDto>(foundUtilityTask);
         }
 
-        public async Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(UtilityTaskTransferDTO utilityTaskTransferDTO)
+        public async Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(UtilityTaskEditDTO utilityTaskEditDTO)
         {
 
-            if (utilityTaskTransferDTO == null)
+            if (utilityTaskEditDTO == null)
             {
                 throw new UtilityTaskException("Utility task is empty");
             }
 
-            bool exists = await GetUtilityTaskByIdAsync<UtilityTaskTransferDTO>(utilityTaskTransferDTO.Id) != null;
+            bool exists = await GetUtilityTaskByIdAsync<UtilityTaskReturnDTO>(utilityTaskEditDTO.Id) != null;
 
             if (!exists)
             {
-                throw new UtilityTaskNotFoundException(utilityTaskTransferDTO.Id);
+                throw new UtilityTaskNotFoundException(utilityTaskEditDTO.Id);
             }
 
-            var community = await _communityService.GetCommunityByIdAsync<CommunityTransferDTO>(utilityTaskTransferDTO.CommunityId);
-            
-            if(community == null)
-            {
-                throw new CommunityNotFoundException(utilityTaskTransferDTO.CommunityId);
-            }
+            var utilityTask = _mapper.Map<UtilityTask>(utilityTaskEditDTO);
 
-            var utilityTask = _mapper.Map<UtilityTask>(utilityTaskTransferDTO);
-
-
-            utilityTask.CommunityId = community.Id;
-            utilityTask.Community = _mapper.Map<Community>(community);
 
             var editedUtilityTask = await _utilityTaskRepository.EditUtilityTask(utilityTask);
 
@@ -118,7 +108,7 @@ namespace KP_Sistema.BLL.Services
         {
             var tasks = await _utilityTaskRepository.GetAllUtilityTasks();
 
-            if(tasks != null || tasks.Any())
+            if(tasks == null || !tasks.Any())
             {
                 throw new UtilityTaskException("There is no tasks in database");
             }

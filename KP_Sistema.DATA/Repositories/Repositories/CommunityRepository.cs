@@ -117,11 +117,11 @@ namespace KP_Sistema.DATA.Repositories.Repositories
         public async Task<List<Community>?> GetAllCommunities()
         {
             //Option #1
-            //var communities = _dbContext.Communities.ToListAsync();
+            var communities = await _dbContext.Communities.ToListAsync();
 
-            //Option #2
-            var communities = await _dbContext.Communities.FromSqlInterpolated(
-                $"SELECT * FROM Communities").ToListAsync();
+            ////Option #2
+            //var communities = await _dbContext.Communities.FromSqlInterpolated(
+            //    $"SELECT * FROM Communities").ToListAsync();
 
             return communities;
         }

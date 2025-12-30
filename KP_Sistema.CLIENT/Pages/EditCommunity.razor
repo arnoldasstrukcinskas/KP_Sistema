@@ -108,7 +108,7 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <div class="table-responsive">
+                                <div class="table-scroll">
                                     <table class="table table-hover mb-0">
                                         <thead>
                                             <tr>
@@ -193,7 +193,7 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <div class="table-responsive">
+                                <div class="table-scroll">
                                     <table class="table table-hover mb-0">
                                         <thead>
                                             <tr>
@@ -207,16 +207,17 @@
 
                                         @if (utilityTasks != null && utilityTasks.Any())
                                         {
-                                            foreach (var task in utilityTasks)
+                                        <tbody>
+                                            @foreach (var task in utilityTasks)
                                             {
-                                                <tbody>
-                                                    <tr>
+                     
+                                                    <tr class="row-size">
                                                         <td>@task.Id</td>
                                                         <td>
                                                             <i class="bi bi-droplet-fill text-primary me-2"></i>
                                                             <strong>@task.Name</strong>
                                                         </td>
-                                                        <td><span class="badge bg-success">@task.Description</span></td>
+                                                        <td class="description-cell"><span class="badge bg-secondary description-text">@task.Description</span></td>
                                                         <td><span class="badge bg-success">@task.Price $</span></td>
                                                         <td>
                                                             @if (taskFlag == "community")
@@ -233,8 +234,9 @@
                                                             }
                                                         </td>
                                                     </tr>
-                                                </tbody>
+                                                
                                             }
+                                            </tbody>
                                         }
                                         else
                                         {
@@ -435,7 +437,7 @@
         taskFlag = "community";
         utilityTasks = null;
 
-        var response = await Http.GetFromJsonAsync<List<UtilityTaskReturnDTO>>($"/Community/Tasks/id?id={communityId}");
+        var response = await Http.GetFromJsonAsync<List<UtilityTaskReturnDTO>>($"/Community/Tasks/{communityId}");
 
         if(response != null)
         {

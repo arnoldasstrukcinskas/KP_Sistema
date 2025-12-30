@@ -106,7 +106,7 @@ CREATE TABLE `UtilityTasks` (
   `Id` int NOT NULL AUTO_INCREMENT,
   `Name` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `Description` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Price` decimal(65,30) NOT NULL,
+  `Price` decimal(10,2) NOT NULL,
   `CommunityId` int NOT NULL,
   PRIMARY KEY (`Id`),
   KEY `IX_UtilityTasks_CommunityId` (`CommunityId`),
