@@ -1,8 +1,188 @@
 ﻿@page "/utilities/edit"
 @inject HttpClient Http
 
-<h3>EditUtilityTask</h3>
+<PageTitle>Edit Utility Services - Community Utility Services</PageTitle>
+
+<!-- Page Header -->
+<div class="bg-custom text-white py-4 mb-4">
+    <div class="container">
+        <div class="d-flex align-items-center">
+            <div>
+                <h1 class="h2 mb-1">Edit Community</h1>
+                <p class="mb-0 opacity-75">Find utility services you want to edit and make changes.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form>
+                        <!-- Basic Information Section -->
+                        <div class="mb-4">
+                            <h4 class="text-primary mb-3">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Find utility service
+                            </h4>
+                            <hr class="mb-4">
+
+                            <div class="col">
+                                <div class="col-md-6 mb-3">
+                                    <label for="utilityServiceName" class="form-label">
+                                        Utility Service Name <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text"
+                                           @bind="input"
+                                           class="form-control"
+                                           id="utilityServiceName"
+                                           placeholder="e.g., Greenwood Estates"
+                                           required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <button type="button" class="btn btn-primary w-50" @onclick=LoadService">
+                                        <i class="bi bi-check-circle me-1"></i> Find
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Location Information Section -->
+                        <div class="mb-4">
+                            <h4 class="text-primary mb-3">
+                                <i class="bi bi-geo-alt me-2"></i>
+                                Edit utility service with Id - @utilityService.Id
+                            </h4>
+                            <hr class="mb-4">
+
+                            <div class="col-md-6 mb-3">
+                                <label for="utilityServiceName" class="form-label">
+                                    UtilityService Name <span class="text-danger">*</span>
+                                </label>
+                                <input type="text"
+                                       @bind="utilityServiceName"
+                                       class="form-control"
+                                       id="utilityServiceName"
+                                       placeholder="e.g., Service: Cut grass"
+                                       required>
+                            </div>
+
+                            <div class="col">
+                                <div class="col-md-6 mb-3">
+                                    <label for="utilityServiceDescription" class="form-label">
+                                        Description <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text"
+                                           @bind="utilityServiceDescription"
+                                           class="form-control"
+                                           id="udilityServiceDescription"
+                                           placeholder="e.g., Demo description"
+                                           required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="utilityServicePrice" class="form-label">
+                                        Price <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="number"
+                                           min="1"
+                                           @bind="utilityServicePrice"
+                                           class="form-control"
+                                           id="udilityServicePrice"
+                                           placeholder="e.g., 25.99"
+                                           required>
+                                </div>
+                                <!-- Form Actions -->
+                                <div class="border-top pt-4 mt-4">
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <button type="reset" class="btn btn-outline-primary" @onclick="() => Reset()">
+                                            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                                        </button>
+                                        <button type="button" class="btn btn-primary" @onclick="() => ChangeUtilityServiceData(utilityService.Id)">
+                                            <i class="bi bi-check-circle me-1"></i> Save service
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    @* Form Ends *@
+                </div>
+                @if (!string.IsNullOrWhiteSpace(alertMessage))
+                {
+                    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center alert-bg">
+                        <div class="bg-white rounded shadow p-4" style="max-width: 500px; width: 90%;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>@alertMessage</span>
+                                <button type="button" class="btn btn-primary" @onclick="() => alertMessage = null">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
+    private string input;
+    private string alertMessage;
+    private string utilityServiceName;
+    private string utilityServiceDescription;
+    private decimal utilityServicePrice;
+    private UtilityTaskReturnDTO utilityService = new UtilityTaskReturnDTO
+    {
+        Id = 0,
+        Name = "",
+        Description = "",
+        Price = 1
+    };
 
+    async Task LoadService()
+    {
+        var response = await Http.GetFromJsonAsync<UtilityTaskReturnDTO>($"/UtilityTask/search?name={input}");
+
+        if(response == null)
+        {
+            alertMessage = alertMessage = $"There are no utility service with name: {input}.";
+        }
+        else
+        {
+            utilityService = response;
+            utilityServiceName = utilityService.Name;
+            utilityServiceDescription = utilityService.Description;
+            utilityServicePrice = utilityService.Price;
+        }
+    }
+
+    async Task ChangeUtilityServiceData(int id)
+    {
+        UtilityTaskEditDTO utilityServiceEditDto = new UtilityTaskEditDTO
+        {
+            Name = utilityServiceName,
+            Description = utilityServiceDescription,
+            Price = utilityServicePrice
+        };
+
+        var response = await Http.PutAsJsonAsync($"/UtilityTask?id={id}", utilityServiceEditDto);
+
+        if (response.IsSuccessStatusCode)
+        {
+            input = utilityServiceName;
+            alertMessage = $"Utility service with id: {utilityService.Id} succesfully changed";
+        }
+        else
+        {
+            alertMessage = $"Failed to edit utility service with id: {utilityService.Id}";
+        }
+    }
+    async Task Reset()
+    {
+        utilityServiceName = string.Empty;
+        utilityServiceDescription = string.Empty;
+        utilityServicePrice = 0;
+
+        StateHasChanged();
+    }
 }

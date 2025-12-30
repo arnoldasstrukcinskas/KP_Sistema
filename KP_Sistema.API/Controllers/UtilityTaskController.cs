@@ -58,8 +58,8 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="Name">Name of utility task.</param>
         /// <returns>Data transfer object of found utility task</returns>
-        [HttpGet("UtilityTask/{name}")]
-        public async Task<IActionResult> GetUtilityTaskByName(string name)
+        [HttpGet("search")]
+        public async Task<IActionResult> GetUtilityTaskByName([FromQuery] string name)
         {
             if(name.IsNullOrEmpty())
             {
@@ -93,17 +93,18 @@ namespace KP_Sistema.API.Controllers
         /// <summary>
         /// Edits utility task
         /// </summary>
-        /// <param name="utilityTask">Data of utility transfer object: id, name, description, price, community id, community name</param>
+        /// <param name="id">Write utilityTask id</param>
+        /// <param name="utilityTaskEditDTO">Data of utility transfer object: id, name, description, price, community id, community name</param>
         /// <returns>Returns edited utility task id, name, and community name it belonged</returns>
         [HttpPut]
-        public async Task<IActionResult> EditUtilityTask([FromBody] UtilityTaskEditDTO utilityTaskEditDTO)
+        public async Task<IActionResult> EditUtilityTask(int id, [FromBody] UtilityTaskEditDTO utilityTaskEditDTO)
         {
             if(utilityTaskEditDTO == null)
             {
                 return BadRequest("Controller: Utility task is empty");
             }
 
-            var utilityTask = await _utilityTaskService.EditUtilityTaskAsync(utilityTaskEditDTO);
+            var utilityTask = await _utilityTaskService.EditUtilityTaskAsync(id, utilityTaskEditDTO);
 
             return Ok(utilityTaskEditDTO);
         }

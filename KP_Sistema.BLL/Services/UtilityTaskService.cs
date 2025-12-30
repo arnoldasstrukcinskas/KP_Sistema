@@ -87,7 +87,7 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<List<UtilityTaskReturnDTO>>(tasks);
         }
 
-        public async Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(UtilityTaskEditDTO utilityTaskEditDTO)
+        public async Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(int id, UtilityTaskEditDTO utilityTaskEditDTO)
         {
 
             if (utilityTaskEditDTO == null)
@@ -95,14 +95,17 @@ namespace KP_Sistema.BLL.Services
                 throw new UtilityTaskException("Utility task is empty");
             }
 
-            bool exists = await GetUtilityTaskByIdAsync<UtilityTaskReturnDTO>(utilityTaskEditDTO.Id) != null;
 
-            if (!exists)
+            var utilityTask = await _utilityTaskRepository.GetUtilityTaskById(id);
+
+            if (utilityTask == null)
             {
-                throw new UtilityTaskNotFoundException(utilityTaskEditDTO.Id);
+                throw new UtilityTaskNotFoundException(id);
             }
 
-            var utilityTask = _mapper.Map<UtilityTask>(utilityTaskEditDTO);
+            utilityTask.Name = utilityTaskEditDTO.Name;
+            utilityTask.Description = utilityTaskEditDTO.Description;
+            utilityTask.Price = utilityTaskEditDTO.Price;
 
 
             var editedUtilityTask = await _utilityTaskRepository.EditUtilityTask(utilityTask);

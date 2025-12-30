@@ -37,12 +37,19 @@ namespace KP_Sistema.DATA.Repositories.Repositories
 
         public async Task<UtilityTask?> GetUtilityTaskById(int id)
         {
-            var utilityTask = await _dbContext.UtilityTasks.FromSqlInterpolated(
-                $"""
-                    SELECT * FROM UtilityTasks WHERE id={id}
-                """)
-                .Include(utilityTask => utilityTask.Community)
+
+            var utilityTask = await _dbContext.UtilityTasks
+                .Where(task => task.Id == id)
+                .Include(task => task.Community)
                 .FirstOrDefaultAsync();
+
+            ////Option #2
+            //var utilityTask = await _dbContext.UtilityTasks.FromSqlInterpolated(
+            //    $"""
+            //        SELECT * FROM UtilityTasks WHERE id={id}
+            //    """)
+            //    .Include(utilityTask => utilityTask.Community)
+            //    .FirstOrDefaultAsync();
 
             return utilityTask;
         }
@@ -77,17 +84,17 @@ namespace KP_Sistema.DATA.Repositories.Repositories
         public async Task<UtilityTask> EditUtilityTask(UtilityTask utilityTask)
         {
             //Option #1
-            //_dbContext.UtilityTasks.Update(utilityTask);
-            //await _dbContext.SaveChangesAsync();
+            _dbContext.UtilityTasks.Update(utilityTask);
+            await _dbContext.SaveChangesAsync();
 
-            //Option #2
-            await _dbContext.Database.ExecuteSqlAsync(
-                $"""
-                UPDATE UtilityTasks SET name={utilityTask.Name}, description={utilityTask.Description},
-                price={utilityTask.Price}, communityId={utilityTask.CommunityId} 
-                WHERE id={utilityTask.Id}
-                """
-                );
+            ////Option #2
+            //await _dbContext.Database.ExecuteSqlAsync(
+            //    $"""
+            //    UPDATE UtilityTasks SET name={utilityTask.Name}, description={utilityTask.Description},
+            //    price={utilityTask.Price}, communityId={utilityTask.CommunityId} 
+            //    WHERE id={utilityTask.Id}
+            //    """
+            //    );
 
             var editedUtilityTask = await GetUtilityTaskById(utilityTask.Id);
 

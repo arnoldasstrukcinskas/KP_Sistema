@@ -84,7 +84,7 @@
                                 <!-- Form Actions -->
                                 <div class="border-top pt-4 mt-4">
                                     <div class="d-flex gap-2 justify-content-end">
-                                        <button type="reset" class="btn btn-outline-primary">
+                                        <button type="reset" class="btn btn-outline-primary" @onclick="() => Reset()">
                                             <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
                                         </button>
                                         <button type="button" class="btn btn-primary" @onclick="() => ChangeCommunityData(community.Id)">
@@ -305,8 +305,6 @@
 
     async Task LoadData()
     {
-        alertMessage = null;
-
         var response = await Http.GetFromJsonAsync<CommunityTransferDTO>($"/Community/name?name={input}");
 
         if (response == null)
@@ -334,19 +332,12 @@
         if (response.IsSuccessStatusCode)
         {
             alertMessage = $"Community with id: {communityId} succesfully edited";
+            input = communityName;
         }
         else
         {
             alertMessage = $"Failed to edit community with id: {communityId}";
         }
-
-        input = communityName;
-    }
-
-    async Task RemoveUserById(int id)
-    {
-        alertMessage = null;
-
     }
 
     async Task LoadAllUsers()
@@ -485,5 +476,12 @@
         await LoadCommunityTasks(communityId);
     }
 
-   
+    async Task Reset()
+    {
+        communityName = string.Empty;
+        communityAddress = string.Empty;
+
+        StateHasChanged();
+    }
+
 }
