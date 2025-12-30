@@ -63,7 +63,7 @@
 								</div>
 							</div>
 							<div class="card-body">
-								<div class="table-responsive">
+								<div class="table-scroll">
 									<table class="table table-hover mb-0">
 										<thead>
 											<tr>
@@ -76,10 +76,10 @@
 
 										@if (communities != null && communities.Any())
 										{
-											foreach (var community in communities)
+											<tbody>
+											@foreach (var community in communities)
 											{
-												<tbody>
-													<tr>
+												<tr>
 														<td>@community.Id</td>
 														<td>
 															<i class="bi bi-droplet-fill text-primary me-2"></i>
@@ -90,8 +90,8 @@
 															<button @onclick=" () => DeleteCommunityById(community.Id)" class="btn btn-sm btn-outline-danger">Delete</button>
 														</td>
 													</tr>
-												</tbody>
 											}
+											</tbody>
 										}
 										else
 										{

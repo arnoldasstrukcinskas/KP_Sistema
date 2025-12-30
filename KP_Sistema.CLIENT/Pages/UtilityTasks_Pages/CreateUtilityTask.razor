@@ -61,6 +61,7 @@
                                         </label>
                                         <input type="number"
                                                min="1"
+                                               default="1"
                                                @bind="utilityTaskPrice"
                                                class="form-control"
                                                id="utilityTaskId"
@@ -117,7 +118,7 @@
 @code {
     private string utilityTaskName;
     private string utilityTaskDescription;
-    private decimal utilityTaskPrice;
+    private decimal utilityTaskPrice = 1;
     private string alertMessage;
 
     async Task CreateTask()

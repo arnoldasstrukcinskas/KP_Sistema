@@ -20,12 +20,25 @@
     cursor: pointer;
 }
 
+.list-group-item {
+    border-left: none;
+    border-right: none;
+}
+
 .table-scroll {
     max-height: 20vh;
     overflow-y: auto;
 }
 
-.list-group-item {
-    border-left: none;
-    border-right: none;
+.description-cell {
+    max-width: 20vw;
 }
+.description-text {
+    display: block;
+    max-height: 8vh;
+    white-space:normal;
+    overflow-x: auto;
+    font-size: 1.0rem;
+    text-align: justify;
+}
+

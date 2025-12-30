@@ -1,5 +1,169 @@
-﻿<h3>DeleteUtilityTask</h3>
+﻿@page "/utilities/delete"
+@inject HttpClient Http
+
+<PageTitle>Delete Utility Task - Community Utility Services</PageTitle>
+
+<!-- Page Header -->
+<div class="bg-custom text-white py-4 mb-4">
+	<div class="container">
+		<div class="d-flex align-items-center">
+			<div>
+				<h1 class="h2 mb-1">Delete community</h1>
+				<p class="mb-0 opacity-75">Find utility task you want to delete and delete it.</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container mb-5">
+	<div class="row justify-content-center">
+		<div class="col-lg-10">
+			<div class="card border-0 shadow-sm">
+				<div class="card-body p-4">
+					<form>
+						<!-- Basic Information Section -->
+						<div class="mb-4">
+							<h4 class="text-primary mb-3">
+								<i class="bi bi-info-circle me-2"></i>
+								Task search
+							</h4>
+							<hr class="mb-4">
+
+							<div class="col">
+								<div class="col-md-6 mb-3">
+									<label for="utilityTaskName" class="form-label">
+										Task Name <span class="text-danger">*</span>
+									</label>
+									<input type="text"
+										   @bind="utilityTaskName"
+										   class="form-control"
+										   id="utilityTaskName"
+										   placeholder="e.g., Greenwood Estates"
+										   required>
+								</div>
+								<div class="col-md-6 mb-3">
+									<button type="button" class="btn btn-primary w-50" @onclick="LoadTasks">
+										<i class="bi bi-check-circle me-1"></i> Find
+									</button>
+								</div>
+							</div>
+						</div>
+					</form>
+					@* startas *@
+					@* Prideti cia diva su lentele ir dynamic rezultatais *@
+					<div class="container mb-4">
+						<div class="card communities-table border-0 shadow-sm">
+							<div class="card-header bg-white py-3">
+								<div class="d-flex justify-content-between align-items-center">
+									<h5 class="mb-0">
+										<i class="bi bi-gear-fill text-primary me-2"></i>
+										Found Tasks
+									</h5>
+								</div>
+							</div>
+							<div class="card-body">
+								<div class="table-scroll">
+									<table class="table table-hover mb-0">
+										<thead>
+											<tr>
+												<th>Id</th>
+												<th>Tasks</th>
+												<th>Price</th>
+												<th>Action</th>
+											</tr>
+										</thead>
+
+										@if (tasks != null && tasks.Any())
+										{
+											foreach (var task in tasks)
+											{
+												<tbody>
+													<tr>
+														<td>@task.Id</td>
+														<td>
+															<i class="bi bi-droplet-fill text-primary me-2"></i>
+															<strong>@task.Name</strong>
+														</td>
+														<td><span class="badge bg-success">@task.Price</span></td>
+														<td>
+															<button @onclick=" () => DeleteTask(task.Id)" class="btn btn-sm btn-outline-danger">Delete</button>
+														</td>
+													</tr>
+												</tbody>
+											}
+										}
+										else
+										{
+											<tbody>
+												<tr>
+													<p class="text-warning mb-0"> Communities not found or missing name </p>
+												</tr>
+											</tbody>
+										}
+										@if (!string.IsNullOrWhiteSpace(alertMessage))
+										{
+											<div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center alert-bg">
+												<div class="bg-white rounded shadow p-4" style="max-width: 500px; width: 90%;">
+													<div class="d-flex justify-content-between align-items-center">
+														<span>@alertMessage</span>
+														<button type="button" class="btn btn-primary" @onclick="() => LoadTasks()">Close</button>
+													</div>
+												</div>
+											</div>
+										}
+									</table>
+								</div>
+							</div>
+
+							@* pabaiga *@
+
+						</div>
+					</div>
+
+					<!-- Help Card -->
+					<div class="card border-0 shadow-sm mt-4 bg-light">
+						<div class="card-body">
+							<div class="d-flex align-items-start">
+								<div class="me-3">
+									<i class="bi bi-info-circle-fill text-primary" style="font-size: 2rem;"></i>
+								</div>
+								<div>
+									<h5 class="mb-2">Note</h5>
+									<p class="text-muted mb-0">
+										Fields marked with <span class="text-danger">*</span> are required.
+										Make sure all information is accurate before saving.
+										You can edit this information later from the community management page.
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 @code {
+
+	private string utilityTaskName;
+	private string alertMessage;
+	private List<UtilityTaskReturnDTO> tasks;
+
+	async Task LoadTasks()
+	{
+		alertMessage = null;
+		tasks = await Http.GetFromJsonAsync<List<UtilityTaskReturnDTO>>($"/UtilityTask/TasksByName?name={utilityTaskName}");
+	}
+
+	async Task DeleteTask(int taskId)
+	{
+		var response = await Http.DeleteAsync($"/UtilityTask?id={taskId}");
+
+		if(response.IsSuccessStatusCode)
+		{
+			alertMessage = $"UtilityTask {taskId} succesfully deleted";
+		}
+	}
 
 }

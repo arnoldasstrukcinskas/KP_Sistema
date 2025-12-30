@@ -64,6 +64,16 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             return utilityTask;
         }
 
+        public async Task<List<UtilityTask>> GetUtilityTasksByName(string name)
+        {
+            var utilityTasks = await _dbContext.UtilityTasks
+                .Where(task => task.Name.Contains(name))
+                .Include(task => task.Community)
+                .ToListAsync();
+
+            return utilityTasks;
+        }
+
         public async Task<UtilityTask> EditUtilityTask(UtilityTask utilityTask)
         {
             //Option #1

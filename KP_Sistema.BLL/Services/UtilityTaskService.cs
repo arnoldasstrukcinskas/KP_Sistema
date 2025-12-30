@@ -75,6 +75,18 @@ namespace KP_Sistema.BLL.Services
             return _mapper.Map<TDto>(foundUtilityTask);
         }
 
+        public async Task<List<UtilityTaskReturnDTO>> GetUtilityTasksByName(string name)
+        {
+            var tasks = await _utilityTaskRepository.GetUtilityTasksByName(name);
+
+            if(tasks == null)
+            {
+                throw new UtilityTaskException("Failed to retrieve tasks");
+            }
+
+            return _mapper.Map<List<UtilityTaskReturnDTO>>(tasks);
+        }
+
         public async Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(UtilityTaskEditDTO utilityTaskEditDTO)
         {
 

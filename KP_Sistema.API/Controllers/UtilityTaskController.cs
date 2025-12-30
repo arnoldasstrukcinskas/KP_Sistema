@@ -71,6 +71,25 @@ namespace KP_Sistema.API.Controllers
             return Ok(utilityTask);
         }
 
+
+        /// <summary>
+        /// Gets utility tasks by name
+        /// </summary>
+        /// <param name="name">Name of utility tasks.</param>
+        /// <returns>Returns utility tasks by name</returns>
+        [HttpGet("TasksByName")]
+        public async Task<IActionResult> GetUtilityTasksByName(string name)
+        {
+            if(name.IsNullOrEmpty())
+            {
+                return BadRequest("Controller: name is not given");
+            }
+
+            var utilityTasks = await _utilityTaskService.GetUtilityTasksByName(name);
+
+            return Ok(utilityTasks);
+        }
+
         /// <summary>
         /// Edits utility task
         /// </summary>
