@@ -21,9 +21,9 @@ namespace KP_Sistema.API.Controllers
         /// <summary>
         /// Adds community to database.
         /// </summary>
-        /// <param name="community">Add community name</param>
+        /// <param name="communityCreateDTO">Add community name</param>
         /// <returns>Added community data: id, name</returns>
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<IActionResult> CreateCommunity([FromBody] CommunityCreateDTO communityCreateDTO)
         {
             if (communityCreateDTO == null)
@@ -94,9 +94,10 @@ namespace KP_Sistema.API.Controllers
         /// <summary>
         /// Find community by name.
         /// </summary>
-        /// <param name="communityTransferDTO">Write community: id, name, UtilityTasks list, Users list</param>
+        /// <param name="id">Write community id</param>
+        /// <param name="communityEditDTO">Write community: id, name, UtilityTasks list, Users list</param>
         /// <returns>Returns found community data: id, name </returns>
-        [HttpPut("id")]
+        [HttpPut]
         public async Task<IActionResult> EditCommunity(int id, [FromBody] CommunityEditDTO communityEditDTO)
         {
             if (communityEditDTO == null)
@@ -113,7 +114,7 @@ namespace KP_Sistema.API.Controllers
         /// <summary>
         /// Deletes community by id.
         /// </summary>
-        /// <param name="Id">Write community Id</param>
+        /// <param name="id">Write community Id</param>
         /// <returns>Returns found community data: id, name </returns>
         [HttpDelete]
         public async Task<IActionResult> DeleteCommunity(int id)
@@ -131,7 +132,6 @@ namespace KP_Sistema.API.Controllers
         /// <summary>
         /// Get all communities.
         /// </summary>
-        /// <param name="Id">Write community Id</param>
         /// <returns>Returns all communities in database</returns>
         [HttpGet]
         public async Task<IActionResult> GetAllCommunities()

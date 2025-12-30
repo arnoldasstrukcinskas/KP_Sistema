@@ -329,7 +329,7 @@
             Address = communityAddress
         };
 
-        var response = await Http.PutAsJsonAsync($"/Community/id?id={communityId}", communityEditDto);
+        var response = await Http.PutAsJsonAsync($"/Community?id={communityId}", communityEditDto);
 
         if (response.IsSuccessStatusCode)
         {
@@ -339,6 +339,8 @@
         {
             alertMessage = $"Failed to edit community with id: {communityId}";
         }
+
+        input = communityName;
     }
 
     async Task RemoveUserById(int id)
