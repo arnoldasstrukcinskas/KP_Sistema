@@ -101,7 +101,10 @@ namespace KP_Sistema.DATA.Repositories.Repositories
 
         public async Task<List<User>> GetAllUsers()
         {
-            var users = await _dbContext.Users.ToListAsync();
+            var users = await _dbContext.Users
+                .Include(user => user.Community)
+                .Include(user => user.Role)
+                .ToListAsync();
 
             return users;
         }

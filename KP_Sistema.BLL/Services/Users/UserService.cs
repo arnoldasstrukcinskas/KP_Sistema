@@ -67,11 +67,11 @@ namespace KP_Sistema.BLL.Services.Users
             return user.PasswordHash;
         }
 
-        public async Task<List<UserTransferDTO>> GetAllUsers()
+        public async Task<List<UserReturnDTO>> GetAllUsers()
         {
             var users = await _userRepository.GetAllUsers();
 
-            return _mapper.Map<List<UserTransferDTO>>(users);
+            return _mapper.Map<List<UserReturnDTO>>(users);
         }
     }
 }

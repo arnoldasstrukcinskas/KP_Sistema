@@ -70,17 +70,21 @@ namespace KP_Sistema.DATA.Repositories.Repositories
         public async Task<Community?> GetCommunityById(int id)
         {
             //Option #1
-            //var community = await _dbContext.Communities
-            //.FirstOrDefaultAsync(community => community.Id == id);
+            var community = await _dbContext.Communities
+            .Include(community => community.Users)
+                .ThenInclude(user => user.Role)
+            .Include(community => community.UtilityTasks)
+            .FirstOrDefaultAsync(community => community.Id == id);
 
-            //Option #2
-            var community = await _dbContext.Communities.FromSqlInterpolated(
-                $"""
-                SELECT * FROM Communities WHERE id={id}
-                """
-                ).Include(community => community.UtilityTasks)
-                .Include(community => community.Users)
-                .FirstOrDefaultAsync();
+            ////Option #2
+            //var community = await _dbContext.Communities.FromSqlInterpolated(
+            //    $"""
+            //    SELECT * FROM Communities WHERE id={id}
+            //    """
+            //    )
+            //    .Include(community => community.UtilityTasks)
+            //    .Include(community => community.Users)
+            //    .FirstOrDefaultAsync();
 
             return community;
         }

@@ -35,5 +35,24 @@ namespace KP_Sistema.API.Controllers
 
             return Ok(response);
         }
+
+        /// <summary>
+        /// Route for Login
+        /// </summary>
+        /// <param name="username">User username</param>
+        /// <param name="password">User password</param>
+        /// <returns>Returns logged in user info</returns>
+        [HttpGet]
+        public async Task<IActionResult> Login(string username, string password)
+        {
+            var user = await _authenticationService.Login(username, password);
+
+            if(user == null)
+            {
+                return BadRequest("Failed to login");
+            }
+
+            return Ok(user);
+        }
     }
 }

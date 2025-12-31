@@ -42,8 +42,6 @@ namespace KP_Sistema.BLL.Services
             }
 
             return _mapper.Map<UserReturnDTO>(user);
-
-
         }
 
         public async Task<UserReturnDTO> Register(UserCreateDTO userCreateDTO)
