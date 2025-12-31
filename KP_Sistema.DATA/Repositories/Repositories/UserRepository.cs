@@ -70,15 +70,18 @@ namespace KP_Sistema.DATA.Repositories.Repositories
         public async Task<User?> GetUserByUsername(string username)
         {
             //Option #1
-            //var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.Username.Equals(username));
-
-            //Option #2
-            var user = await _dbContext.Users.FromSqlInterpolated(
-                $"""
-                SELECT * FROM Users WHERE username={username}
-                """).Include(user => user.Community)
+            var user = await _dbContext.Users
+                .Include(user => user.Community)
                 .Include(user => user.Role)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(user => user.Username.Equals(username));
+
+            ////Option #2
+            //var user = await _dbContext.Users.FromSqlInterpolated(
+            //    $"""
+            //    SELECT * FROM Users WHERE username={username}
+            //    """).Include(user => user.Community)
+            //    .Include(user => user.Role)
+            //    .FirstOrDefaultAsync();
 
             return user;
         }

@@ -9,6 +9,6 @@ namespace KP_Sistema.BLL.Exceptions.Authentication
     public class UserAuthenticationNotFoundException : UserAuthenticationException
     {
         public UserAuthenticationNotFoundException(string name)
-            : base($"Community with name: {name}, not found") { }
+            : base($"User with name: {name}, not found") { }
     }
 }
