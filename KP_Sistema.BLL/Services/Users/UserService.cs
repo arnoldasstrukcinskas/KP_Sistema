@@ -30,7 +30,7 @@ namespace KP_Sistema.BLL.Services.Users
                 PasswordHash = userCreateDTO.Password,
                 Email = userCreateDTO.Mail,
                 CommunityId = null,
-                RoleId = 1,
+                RoleId = userCreateDTO.RoleId,
             };
 
             var createdUser = await _userRepository.AddUser(newUser);
