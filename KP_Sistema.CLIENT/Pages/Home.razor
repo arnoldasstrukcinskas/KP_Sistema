@@ -1,4 +1,7 @@
 ﻿@page "/home"
+@inject IJSRuntime JS
+@inject HttpClient Http
+@attribute [Authorize]
 
 <PageTitle>Home - Community Utility Services</PageTitle>
 
@@ -7,10 +10,10 @@
     <div class="container ms-2">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <h1 class="h2 mb-2">Welcome back, [User Name]!</h1>
+                <h1 class="h2 mb-2">Welcome back, @userData.user.Username!</h1>
                 <p class="mb-0">
                     <i class="bi bi-geo-alt-fill me-1"></i>
-                    <strong>Your Community:</strong> Greenwood Estates
+                    <strong>Your Community:</strong> @userData.user.Community
                 </p>
             </div>
             <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
@@ -302,3 +305,27 @@
         </div>
     </div>
 </div>
+
+@code {
+    private LoginResponseDTO userData;
+
+    protected async Task GetUserData()
+    {
+        var userDataJson = await JS.InvokeAsync<string>("auth.getUserData");
+
+        if (!string.IsNullOrEmpty(userDataJson))
+        {
+            userData = JsonSerializer.Deserialize<LoginResponseDTO>(userDataJson);
+
+            if(string.IsNullOrEmpty(userData.user.Community))
+            {
+                userData.user.Community = "No community.";
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUserData();
+    }
+}

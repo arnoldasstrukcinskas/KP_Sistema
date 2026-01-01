@@ -1,0 +1,335 @@
+﻿@page "/allusers"
+@inject HttpClient Http
+@attribute [Authorize]
+
+<AuthorizeView Roles="Admin">
+
+    <PageTitle>Edit Community - Community Utility Services</PageTitle>
+
+    <!-- Page Header -->
+    <div class="bg-custom text-white py-4 mb-4">
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <div>
+                    <h1 class="h2 mb-1">All Users</h1>
+                    <p class="mb-0 opacity-75">You can manage Users, set role or delete user entirely</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        @* Form Ends *@
+                        @* Start of Users Table *@
+                        <div class="container mb-4">
+                            <div class="card communities-table border-0 shadow-sm">
+                                <div class="card-header bg-white py-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">
+                                            <i class="bi bi-gear-fill text-primary me-2"></i>
+                                            Users - @usersFlag
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-scroll">
+                                        <table class="table table-hover mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Username</th>
+                                                    <th>Email</th>
+                                                    <th>Role</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+
+                                            @if (users != null && users.Any())
+                                            {
+                                                foreach (var user in users)
+                                                {
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>@user.Id</td>
+                                                            <td>
+                                                                <i class="bi bi-droplet-fill text-primary me-2"></i>
+                                                                <strong>@user.Username</strong>
+                                                            </td>
+                                                            <td><span class="badge bg-warning text-dark">@user.EMail</span></td>
+                                                            <td><span class="badge bg-success">@user.Role</span></td>
+                                                            <td>
+                                                                @if (usersFlag == "community")
+                                                                {
+                                                                    <button @onclick=" () => RemoveUserFromCommunity(community.Id, user.Id)" class="btn btn-sm btn-outline-danger">
+                                                                        Remove
+                                                                    </button>
+                                                                }
+                                                                else if (usersFlag == "all")
+                                                                {
+                                                                    <button @onclick=" () => AddUserToCommunity(community.Id ,user.Id)" class="btn btn-sm btn-outline-success">
+                                                                        Add
+                                                                    </button>
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tbody>
+                                                    <tr>
+                                                        <p class="text-warning mb-0"> Users not found or missing name </p>
+                                                    </tr>
+                                                </tbody>
+                                            }
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-6 text-center">
+                                            <button class="btn btn-primary w-75"
+                                                    @onclick=" () => LoadAllUsers()">
+                                                All Users
+                                            </button>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <button class="btn btn-primary w-75"
+                                                    @onclick=" () => LoadCommunityUsers(community.Id)">
+                                                Community Users
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @* End of Users Table *@
+
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(alertMessage))
+                    {
+                        <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center alert-bg">
+                            <div class="bg-white rounded shadow p-4" style="max-width: 500px; width: 90%;">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>@alertMessage</span>
+                                    <button type="button" class="btn btn-primary" @onclick="() => alertMessage = null">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @code {
+        private string input = "";
+        private string communityName = "";
+        private string communityAddress = "";
+        private string? alertMessage = "";
+        private string? usersFlag = "";
+        private string? taskFlag = "";
+        private List<UserTransferDTO> users;
+        private List<UtilityTaskReturnDTO> utilityTasks;
+        private CommunityTransferDTO? community = new CommunityTransferDTO
+        {
+            Id = 0,
+            Name = "",
+            Address = "",
+            Users = new List<UserTransferDTO>(),
+            UtilityTasks = new List<UtilityTaskTransferDTO>()
+        };
+
+        async Task LoadData()
+        {
+            var response = await Http.GetFromJsonAsync<CommunityTransferDTO>($"/Community/name?name={input}");
+
+            if (response == null)
+            {
+                alertMessage = $"There are no users in this community.";
+            }
+            else
+            {
+                community = response;
+                communityName = community.Name;
+                communityAddress = community.Address;
+            }
+        }
+
+        async Task ChangeCommunityData(int communityId)
+        {
+            CommunityEditDTO communityEditDto = new CommunityEditDTO
+            {
+                Name = communityName,
+                Address = communityAddress
+            };
+
+            var response = await Http.PutAsJsonAsync($"/Community?id={communityId}", communityEditDto);
+
+            if (response.IsSuccessStatusCode)
+            {
+                alertMessage = $"Community with id: {communityId} succesfully edited";
+                input = communityName;
+            }
+            else
+            {
+                alertMessage = $"Failed to edit community with id: {communityId}";
+            }
+        }
+
+        async Task LoadAllUsers()
+        {
+            usersFlag = "all";
+            users = null;
+            var response = await Http.GetFromJsonAsync<List<UserTransferDTO>>($"/User/Users");
+
+            if (response != null && response.Any())
+            {
+                users = response;
+            }
+            else
+            {
+                alertMessage = "There are no users";
+
+            }
+        }
+
+        async Task LoadCommunityUsers(int id)
+        {
+            usersFlag = "community";
+            users = null;
+            var response = await Http.GetFromJsonAsync<List<UserTransferDTO>>($"/Community/Users/{id}");
+
+            if (response != null && response.Any())
+            {
+                users = response;
+            }
+            else
+            {
+                alertMessage = "There are no users";
+            }
+        }
+
+        async Task AddUserToCommunity(int communityId, int userId)
+        {
+            users = null;
+            var response = await Http.PostAsJsonAsync<CommunityReturnDTO>($"/Community/AddUser/{communityId}/{userId}", null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                alertMessage = $"User with id: {userId} succesfulyl added";
+            }
+            else
+            {
+                alertMessage = "Failed to add user";
+            }
+
+            await LoadAllUsers();
+        }
+
+        async Task RemoveUserFromCommunity(int communityId, int userId)
+        {
+            users = null;
+            var response = await Http.PostAsJsonAsync<CommunityReturnDTO>($"/Community/RemoveUser/{communityId}/{userId}", null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                alertMessage = $"User with id: {userId} succesfully deleted";
+            }
+            else
+            {
+                alertMessage = "Failed to delete user";
+            }
+
+
+            await LoadCommunityUsers(communityId);
+        }
+
+        async Task LoadAllTasks()
+        {
+            taskFlag = "all";
+            utilityTasks = null;
+
+            var response = await Http.GetFromJsonAsync<List<UtilityTaskReturnDTO>>($"/UtilityTask/Tasks");
+
+            if (response != null)
+            {
+                utilityTasks = response;
+            }
+            else
+            {
+                alertMessage = "There are no Utility Services";
+            }
+        }
+
+        async Task LoadCommunityTasks(int communityId)
+        {
+            taskFlag = "community";
+            utilityTasks = null;
+
+            var response = await Http.GetFromJsonAsync<List<UtilityTaskReturnDTO>>($"/Community/Tasks/{communityId}");
+
+            if (response != null)
+            {
+                utilityTasks = response;
+            }
+            else
+            {
+                alertMessage = $"There are no Utility Services in community with id: {communityId}";
+            }
+        }
+
+        async Task AddUtilityTaskToCommunity(int communityId, int taskId)
+        {
+            utilityTasks = null;
+            var response = await Http.PostAsJsonAsync<CommunityReturnDTO>($"/Community/AddTask/{communityId}/{taskId}", null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                alertMessage = $"Task with id: {taskId} succesfulyl added";
+            }
+            else
+            {
+                alertMessage = "Failed to add Task";
+            }
+
+            await LoadAllTasks();
+        }
+
+        async Task RemoveUtilityTaskFromCommunity(int communityId, int taskId)
+        {
+            utilityTasks = null;
+            var response = await Http.PostAsJsonAsync<CommunityReturnDTO>($"/Community/RemoveTask/{communityId}/{taskId}", null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                alertMessage = $"Task with id: {taskId} succesfully deleted";
+            }
+            else
+            {
+                alertMessage = "Failed to delete Task";
+            }
+
+            await LoadCommunityTasks(communityId);
+        }
+
+        async Task Reset()
+        {
+            communityName = string.Empty;
+            communityAddress = string.Empty;
+
+            StateHasChanged();
+        }
+
+    }
+
+</AuthorizeView>
+
+@code {
+
+}

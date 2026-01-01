@@ -1,0 +1,154 @@
+﻿@page "/community"
+@inject HttpClient Http
+@inject IJSRuntime JS
+@attribute [Authorize]
+
+<PageTitle>My Community - Community Utility Services</PageTitle>
+
+<!-- Page Header -->
+<div class="bg-custom text-white py-4 mb-4">
+    <div class="container">
+        <div class="d-flex align-items-center">
+            <div>
+                <h1 class="h2 mb-1">Community - @community.Name</h1>
+                <p class="mb-0 opacity-75">Find community you want to edit and make changes.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    @* Start of UtilityServices Table *@
+                    <div class="container mb-4">
+                        <div class="card communities-table border-0 shadow-sm">
+                            <div class="card-header bg-white py-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <i class="bi bi-gear-fill text-primary me-2"></i>
+                                        Services
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-scroll">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Name</th>
+                                                <th>Description</th>
+                                                <th>Price</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+
+                                        @if (community.UtilityTasks != null && community.UtilityTasks.Any())
+                                        {
+                                            <tbody>
+                                                @foreach (var task in community.UtilityTasks)
+                                                {
+
+                                                    <tr class="row-size">
+                                                        <td>@task.Id</td>
+                                                        <td>
+                                                            <i class="bi bi-droplet-fill text-primary me-2"></i>
+                                                            <strong>@task.Name</strong>
+                                                        </td>
+                                                        <td class="description-cell"><span class="badge bg-secondary description-text">@task.Description</span></td>
+                                                        <td><span class="badge bg-success">@task.Price $</span></td>
+                                                        <td>
+                                                            <button @onclick=" () => Pay()" class="btn btn-sm btn-primary">
+                                                                Pay
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+
+                                                }
+                                            </tbody>
+                                        }
+                                        else
+                                        {
+                                            <tbody>
+                                                <tr>
+                                                    <p class="text-warning mb-0"> Task not found or missing name </p>
+                                                </tr>
+                                            </tbody>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @* End of UtilityServices Table *@
+                </div>
+              </div>
+        </div>
+    </div>
+    @if (!string.IsNullOrWhiteSpace(alertMessage))
+    {
+        <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center alert-bg">
+            <div class="bg-white rounded shadow p-4" style="max-width: 500px; width: 90%;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>@alertMessage</span>
+                    <button type="button" class="btn btn-primary" @onclick="() => alertMessage = null">Close</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private CommunityTransferDTO? community = new CommunityTransferDTO
+    {
+        Id = 0,
+        Name = "",
+        Address = "",
+    };
+    private LoginResponseDTO? userData = new LoginResponseDTO();
+    private string alertMessage;
+
+    private async Task LoadUtilityTasks()
+    {
+
+        var response = await Http.GetFromJsonAsync<CommunityTransferDTO>($"/Community/name?name={userData.user.Community}");
+
+        if(response == null)
+        {
+            alertMessage = "Community not asigned";
+        }
+        else
+        {
+            community = response;
+        }
+    }
+
+    protected async Task GetUserData()
+    {
+        var userDataJson = await JS.InvokeAsync<string>("auth.getUserData");
+
+        if (!string.IsNullOrEmpty(userDataJson))
+        {
+            userData = JsonSerializer.Deserialize<LoginResponseDTO>(userDataJson);
+
+            if (string.IsNullOrEmpty(userData.user.Community))
+            {
+                userData.user.Community = "No community.";
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUserData();
+        await LoadUtilityTasks();
+    }
+
+    protected async Task Pay()
+    {
+        alertMessage = "Succesfully payed";
+    }
+}

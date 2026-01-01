@@ -9,7 +9,8 @@ namespace KP_Sistema.BLL.Interfaces.Users
 {
     public interface IAdministratorService
     {
-        Task<UserReturnDTO> EditUserRole(UserTransferDTO userEditDto, string currentUserUsername);
+        Task<UserReturnDTO> EditUserRole(int userId, int roleId);
+        Task<UserReturnDTO> SetCommunity(int userId, int communityId);
         Task<UserReturnDTO> DeleteUser(string userName);
     }
 }

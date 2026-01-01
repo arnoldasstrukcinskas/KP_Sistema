@@ -67,6 +67,30 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             return user;
         }
 
+        public async Task<User> EditRole(int userId, int roleId)
+        {
+            var user = await GetUserById(userId);
+
+            user.RoleId = roleId;
+
+            _dbContext.Update(user);
+            await _dbContext.SaveChangesAsync();
+
+            return user;
+        }
+
+        public async Task<User> SetCommunity(int userId, int communityId)
+        {
+            var user = await GetUserById(userId);
+
+            user.CommunityId = communityId;
+
+            _dbContext.Update(user);
+            await _dbContext.SaveChangesAsync();
+
+            return user;
+        }
+
         public async Task<User?> GetUserByUsername(string username)
         {
             //Option #1

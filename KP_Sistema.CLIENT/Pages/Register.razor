@@ -191,10 +191,6 @@
 
     private async Task RegisterUser()
     {
-        if (!await isFieldsCorrect())
-        {
-            return;
-        }
 
         UserCreateDTO user = new UserCreateDTO
         {

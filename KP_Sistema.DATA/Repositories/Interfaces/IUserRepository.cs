@@ -12,6 +12,8 @@ namespace KP_Sistema.DATA.Repositories.Interfaces
         Task<User?> GetUserByUsername(string username);
         Task<User> AddUser(User user);
         Task<User> EditUser(User user);
+        Task<User> EditRole(int userId, int roleId);
+        Task<User> SetCommunity(int userId, int roleId);
         Task<User> DeleteUser(User user);
         Task<User?> GetUserById(int id);
         Task<List<User>> GetAllUsers();
