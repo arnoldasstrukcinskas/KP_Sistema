@@ -30,7 +30,7 @@ namespace KP_Sistema.BLL.Services.Users
                 PasswordHash = userCreateDTO.Password,
                 Email = userCreateDTO.Mail,
                 CommunityId = null,
-                RoleId = userCreateDTO.RoleId,
+                RoleId = 1,
             };
 
             var createdUser = await _userRepository.AddUser(newUser);
@@ -43,6 +43,13 @@ namespace KP_Sistema.BLL.Services.Users
             var foundUser = await _userRepository.GetUserByUsername(username);
 
             return _mapper.Map<UserReturnDTO>(foundUser);
+        }
+
+        public async Task<UserReturnDTO> GetUserById(int id)
+        {
+            var user = await _userRepository.GetUserById(id);
+
+            return _mapper.Map<UserReturnDTO>(user);
         }
 
         public async Task<UserReturnDTO> DeleteUser(string userName)
@@ -65,6 +72,24 @@ namespace KP_Sistema.BLL.Services.Users
             var user = await _userRepository.GetUserByUsername(username);
 
             return user.PasswordHash;
+        }
+
+        public async Task<bool> ChangeUserPassword(ChangePasswordDTO changePasswordDTO)
+        {
+            var user = await _userRepository.GetUserById(changePasswordDTO.id);
+            
+            if(changePasswordDTO == null)
+            {
+                throw new Exception("There is no data for changing password");
+            }
+
+            if (user.PasswordHash.Equals(changePasswordDTO.oldPassword))
+            {
+                user.PasswordHash = changePasswordDTO.newPassword;
+                var editedUser = await _userRepository.EditUser(user);
+                return true;
+            }
+            return false;
         }
 
         public async Task<List<UserReturnDTO>> GetAllUsers()

@@ -1,4 +1,8 @@
-﻿@* <AuthorizeView> *@
+﻿@inject IJSRuntime JS
+@inject NavigationManager navigation
+@inject AuthenticationService authenticationService
+
+@* <AuthorizeView> *@
 <div class="horizontal-menu">
     <nav class="bg-light border navbar navbar-expand-md navbar-light">
         <div class="container-fluid">
@@ -9,14 +13,14 @@
             <div class="collapse navbar-collapse" id="navbar">
                 @* <Authorized> *@
                 <ul class="navbar-nav me-auto mt-2">
-                    <li class="nav-item"><a class="nav-link" href="/quote">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="/quote">News</a></li>
                     <li class="nav-item"><a class="nav-link" href="/quote">Updates</a></li>
                     <li class="nav-item"><a class="nav-link" href="/buy">Profile</a></li>
                 </ul>
                 <ul class="navbar-nav ms-auto mt-2">
-                    <li class="nav-item"><a class="nav-link" href="/change_pass">Change Password</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Users/changePassword">Change Password</a></li>
+                    <li class="nav-item"><button class="btn btn-outline-danger" @onclick="() => LogOut()">Log Out</button></li>
                 </ul>
                 @* </Authorized>
                 <NotAuthorized>
@@ -31,5 +35,10 @@
 </div>
 @* </AuthorizeView> *@
 @code {
-
+    protected async Task LogOut()
+    {
+        await JS.InvokeVoidAsync("auth.clearUserData");
+        authenticationService.NotifyUserLogout();
+        navigation.NavigateTo("/login");
+    }
 }

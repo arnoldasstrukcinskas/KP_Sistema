@@ -1,5 +1,6 @@
-﻿@page "/login"
+﻿@page "/register"
 @layout UnauthorizedLayout
+@using System.Text.Json
 @inject AuthenticationService authenticationService
 @inject HttpClient Http
 @inject NavigationManager navigation
@@ -15,8 +16,8 @@
                     <!-- Left Side - Login Form -->
                     <div class="col-lg-6 p-5">
                         <div class="mb-4">
-                            <h2 class="fw-bold text-custom mb-2">Welcome Back</h2>
-                            <p class="text-muted">Sign in to access your community services</p>
+                            <h2 class="fw-bold text-custom mb-2">Registration</h2>
+                            <p class="text-muted">Become member of our ground breaking system!</p>
                         </div>
 
                         <form>
@@ -26,11 +27,26 @@
                                     <span class="input-group-text bg-light border-end-0">
                                         <i class="bi bi-envelope"></i>
                                     </span>
-                                    <input @bind="usernameInput"
+                                    <input @bind="userNameInput"
                                            type="text"
                                            class="form-control border-start-0"
                                            id="username"
                                            placeholder="Enter your username"
+                                           required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="mail" class="form-label">EMail</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-lock"></i>
+                                    </span>
+                                    <input @bind="mailInput"
+                                           type="email"
+                                           class="form-control border-start-0"
+                                           id="mail"
+                                           placeholder="Enter your Email: mailer@mail.com"
                                            required>
                                 </div>
                             </div>
@@ -50,16 +66,31 @@
                                 </div>
                             </div>
 
+                            <div class="mb-3">
+                                <label for="rePassword" class="form-label">Repeat Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-lock"></i>
+                                    </span>
+                                    <input @bind="rePasswordInput"
+                                           type="password"
+                                           class="form-control border-start-0"
+                                           id="rePassword"
+                                           placeholder="Repeat your password"
+                                           required>
+                                </div>
+                            </div>
+
                             <div class="d-grid mb-3">
-                                <button type="button" class="btn btn-custom btn-lg" @onclick="() => LoginUser()">
-                                    <i class="bi bi-box-arrow-in-right me-2"></i>Log In
+                                <button type="submit" class="btn btn-custom btn-lg" @onclick="() => RegisterUser()">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>Register
                                 </button>
                             </div>
 
                             <div class="text-center">
                                 <p class="text-muted mb-0">
                                     Don't have an account?
-                                    <a href="/register" class="text-custom text-decoration-none fw-bold">Register</a>
+                                    <a href="/register" class="text-custom text-decoration-none fw-bold">Log In</a>
                                 </p>
                             </div>
                         </form>
@@ -139,46 +170,67 @@
         </div>
     </div>
     @if (!string.IsNullOrWhiteSpace(alertMessage))
-        {
-            <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center alert-bg">
-                <div class="bg-white rounded shadow p-4" style="max-width: 500px; width: 90%;">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span>@alertMessage</span>
-                        <button type="button" class="btn btn-primary" @onclick="() => alertMessage = null">Close</button>
-                    </div>
+    {
+        <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center alert-bg">
+            <div class="bg-white rounded shadow p-4" style="max-width: 500px; width: 90%;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>@alertMessage</span>
+                    <button type="button" class="btn btn-primary" @onclick="() => alertMessage = null">Close</button>
                 </div>
             </div>
-        }
+        </div>
+    }
 </div>
 
-@code{
-    private string usernameInput;
+@code {
+    private string userNameInput;
+    private string mailInput;
     private string passwordInput;
+    private string rePasswordInput;
     private string alertMessage;
 
-    private async Task LoginUser()
+    private async Task RegisterUser()
     {
-        LoginDTO userLogin = new LoginDTO
+        if (!await isFieldsCorrect())
         {
-            username = usernameInput,
-            password = passwordInput
+            return;
+        }
+
+        UserCreateDTO user = new UserCreateDTO
+        {
+            Username = userNameInput,
+            Mail = mailInput,
+            Password = passwordInput,
+            RePassword = rePasswordInput
         };
 
-        var response = await Http.PostAsJsonAsync("/Authentication/login", userLogin);
+        var response = await Http.PostAsJsonAsync("/Authentication/register", user);
 
         if(response.IsSuccessStatusCode)
         {
-            var loginData = await response.Content.ReadFromJsonAsync<LoginResponseDTO>();
-            await JS.InvokeVoidAsync("auth.setUserData", JsonSerializer.Serialize(loginData));
-
-            authenticationService.NotifyUserAuthentication(loginData);
-
-            navigation.NavigateTo("/home");
+            navigation.NavigateTo("/login");
         }
         else
         {
-            alertMessage = "Failed to login!";
+            alertMessage = "Failerd to register!";
         }
+
+    }
+
+    private async Task<bool> isFieldsCorrect()
+    {
+        if (string.IsNullOrWhiteSpace(userNameInput) ||
+           string.IsNullOrWhiteSpace(mailInput) ||
+           string.IsNullOrWhiteSpace(passwordInput) ||
+           string.IsNullOrWhiteSpace(rePasswordInput) ||
+           !mailInput.Contains("@") ||
+           passwordInput != rePasswordInput)
+        {
+            alertMessage = "Please fill all fields correctly!";
+            return false;
+        }
+
+        return true;
     }
 
     protected override async Task OnInitializedAsync()

@@ -1,4 +1,7 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Valdymas</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -29,6 +32,7 @@
             </NavLink>
         </div> *@
         @*---------------------------- Community Section -------------------------------------- *@
+        <AuthorizeView Roles="Admin">
         <div class="nav-item px-3 border-bottom border-white border-4">
             <h3 class="text-white">Community</h3>
         </div>
@@ -47,7 +51,9 @@
                 <span class="bi bi-trash-fill-nav-menu" aria-hidden="true"></span> Delete Community
             </NavLink>
         </div>
+        </AuthorizeView>
         @*----------------------------------------- Utility Services section -------------------------- *@
+        <AuthorizeView Roles="Admin, Manager">
         <div class="nav-item px-3 border-bottom border-white border-4">
             <h3 class="text-white">Utility Services</h3>
         </div>
@@ -66,6 +72,7 @@
                 <span class="bi bi-trash-fill-nav-menu" aria-hidden="true"></span> Delete Utility Service
             </NavLink>
         </div>
+        </AuthorizeView>
     </nav>
 </div>
 

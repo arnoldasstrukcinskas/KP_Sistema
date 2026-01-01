@@ -1,15 +1,25 @@
 ﻿@inherits LayoutComponentBase
-<div class="container-fluid">
+
+
+<div class="container-fluid p-0">
     <div class="row">
-        <div class="col-12">
-            <HorizontalMenu />
-        </div>
+        <AuthorizeView>
+            <Authorized>
+                <div class="col-12">
+                    <HorizontalMenu />
+                </div>
+            </Authorized>
+        </AuthorizeView>
     </div>
     <div class="row">
-        <div class="sidebar col-3">
-            <NavMenu />
-        </div>
-        <div class="col-9 my-5">
+        <AuthorizeView>
+            <Authorized>
+                <div class="sidebar col-3">
+                    <NavMenu />
+                </div>
+            </Authorized>
+        </AuthorizeView>
+        <div id="flag" class="col-9 my-5">
             <main>
                 <article>
                     @Body

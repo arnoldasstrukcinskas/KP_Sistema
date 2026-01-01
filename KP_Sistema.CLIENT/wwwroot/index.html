@@ -32,3 +32,19 @@
 </body>
 
 </html>
+
+<script>
+        
+
+    window.auth = {
+        getUserData: function () {
+            return sessionStorage.getItem("userData");
+        },
+        setUserData: function (userData) {
+            sessionStorage.setItem("userData", userData);
+        },
+        clearUserData: function () {
+            sessionStorage.removeItem("userData");
+        }
+    };
+</script>

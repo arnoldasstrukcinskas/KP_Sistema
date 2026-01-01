@@ -1,4 +1,5 @@
-﻿using KP_Sistema.CONTRACTS.DTO.UserDTO;
+﻿using KP_Sistema.CONTRACTS.DTO.AuthenticationDTO;
+using KP_Sistema.CONTRACTS.DTO.UserDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace KP_Sistema.BLL.Interfaces
 {
     public interface IAuthenticationService
     {
-        Task<UserReturnDTO?> Login(string username, string password);
+        Task<LoginResponseDTO?> Login(string username, string password);
         Task<UserReturnDTO?> Register(UserCreateDTO userCreateDTO);
+        Task<bool> ChangePasword(ChangePasswordDTO changePasswordDTO);
     }
 }

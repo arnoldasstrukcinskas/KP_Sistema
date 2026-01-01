@@ -53,14 +53,14 @@ namespace KP_Sistema.DATA.Repositories.Repositories
 
         public async Task<User> EditUser(User user)
         {
-            //Option #1
+            ////Option #1
             //_dbContext.Users.Update(user);
             //await _dbContext.SaveChangesAsync();
-            
+
             //Option #2
             await _dbContext.Database.ExecuteSqlAsync(
                 $"""
-                UPDATE Users SET username={user.Username}, mail={user.Email}, passwordHash={user.PasswordHash}
+                UPDATE Users SET username={user.Username}, email={user.Email}, passwordHash={user.PasswordHash}
                 """
                 );
 
@@ -94,7 +94,7 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             //Option@= #2
             var user = await _dbContext.Users.FromSqlInterpolated(
                 $"""
-                SELECT * FROM users WHERE id={id}
+                SELECT * FROM Users WHERE id={id}
                 """).Include(user => user.Community)
                 .Include(user => user.Role)
                 .FirstOrDefaultAsync();
