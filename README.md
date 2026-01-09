@@ -61,7 +61,7 @@ dotnet tool update --global dotnet-ef
 ```
 #### 2. Go to project directory(this is example directory)
 ```bash
-cd "D:\Downloads\KP_Sistema2"
+cd "D:\Downloads\KP_Sistema"
 ```
 #### 3. Build project(with logs)
 ```bash
