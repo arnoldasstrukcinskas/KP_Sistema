@@ -35,6 +35,7 @@ namespace KP_Sistema.BLL.Services.Users
             _mapper = mapper;
         }
        
+        //Šis metodas šiuo metu nenaudojamas, tačiau paliktas, kaip alternatyva
         public async Task<UtilityTaskReturnDTO> AddUtilityTaskAsync(UtilityTaskCreateDTO utilityTaskCreateDTO)
         {
 
@@ -55,6 +56,7 @@ namespace KP_Sistema.BLL.Services.Users
             return _mapper.Map<UtilityTaskReturnDTO>(createedUtilityTask);
         }
 
+        //Šis metodas šiuo metu nenaudojamas, tačiau paliktas, kaip alternatyva
         public async Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(int id, UtilityTaskEditDTO utilityTaskEditDTO)
         {
 
@@ -76,6 +78,7 @@ namespace KP_Sistema.BLL.Services.Users
             return _mapper.Map<UtilityTaskReturnDTO>(editedUtilityTask);
         }
 
+        //Šis metodas šiuo metu nenaudojamas, tačiau paliktas, kaip alternatyva
         public async Task<UtilityTaskReturnDTO> DeleteUtilityTaskAsync(int id)
         {
             var utilityTask = await _utilityTaskService.GetUtilityTaskByIdAsync<UtilityTaskReturnDTO>(id);
@@ -89,6 +92,7 @@ namespace KP_Sistema.BLL.Services.Users
             return _mapper.Map<UtilityTaskReturnDTO>(deletedUtilityTask);
         }
 
+        //Šis metodas šiuo metu nenaudojamas, tačiau paliktas, kaip alternatyva
         public async Task<UtilityTaskReturnDTO> AddTaskToCommunity(string taskName, string communityName)
         {
             var community = await _communityService.GetCommunityByNameAsync<CommunityTransferDTO>(communityName);
@@ -112,6 +116,7 @@ namespace KP_Sistema.BLL.Services.Users
             return _mapper.Map<UtilityTaskReturnDTO>(utilityTransferTask);
         }
 
+        //Šis metodas šiuo metu nenaudojamas, tačiau paliktas, kaip alternatyva
         public async Task<CommunityReturnDTO> DeleteUtilityTaskFromCommunity(int communityId, int taskId)
         {
             var community = await _communityService.GetCommunityByIdAsync<CommunityTransferDTO>(communityId);

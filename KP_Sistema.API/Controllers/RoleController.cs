@@ -53,6 +53,10 @@ namespace KP_Sistema.API.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Retrieves all available roles.
+        /// </summary>
+        /// <returns>List of all roles.</returns>
         [HttpGet]
         public async Task<IActionResult> GetAllRoles()
         {
