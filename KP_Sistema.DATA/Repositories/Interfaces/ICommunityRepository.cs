@@ -16,10 +16,8 @@ namespace KP_Sistema.DATA.Repositories.Interfaces
         Task<Community?> GetCommunityByName(string name);
         Task<List<Community>> GetCommunitiesByName(string name);
         Task<List<Community>?> GetAllCommunities();
-
         Task<Community> AddUserToCommunity(int communityId, int userId);
         Task<Community> DeleteUserFromCommunity(int communityId, int userId);
-
         Task<Community> AddUtilityTaskToCommunity(int communityId, int taskId);
         Task<Community> DeleteUtilityTaskFromCommunity(int communityId, int taskId);
     }

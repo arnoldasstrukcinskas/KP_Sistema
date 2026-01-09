@@ -79,7 +79,7 @@ namespace KP_Sistema.BLL.Services
         {
             var tasks = await _utilityTaskRepository.GetUtilityTasksByName(name);
 
-            if(tasks == null)
+            if (tasks == null)
             {
                 throw new UtilityTaskException("Failed to retrieve tasks");
             }

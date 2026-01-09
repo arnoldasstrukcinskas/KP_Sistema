@@ -39,16 +39,16 @@ namespace KP_Sistema.DATA.Repositories.Repositories
         public async Task<User> DeleteUser(User user)
         {
             //Option #1
-            //_dbContext.Users.Remove(user);
-            //await _dbContext.SaveChangesAsync();
+            _dbContext.Users.Remove(user);
+            await _dbContext.SaveChangesAsync();
 
-            //Option #2
-            await _dbContext.Database.ExecuteSqlAsync(
-                $" DELETE FROM Users WHERE userid={user.Id} ");
+            ////Option #2
+            //await _dbContext.Database.ExecuteSqlAsync(
+            //    $" DELETE FROM Users WHERE id={user.Id} ");
 
-            var deletedUser = await GetUserById(user.Id);
+            //var deletedUser = await GetUserById(user.Id);
 
-            return deletedUser;
+            return user;
         }
 
         public async Task<User> EditUser(User user)

@@ -4,6 +4,7 @@ using KP_Sistema.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Numerics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace KP_Sistema.API.Controllers
 {
@@ -23,6 +24,7 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="communityCreateDTO">Add community name</param>
         /// <returns>Added community data: id, name</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost("Create")]
         public async Task<IActionResult> CreateCommunity([FromBody] CommunityCreateDTO communityCreateDTO)
         {
@@ -41,6 +43,7 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="Id">Write community id</param>
         /// <returns>Returns found community data: id, name </returns>
+        [Authorize(Roles = "Admin, Manager")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetCommunityById(int id)
         {
@@ -59,6 +62,7 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="name">Write community name</param>
         /// <returns>Returns found community data: id, name </returns>
+        [Authorize]
         [HttpGet("name")]
         public async Task<IActionResult> GetCommunityByName([FromQuery] string name)
         {
@@ -78,6 +82,7 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param search="name">Write community name</param>
         /// <returns>Returns found communities data: id, name, users and tasks </returns>
+        [Authorize(Roles = "Admin, Manager")]
         [HttpGet("search")]
         public async Task<IActionResult> GetCommunitiesByName([FromQuery] string name)
         {
@@ -97,6 +102,7 @@ namespace KP_Sistema.API.Controllers
         /// <param name="id">Write community id</param>
         /// <param name="communityEditDTO">Write community: id, name, UtilityTasks list, Users list</param>
         /// <returns>Returns found community data: id, name </returns>
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<IActionResult> EditCommunity(int id, [FromBody] CommunityEditDTO communityEditDTO)
         {
@@ -116,6 +122,7 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="id">Write community Id</param>
         /// <returns>Returns found community data: id, name </returns>
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         public async Task<IActionResult> DeleteCommunity(int id)
         {
@@ -153,6 +160,7 @@ namespace KP_Sistema.API.Controllers
         /// <param name="communityId">Write community Id</param>
         /// <param name="userId">Write User Id</param>
         /// <returns>Returns community where was added User</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost("AddUser/{communityId}/{userId}")]
         public async Task<IActionResult> AddUserToCommunity(int communityId, int userId)
         {
@@ -172,6 +180,7 @@ namespace KP_Sistema.API.Controllers
         /// <param name="communityId">Write community Id</param>
         /// <param name="userId">Write User Id</param>
         /// <returns>Returns community where was deleted User</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost("RemoveUser/{communityId}/{userId}")]
         public async Task<IActionResult> RemoveUserFromCommunity(int communityId, int userId)
         {
@@ -191,6 +200,7 @@ namespace KP_Sistema.API.Controllers
         /// <param name="communityId">Write community Id</param>
         /// <param name="taskId">Write Task Id</param>
         /// <returns>Returns community where was added Task</returns>
+        [Authorize(Roles = "Admin, Manager")]
         [HttpPost("AddTask/{communityId}/{taskId}")]
         public async Task<IActionResult> AddUtilityTaskToCommunity(int communityId, int taskId)
         {
@@ -210,6 +220,7 @@ namespace KP_Sistema.API.Controllers
         /// <param name="communityId">Write community Id</param>
         /// <param name="taskId">Write Task Id</param>
         /// <returns>Returns community where was deleted Task</returns>
+        [Authorize(Roles = "Admin, Manager")]
         [HttpPost("RemoveTask/{communityId}/{taskId}")]
         public async Task<IActionResult> RemoveUtilityTaskFromCommunity(int communityId, int taskId)
         {
@@ -228,6 +239,7 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="Id">Write community id</param>
         /// <returns>Returns Users from specific community</returns>
+        [Authorize(Roles = "Admin")]
         [HttpGet("Users/{taskId:int}")]
         public async Task<IActionResult> GetUsersFromCommunity(int taskId)
         {
@@ -248,6 +260,7 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="communityId">Id of community</param>
         /// <returns>Returns list of Utility Tasks in specified community</returns>
+        [Authorize(Roles = "Admin, Manager")]
         [HttpGet("Tasks/{communityId:int}")]
         public async Task<IActionResult> GetUtilityTasksFromCommunityById(int communityId)
         {

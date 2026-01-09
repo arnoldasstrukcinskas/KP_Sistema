@@ -59,19 +59,28 @@
                                                                 <i class="bi bi-droplet-fill text-primary me-2"></i>
                                                                 <strong>@user.Username</strong>
                                                             </td>
-                                                            <td><span class="badge bg-warning text-dark">@user.EMail</span></td>
+                                                            <td><span class="badge bg-warning text-dark">@user.Email</span></td>
                                                             <td><span class="badge bg-success">@user.Role</span></td>
                                                             <td>
-                                                                @if (usersFlag == "community")
+                                                                @if (usersFlag == "managers")
                                                                 {
-                                                                    <button @onclick=" () => RemoveUserFromCommunity(community.Id, user.Id)" class="btn btn-sm btn-outline-danger">
+                                                                    <button @onclick=" () => RemoveManager(user.Id)" class="btn btn-sm btn-outline-danger">
                                                                         Remove
                                                                     </button>
                                                                 }
                                                                 else if (usersFlag == "all")
                                                                 {
-                                                                    <button @onclick=" () => AddUserToCommunity(community.Id ,user.Id)" class="btn btn-sm btn-outline-success">
-                                                                        Add
+                                                                    <button @onclick=" () => MakeManager(user.Id)" class="btn btn-sm btn-outline-success">
+                                                                        Make manager
+                                                                    </button>
+                                                                    <button @onclick=" () => MakeAdmin(user.Id)" class="btn btn-sm btn-outline-success">
+                                                                        Make Admin
+                                                                    </button>
+                                                                }
+                                                                else if (usersFlag == "admins")
+                                                                {
+                                                                    <button @onclick=" () => RemoveAdmin(user.Id)" class="btn btn-sm btn-outline-danger">
+                                                                        Remove
                                                                     </button>
                                                                 }
                                                             </td>
@@ -92,16 +101,22 @@
                                 </div>
                                 <div class="card-footer bg-white">
                                     <div class="row justify-content-center">
-                                        <div class="col-md-6 text-center">
+                                        <div class="col-md-4 text-center">
                                             <button class="btn btn-primary w-75"
                                                     @onclick=" () => LoadAllUsers()">
                                                 All Users
                                             </button>
                                         </div>
-                                        <div class="col-md-6 text-center">
+                                        <div class="col-md-4 text-center">
                                             <button class="btn btn-primary w-75"
-                                                    @onclick=" () => LoadCommunityUsers(community.Id)">
-                                                Community Users
+                                                    @onclick=" () => LoadManagers()">
+                                                All Managers
+                                            </button>
+                                        </div>
+                                        <div class="col-md-4 text-center">
+                                            <button class="btn btn-primary w-75"
+                                                    @onclick=" () => LoadAdmins()">
+                                                All Admins
                                             </button>
                                         </div>
                                     </div>
@@ -126,210 +141,130 @@
             </div>
         </div>
     </div>
-
-    @code {
-        private string input = "";
-        private string communityName = "";
-        private string communityAddress = "";
-        private string? alertMessage = "";
-        private string? usersFlag = "";
-        private string? taskFlag = "";
-        private List<UserTransferDTO> users;
-        private List<UtilityTaskReturnDTO> utilityTasks;
-        private CommunityTransferDTO? community = new CommunityTransferDTO
-        {
-            Id = 0,
-            Name = "",
-            Address = "",
-            Users = new List<UserTransferDTO>(),
-            UtilityTasks = new List<UtilityTaskTransferDTO>()
-        };
-
-        async Task LoadData()
-        {
-            var response = await Http.GetFromJsonAsync<CommunityTransferDTO>($"/Community/name?name={input}");
-
-            if (response == null)
-            {
-                alertMessage = $"There are no users in this community.";
-            }
-            else
-            {
-                community = response;
-                communityName = community.Name;
-                communityAddress = community.Address;
-            }
-        }
-
-        async Task ChangeCommunityData(int communityId)
-        {
-            CommunityEditDTO communityEditDto = new CommunityEditDTO
-            {
-                Name = communityName,
-                Address = communityAddress
-            };
-
-            var response = await Http.PutAsJsonAsync($"/Community?id={communityId}", communityEditDto);
-
-            if (response.IsSuccessStatusCode)
-            {
-                alertMessage = $"Community with id: {communityId} succesfully edited";
-                input = communityName;
-            }
-            else
-            {
-                alertMessage = $"Failed to edit community with id: {communityId}";
-            }
-        }
-
-        async Task LoadAllUsers()
-        {
-            usersFlag = "all";
-            users = null;
-            var response = await Http.GetFromJsonAsync<List<UserTransferDTO>>($"/User/Users");
-
-            if (response != null && response.Any())
-            {
-                users = response;
-            }
-            else
-            {
-                alertMessage = "There are no users";
-
-            }
-        }
-
-        async Task LoadCommunityUsers(int id)
-        {
-            usersFlag = "community";
-            users = null;
-            var response = await Http.GetFromJsonAsync<List<UserTransferDTO>>($"/Community/Users/{id}");
-
-            if (response != null && response.Any())
-            {
-                users = response;
-            }
-            else
-            {
-                alertMessage = "There are no users";
-            }
-        }
-
-        async Task AddUserToCommunity(int communityId, int userId)
-        {
-            users = null;
-            var response = await Http.PostAsJsonAsync<CommunityReturnDTO>($"/Community/AddUser/{communityId}/{userId}", null);
-
-            if (response.IsSuccessStatusCode)
-            {
-                alertMessage = $"User with id: {userId} succesfulyl added";
-            }
-            else
-            {
-                alertMessage = "Failed to add user";
-            }
-
-            await LoadAllUsers();
-        }
-
-        async Task RemoveUserFromCommunity(int communityId, int userId)
-        {
-            users = null;
-            var response = await Http.PostAsJsonAsync<CommunityReturnDTO>($"/Community/RemoveUser/{communityId}/{userId}", null);
-
-            if (response.IsSuccessStatusCode)
-            {
-                alertMessage = $"User with id: {userId} succesfully deleted";
-            }
-            else
-            {
-                alertMessage = "Failed to delete user";
-            }
-
-
-            await LoadCommunityUsers(communityId);
-        }
-
-        async Task LoadAllTasks()
-        {
-            taskFlag = "all";
-            utilityTasks = null;
-
-            var response = await Http.GetFromJsonAsync<List<UtilityTaskReturnDTO>>($"/UtilityTask/Tasks");
-
-            if (response != null)
-            {
-                utilityTasks = response;
-            }
-            else
-            {
-                alertMessage = "There are no Utility Services";
-            }
-        }
-
-        async Task LoadCommunityTasks(int communityId)
-        {
-            taskFlag = "community";
-            utilityTasks = null;
-
-            var response = await Http.GetFromJsonAsync<List<UtilityTaskReturnDTO>>($"/Community/Tasks/{communityId}");
-
-            if (response != null)
-            {
-                utilityTasks = response;
-            }
-            else
-            {
-                alertMessage = $"There are no Utility Services in community with id: {communityId}";
-            }
-        }
-
-        async Task AddUtilityTaskToCommunity(int communityId, int taskId)
-        {
-            utilityTasks = null;
-            var response = await Http.PostAsJsonAsync<CommunityReturnDTO>($"/Community/AddTask/{communityId}/{taskId}", null);
-
-            if (response.IsSuccessStatusCode)
-            {
-                alertMessage = $"Task with id: {taskId} succesfulyl added";
-            }
-            else
-            {
-                alertMessage = "Failed to add Task";
-            }
-
-            await LoadAllTasks();
-        }
-
-        async Task RemoveUtilityTaskFromCommunity(int communityId, int taskId)
-        {
-            utilityTasks = null;
-            var response = await Http.PostAsJsonAsync<CommunityReturnDTO>($"/Community/RemoveTask/{communityId}/{taskId}", null);
-
-            if (response.IsSuccessStatusCode)
-            {
-                alertMessage = $"Task with id: {taskId} succesfully deleted";
-            }
-            else
-            {
-                alertMessage = "Failed to delete Task";
-            }
-
-            await LoadCommunityTasks(communityId);
-        }
-
-        async Task Reset()
-        {
-            communityName = string.Empty;
-            communityAddress = string.Empty;
-
-            StateHasChanged();
-        }
-
-    }
-
 </AuthorizeView>
 
 @code {
+    private string input = "";
+    private string? alertMessage = "";
+    private string? usersFlag = "";
+    private string? taskFlag = "";
+    private List<UserReturnDTO> users;
 
+
+    async Task LoadAllUsers()
+    {
+        usersFlag = "all";
+        var response = await Http.GetFromJsonAsync<List<UserReturnDTO>>($"/User/Users");
+
+        if (response != null && response.Any())
+        {
+            users = response;
+        }
+        else
+        {
+            alertMessage = "There are no users";
+        }
+    }
+
+    async Task LoadManagers()
+    {
+        users = null;
+        usersFlag = "managers";
+        var response = await Http.GetFromJsonAsync<List<UserReturnDTO>>($"/User/Managers");
+
+        if (response != null && response.Any())
+        {
+            users = response;
+        }
+        else
+        {
+            alertMessage = "There are no managers.";
+        }
+    }
+
+    async Task LoadAdmins()
+    {
+        users = null;
+        usersFlag = "admins";
+        var response = await Http.GetFromJsonAsync<List<UserReturnDTO>>($"/User/Admins");
+
+        if (response != null && response.Any())
+        {
+            users = response;
+        }
+        else
+        {
+            alertMessage = "There are no admins.";
+        }
+    }
+
+    private async Task MakeManager(int userId)
+    {
+        usersFlag = "managers";
+        var response = await Http.PostAsJsonAsync<UserReturnDTO>($"/User/role?userId={userId}&roleId={2}", null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            alertMessage = $"User with id: {userId}, role set to manager";
+        }
+        else
+        {
+            alertMessage = $"Failed to set manager role to user with id: {userId}";
+        }
+
+        await LoadManagers();
+    }
+
+    private async Task RemoveManager(int userId)
+    {
+        usersFlag = "admins";
+        var response = await Http.PostAsJsonAsync<UserReturnDTO>($"/User/role?userId={userId}&roleId={1}", null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            alertMessage = $"User with id: {userId} manager role removed";
+        }
+        else
+        {
+            alertMessage = $"Failed to remove manager role to user with id: {userId}";
+        }
+
+        await LoadManagers();
+
+    }
+
+    private async Task MakeAdmin(int userId)
+    {
+        var response = await Http.PostAsJsonAsync<UserReturnDTO>($"/User/role?userId={userId}&roleId={3}", null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            alertMessage = $"User with id: {userId}, role set to admin";
+        }
+        else
+        {
+            alertMessage = $"Failed to set admin role to user with id: {userId}";
+        }
+
+        await LoadAdmins();
+    }
+
+    private async Task RemoveAdmin(int userId)
+    {
+        var response = await Http.PostAsJsonAsync<UserReturnDTO>($"/User/role?userId={userId}&roleId={1}", null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            alertMessage = $"User with id: {userId} admin role removed";
+        }
+        else
+        {
+            alertMessage = $"Failed to remove admin role to user with id: {userId}";
+        }
+
+        await LoadAdmins();
+    }
 }
+
+
+

@@ -57,19 +57,39 @@ namespace KP_Sistema.BLL.Services.Users
             return _mapper.Map<UserReturnDTO>(editedUser);
         }
 
-        public async Task<UserReturnDTO> DeleteUser(string username)
+        public async Task<UserReturnDTO> DeleteUser(int id)
         {
 
-            if (!await IfUserExistsByName(username))
+            if (!await IfUserExistsById(id))
             {
                 throw new Exception("No such user");
             }
+            var user = await _userRepository.GetUserById(id);
 
-            var deletedUser = await DeleteUser(username);
+            var deletedUser = await _userRepository.DeleteUser(user);
 
             return _mapper.Map<UserReturnDTO>(deletedUser);
         }
 
+        public async Task<List<UserReturnDTO>> GetAllAdmins()
+        {
+            var users = await _userRepository.GetAllUsers();
+
+            var admins = users.Where(user => user.RoleId == 3);
+
+            return _mapper.Map<List<UserReturnDTO>>(admins);
+        }
+
+        public async Task<List<UserReturnDTO>> GetAllManagers()
+        {
+            var users = await _userRepository.GetAllUsers();
+
+            var managers = users.Where(user => user.RoleId == 2);
+
+            return _mapper.Map<List<UserReturnDTO>>(managers);
+        }
+
+        //Helper methods
         private async Task<bool> IfUserExistsByName(string username)
         {
             var userByName = await _userRepository.GetUserByUsername(username);

@@ -47,7 +47,6 @@ namespace KP_Sistema.BLL.Services
 
         public async Task<TDto?> GetCommunityByIdAsync<TDto>(int id)
         {
-            //check to avoid null
             var foundCommunity = await _communityRepository.GetCommunityById(id);
             
             if(foundCommunity == null)

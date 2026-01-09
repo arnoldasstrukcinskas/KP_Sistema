@@ -2,6 +2,7 @@
 using KP_Sistema.BLL.Interfaces;
 using KP_Sistema.CONTRACTS.DTO.CommunityDTO;
 using KP_Sistema.CONTRACTS.DTO.UtilityTaskDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -23,6 +24,7 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="utilityTaskCreateDTO">Data create object containing the details of the new UtilityTask (name, description, price, community id).</param>
         /// <returns>Added utility taskt object with name, description, price, community id</returns>
+        [Authorize(Roles = "Admin, Manager")]
         [HttpPost]
         public async Task<IActionResult> AddUtilityTask([FromBody] UtilityTaskCreateDTO utilityTaskCreateDTO)
         {
@@ -40,6 +42,7 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="Id">Id of utility task.</param>
         /// <returns>Data transfer object of found utility task</returns>
+        [Authorize(Roles = "Admin, Manager")]
         [HttpGet("Task/{id:int}")]
         public async Task<IActionResult> GetUtilityTaskByTaskId(int id)
         {
@@ -58,6 +61,7 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="Name">Name of utility task.</param>
         /// <returns>Data transfer object of found utility task</returns>
+        [Authorize(Roles = "Admin, Manager")]
         [HttpGet("search")]
         public async Task<IActionResult> GetUtilityTaskByName([FromQuery] string name)
         {
@@ -77,6 +81,7 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="name">Name of utility tasks.</param>
         /// <returns>Returns utility tasks by name</returns>
+        [Authorize(Roles = "Admin, Manager")]
         [HttpGet("TasksByName")]
         public async Task<IActionResult> GetUtilityTasksByName(string name)
         {
@@ -114,6 +119,7 @@ namespace KP_Sistema.API.Controllers
         /// </summary>
         /// <param name="Id">Id of utility task</param>
         /// <returns>Returns deleted utility task id, name, and community name it belonged</returns>
+        [Authorize(Roles = "Admin, Manager")]
         [HttpDelete]
         public async Task<IActionResult> DeleteUtilityTask(int id)
         {
@@ -131,6 +137,7 @@ namespace KP_Sistema.API.Controllers
         /// Returns all tasks from database
         /// </summary>
         /// <returns>Returns list of Utility Tasks in database</returns>
+        //[Authorize(Roles = "Manager")]
         [HttpGet("Tasks")]
         public async Task<IActionResult> GetAllUtilityTasks()
         {

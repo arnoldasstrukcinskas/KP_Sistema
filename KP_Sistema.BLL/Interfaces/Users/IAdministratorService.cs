@@ -11,6 +11,8 @@ namespace KP_Sistema.BLL.Interfaces.Users
     {
         Task<UserReturnDTO> EditUserRole(int userId, int roleId);
         Task<UserReturnDTO> SetCommunity(int userId, int communityId);
-        Task<UserReturnDTO> DeleteUser(string userName);
+        Task<UserReturnDTO> DeleteUser(int id);
+        Task<List<UserReturnDTO>> GetAllAdmins();
+        Task<List<UserReturnDTO>> GetAllManagers();
     }
 }

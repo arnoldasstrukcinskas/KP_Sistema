@@ -1,8 +1,10 @@
 ﻿@page "/utilities/delete"
 @inject HttpClient Http
+@attribute [Authorize]
 
 <PageTitle>Delete Utility Task - Community Utility Services</PageTitle>
 
+<AuthorizeView Roles="Admin, Manager">
 <!-- Page Header -->
 <div class="bg-custom text-white py-4 mb-4">
 	<div class="container">
@@ -143,6 +145,7 @@
 		</div>
 	</div>
 </div>
+</AuthorizeView>
 
 @code {
 

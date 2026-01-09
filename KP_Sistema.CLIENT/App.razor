@@ -1,5 +1,7 @@
-﻿@inject NavigationManager navigation;
-@inject AuthenticationService authentication;
+﻿@using System.Net.Http.Headers
+@inject NavigationManager navigation;
+@inject AuthenticationService authenticationService;
+@inject HttpClient Http
 
 <Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
@@ -17,3 +19,23 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+@code{
+    [Inject] IJSRuntime JS { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var storedUserJson = await JS.InvokeAsync<string>("auth.getUserData");
+
+        if (!string.IsNullOrWhiteSpace(storedUserJson))
+        {
+            var loginData =
+                JsonSerializer.Deserialize<LoginResponseDTO>(storedUserJson);
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", loginData!.Token);
+
+            authenticationService.NotifyUserAuthentication(loginData);
+        }
+    }
+}

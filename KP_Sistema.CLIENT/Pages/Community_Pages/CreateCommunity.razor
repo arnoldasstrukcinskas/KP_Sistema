@@ -1,9 +1,11 @@
 ﻿@page "/communities/create"
 @inject HttpClient Http
+@inject IJSRuntime JS
 @attribute [Authorize]
 
 <PageTitle>Add Community - Community Utility Services</PageTitle>
 
+<AuthorizeView Roles="Admin, Manager">
 <!-- Page Header -->
 <div class="bg-custom text-white py-4 mb-4">
     <div class="container">
@@ -100,6 +102,7 @@
         }
     </div>
 </div>
+</AuthorizeView>
 
 @code {
     private string? communityName;
@@ -115,6 +118,10 @@
             };
 
         var response = await Http.PostAsJsonAsync("/Community/Create", communityCreateDto);
+
+        var userDataJson = await JS.InvokeAsync<string>("auth.getUserData");
+        var userData = JsonSerializer.Deserialize<LoginResponseDTO>(userDataJson);
+        Console.WriteLine($"{userData.Token} + {userData.user.Role} + {userData.user.Username}");
 
         if(response.IsSuccessStatusCode)
         {

@@ -1,9 +1,11 @@
 ﻿@page "/communities/delete"
 @inject HttpClient Http
+@attribute [Authorize]
 
 
 <PageTitle>Delete Community - Community Utility Services</PageTitle>
 
+<AuthorizeView Roles="Admin">
 <!-- Page Header -->
 <div class="bg-custom text-white py-4 mb-4">
 	<div class="container">
@@ -144,6 +146,7 @@
 </div>
 </div>
 </div>
+</AuthorizeView>
 
 @code {
     private List<CommunityTransferDTO>? communities;

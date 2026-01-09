@@ -37,7 +37,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="mail" class="form-label">EMail</label>
+                                <label for="mail" class="form-label">Email</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0">
                                         <i class="bi bi-lock"></i>
@@ -82,7 +82,7 @@
                             </div>
 
                             <div class="d-grid mb-3">
-                                <button type="submit" class="btn btn-custom btn-lg" @onclick="() => RegisterUser()">
+                                <button type="button" class="btn btn-custom btn-lg" @onclick="() => RegisterUser()">
                                     <i class="bi bi-box-arrow-in-right me-2"></i>Register
                                 </button>
                             </div>
@@ -90,7 +90,7 @@
                             <div class="text-center">
                                 <p class="text-muted mb-0">
                                     Don't have an account?
-                                    <a href="/register" class="text-custom text-decoration-none fw-bold">Log In</a>
+                                    <a href="/login" class="text-custom text-decoration-none fw-bold">Log In</a>
                                 </p>
                             </div>
                         </form>
@@ -202,7 +202,7 @@
 
         var response = await Http.PostAsJsonAsync("/Authentication/register", user);
 
-        if(response.IsSuccessStatusCode)
+        if(response != null)
         {
             navigation.NavigateTo("/login");
         }

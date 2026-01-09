@@ -1,8 +1,141 @@
 ﻿@page "/profile"
+@inject HttpClient Http
+@inject IJSRuntime JS
+@attribute [Authorize]
 
+<PageTitle>Edit Community - Community Utility Services</PageTitle>
 
-<h3>Profile</h3>
+<!-- Page Header -->
+<div class="bg-custom text-white py-4 mb-4">
+    <div class="container">
+        <div class="d-flex align-items-center">
+            <div>
+                <h1 class="h2 mb-1">Edit User</h1>
+                <p class="mb-0 opacity-75">Find community you want to edit and make changes.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form>
+                        <!-- User Information Section -->
+                        <div class="mb-4">
+                            <h4 class="text-primary mb-3">
+                                <i class="bi bi-geo-alt me-2"></i>
+                                Edit User with Id - @user.user.Id
+                            </h4>
+                            <hr class="mb-4">
+
+                            <div class="col-md-6 mb-3">
+                                <label for="userName" class="form-label">
+                                    User Name <span class="text-danger">*</span>
+                                </label>
+                                <input type="text"
+                                       @bind="userName"
+                                       class="form-control"
+                                       id="userName"
+                                       placeholder="e.g., user123"
+                                       required>
+                            </div>
+
+                            <div class="col">
+                                <div class="col-md-6 mb-3">
+                                    <label for="mail" class="form-label">
+                                        Mail <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text"
+                                           @bind="userMail"
+                                           class="form-control"
+                                           id="mail"
+                                           placeholder="e.g., mailer@userMail.com"
+                                           required>
+                                </div>
+                                <!-- Form Actions -->
+                                <div class="border-top pt-4 mt-4">
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <button type="reset" class="btn btn-outline-primary" @onclick="() => Reset()">
+                                            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                                        </button>
+                                        <button type="button" class="btn btn-primary" @onclick="() => ChangeUserData()">
+                                            <i class="bi bi-check-circle me-1"></i> Save User
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    @* Form Ends *@
+                </div>
+                @if (!string.IsNullOrWhiteSpace(alertMessage))
+                {
+                    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center alert-bg">
+                        <div class="bg-white rounded shadow p-4" style="max-width: 500px; width: 90%;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>@alertMessage</span>
+                                <button type="button" class="btn btn-primary" @onclick="() => alertMessage = null">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
+    private LoginResponseDTO? user = new LoginResponseDTO();
+    private string userName = "";
+    private string alertMessage = "";
+    private string userMail = "";
 
+    private async Task ChangeUserData()
+    {
+        UserTransferDTO editedUser = new UserTransferDTO
+            {
+                Id = user.user.Id,
+                Username = userName,
+                EMail = userMail,
+                CommunityName = "",
+                Role = ""
+            };
+
+        var response = await Http.PutAsJsonAsync($"/User/edit", editedUser);
+
+        if(response.IsSuccessStatusCode)
+        {
+            alertMessage = $"User with id: {user.user.Id} data succesfully changed";
+        }
+        else
+        {
+            alertMessage = $"Failed to change of user with id: {user.user.Id} {editedUser.Id} {editedUser.Username} {editedUser.EMail}";
+        }
+
+        await GetUserData();
+    }
+
+    protected async Task GetUserData()
+    {
+        var userDataJson = await JS.InvokeAsync<string>("auth.getUserData");
+
+        if (!string.IsNullOrEmpty(userDataJson))
+        {
+            user = JsonSerializer.Deserialize<LoginResponseDTO>(userDataJson);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUserData();
+    }
+
+    private async Task Reset()
+    {
+        userName = "";
+        userMail = "";
+    }
 }

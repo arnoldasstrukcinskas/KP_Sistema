@@ -83,7 +83,7 @@ CREATE TABLE `Users` (
   KEY `IX_Users_RoleId` (`RoleId`),
   CONSTRAINT `FK_Users_Communities_CommunityId` FOREIGN KEY (`CommunityId`) REFERENCES `Communities` (`Id`),
   CONSTRAINT `FK_Users_Roles_RoleId` FOREIGN KEY (`RoleId`) REFERENCES `Roles` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -92,6 +92,7 @@ CREATE TABLE `Users` (
 
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
+INSERT INTO `Users` VALUES (1,'jonukas123','jonasjonauskas@gmail.com','v3TkooCv+vvfZpK8ap89ZrAwlPv7SpFYm8f9azJmT9s=',2,1),(2,'vytas123','vytas@gmail.com','2XvthEiRhJj0QaUNLJuv8lFWDvlKPBO7l402HrkABrg=',5,1),(3,'Zigmas001','zigmaszigmauskas@gmail.com','0QpMRZS0Px8SIhgPP1azq9I1957d4tWvRrgQbCRtlek=',2,1),(4,'admin','admin@gmail.com','jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=',1,3),(5,'manager','manager@gmail.com','buSkac1OkQU4R/XT/LYdvMkejw7xC+d0jaTEobo4LRc=',3,2);
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -107,10 +108,10 @@ CREATE TABLE `UtilityTasks` (
   `Name` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `Description` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `Price` decimal(10,2) NOT NULL,
-  `CommunityId` int NOT NULL,
+  `CommunityId` int DEFAULT NULL,
   PRIMARY KEY (`Id`),
   KEY `IX_UtilityTasks_CommunityId` (`CommunityId`),
-  CONSTRAINT `FK_UtilityTasks_Communities_CommunityId` FOREIGN KEY (`CommunityId`) REFERENCES `Communities` (`Id`) ON DELETE CASCADE
+  CONSTRAINT `FK_UtilityTasks_Communities_CommunityId` FOREIGN KEY (`CommunityId`) REFERENCES `Communities` (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -120,7 +121,7 @@ CREATE TABLE `UtilityTasks` (
 
 LOCK TABLES `UtilityTasks` WRITE;
 /*!40000 ALTER TABLE `UtilityTasks` DISABLE KEYS */;
-INSERT INTO `UtilityTasks` VALUES (1,'Task 1 for Green Valley Community','Demo task description',100.000000000000000000000000000000,1),(2,'Task 2 for Sunrise Heights','Demo task description',120.000000000000000000000000000000,2),(3,'Task 3 for River Park Residences','Demo task description',130.000000000000000000000000000000,3),(4,'Task 4 for Lakeside Community','Demo task description',140.000000000000000000000000000000,4),(5,'Task 5 for Hilltop Estates','Demo task description',150.000000000000000000000000000000,5),(6,'Task 6 for Pinewood Community','Demo task description',160.000000000000000000000000000000,6),(7,'Task 7 for Meadowbrook Living','Demo task description',170.000000000000000000000000000000,7),(8,'Task 8 for Cedar Grove','Demo task description',180.000000000000000000000000000000,8),(9,'Task 9 for Willow Creek','Demo task description',190.000000000000000000000000000000,9),(10,'Task 10 for Silverstone Community','Demo task description',200.000000000000000000000000000000,10),(11,'Task 11 for Oakridge Homes','Demo task description',210.000000000000000000000000000000,11),(12,'Task 12 for Harbor View Community','Demo task description',220.000000000000000000000000000000,12),(13,'Task 13 for Forest Edge','Demo task description',230.000000000000000000000000000000,13),(14,'Task 14 for Parkside Living','Demo task description',240.000000000000000000000000000000,14),(15,'Task 15 for Mountain View Community','Demo task description',250.000000000000000000000000000000,15);
+INSERT INTO `UtilityTasks` VALUES (1,'Task 1 for Green Valley Community','Demo task description',100.00,5),(2,'Task 2 for Sunrise Heights','Demo task description',120.00,3),(3,'Task 3 for River Park Residences','Demo task description',130.00,3),(4,'Task 4 for Lakeside Community','Demo task description',140.00,2),(5,'Task 5 for Hilltop Estates','Demo task description',150.00,5),(6,'Task 6 for Pinewood Community','Demo task description',160.00,6),(7,'Task 7 for Meadowbrook Living','Demo task description',170.00,5),(8,'Task 8 for Cedar Grove','Demo task description',180.00,8),(9,'Task 9 for Willow Creek','Demo task description',190.00,5),(10,'Task 10 for Silverstone Community','Demo task description',200.00,10),(11,'Task 11 for Oakridge Homes','Demo task description',210.00,11),(12,'Task 12 for Harbor View Community','Demo task description',220.00,3),(13,'Task 13 for Forest Edge','Demo task description',230.00,13),(14,'Task 14 for Parkside Living','Demo task description',240.00,5),(15,'Task 15 for Mountain View Community','Demo task description',250.00,3);
 /*!40000 ALTER TABLE `UtilityTasks` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -144,7 +145,7 @@ CREATE TABLE `__EFMigrationsHistory` (
 
 LOCK TABLES `__EFMigrationsHistory` WRITE;
 /*!40000 ALTER TABLE `__EFMigrationsHistory` DISABLE KEYS */;
-INSERT INTO `__EFMigrationsHistory` VALUES ('20251221131214_InitialCreate','9.0.10');
+INSERT INTO `__EFMigrationsHistory` VALUES ('20251221131214_InitialCreate','9.0.10'),('20251230094305_FixTaskEntity','9.0.10'),('20251230102739_FixTaskEntityPrice','9.0.10');
 /*!40000 ALTER TABLE `__EFMigrationsHistory` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -157,4 +158,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-21 13:28:08
+-- Dump completed on 2026-01-08 12:54:24

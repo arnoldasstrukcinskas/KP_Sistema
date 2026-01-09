@@ -59,19 +59,16 @@ namespace KP_Sistema.BLL.Services.Users
             return _mapper.Map<UserReturnDTO>(user);
         }
 
-        public async Task<UserReturnDTO> EditUser(UserTransferDTO userEditDTO)
+        public async Task<UserReturnDTO> EditUser(UserTransferDTO usertransferDTO)
         {
-            var user = _mapper.Map<User>(EditUser);
-            var editedUser = await _userRepository.EditUser(user);
+            var user = await _userRepository.GetUserById(usertransferDTO.Id);
 
-            return _mapper.Map<UserReturnDTO>(editedUser);
-        }
+            user.Username = usertransferDTO.Username;
+            user.Email= usertransferDTO.EMail;
 
-        public async Task<String> GetUserPassword(string username)
-        {
-            var user = await _userRepository.GetUserByUsername(username);
+            var response = await _userRepository.EditUser(user);
 
-            return user.PasswordHash;
+            return _mapper.Map<UserReturnDTO>(user);
         }
 
         public async Task<bool> ChangeUserPassword(ChangePasswordDTO changePasswordDTO)
@@ -98,5 +95,13 @@ namespace KP_Sistema.BLL.Services.Users
 
             return _mapper.Map<List<UserReturnDTO>>(users);
         }
+
+        public async Task<String> GetUserPassword(string username)
+        {
+            var user = await _userRepository.GetUserByUsername(username);
+
+            return user.PasswordHash;
+        }
+
     }
 }

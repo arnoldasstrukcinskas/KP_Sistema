@@ -1,8 +1,10 @@
 ﻿@page "/utilities/edit"
 @inject HttpClient Http
+@attribute [Authorize]
 
 <PageTitle>Edit Utility Services - Community Utility Services</PageTitle>
 
+<AuthorizeView Roles="Admin, Manager">
 <!-- Page Header -->
 <div class="bg-custom text-white py-4 mb-4">
     <div class="container">
@@ -124,6 +126,142 @@
         </div>
     </div>
 </div>
+@* Community table *@
+
+    <div class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <form>
+                            <!-- Basic Information Section -->
+                            <div class="mb-4">
+                                <h4 class="text-primary mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    Find community
+                                </h4>
+                                <hr class="mb-4">
+
+                                <div class="col">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="communityName" class="form-label">
+                                            Community Name <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text"
+                                               @bind="input"
+                                               class="form-control"
+                                               id="communityName"
+                                               placeholder="e.g., Greenwood Estates"
+                                               required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <button type="button" class="btn btn-primary w-50" @onclick=LoadCommunity">
+                                            <i class="bi bi-check-circle me-1"></i> Find
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                         <div class="mb-4">
+                            <h4 class="text-primary mb-3">
+                                <i class="bi bi-geo-alt me-2"></i>
+                                Edit community with Id - @community.Id
+                            </h4>
+                            <hr class="mb-4">
+                          </div>
+                        @* Start of UtilityServices Table *@
+                        <div class="container mb-4">
+                            <div class="card communities-table border-0 shadow-sm">
+                                <div class="card-header bg-white py-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">
+                                            <i class="bi bi-gear-fill text-primary me-2"></i>
+                                            Services - @taskFlag
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-scroll">
+                                        <table class="table table-hover mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Name</th>
+                                                    <th>Description</th>
+                                                    <th>Price</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+
+                                            @if (utilityTasks != null && utilityTasks.Any())
+                                            {
+                                                <tbody>
+                                                    @foreach (var task in utilityTasks)
+                                                    {
+
+                                                        <tr class="row-size">
+                                                            <td>@task.Id</td>
+                                                            <td>
+                                                                <i class="bi bi-droplet-fill text-primary me-2"></i>
+                                                                <strong>@task.Name</strong>
+                                                            </td>
+                                                            <td class="description-cell"><span class="badge bg-secondary description-text">@task.Description</span></td>
+                                                            <td><span class="badge bg-success">@task.Price $</span></td>
+                                                            <td>
+                                                                @if (taskFlag == "community")
+                                                                {
+                                                                    <button @onclick=" () => RemoveUtilityTaskFromCommunity(community.Id, task.Id)" class="btn btn-sm btn-outline-danger">
+                                                                        Remove
+                                                                    </button>
+                                                                }
+                                                                else if (taskFlag == "all")
+                                                                {
+                                                                    <button @onclick=" () => AddUtilityTaskToCommunity(community.Id ,task.Id)" class="btn btn-sm btn-outline-success">
+                                                                        Add
+                                                                    </button>
+                                                                }
+                                                            </td>
+                                                        </tr>
+
+                                                    }
+                                                </tbody>
+                                            }
+                                            else
+                                            {
+                                                <tbody>
+                                                    <tr>
+                                                        <p class="text-warning mb-0"> Task not found or missing name </p>
+                                                    </tr>
+                                                </tbody>
+                                            }
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-6 text-center">
+                                            <button class="btn btn-primary w-75"
+                                                    @onclick=" () => LoadAllTasks()">
+                                                All Tasks
+                                            </button>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <button class="btn btn-primary w-75"
+                                                    @onclick=" () => LoadCommunityTasks(community.Id)">
+                                                Community Tasks
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @* End of UtilityServices Table *@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</AuthorizeView>
 
 @code {
     private string input;
@@ -131,12 +269,22 @@
     private string utilityServiceName;
     private string utilityServiceDescription;
     private decimal utilityServicePrice;
+    private string taskFlag;
+    private List<UtilityTaskReturnDTO> utilityTasks;
     private UtilityTaskReturnDTO utilityService = new UtilityTaskReturnDTO
     {
         Id = 0,
         Name = "",
         Description = "",
         Price = 1
+    };
+    private CommunityTransferDTO? community = new CommunityTransferDTO
+    {
+        Id = 0,
+        Name = "",
+        Address = "",
+        Users = new List<UserTransferDTO>(),
+        UtilityTasks = new List<UtilityTaskTransferDTO>()
     };
 
     async Task LoadService()
@@ -184,5 +332,87 @@
         utilityServicePrice = 0;
 
         StateHasChanged();
+    }
+
+    async Task LoadCommunity()
+    {
+        var response = await Http.GetFromJsonAsync<CommunityTransferDTO>($"/Community/name?name={input}");
+
+        if (response == null)
+        {
+            alertMessage = $"There are no users in this community.";
+        }
+        else
+        {
+            community = response;
+        }
+    }
+
+    async Task LoadAllTasks()
+    {
+        taskFlag = "all";
+        utilityTasks = null;
+
+        var response = await Http.GetFromJsonAsync<List<UtilityTaskReturnDTO>>($"/UtilityTask/Tasks");
+
+        if (response != null)
+        {
+            utilityTasks = response;
+        }
+        else
+        {
+            alertMessage = "There are no Utility Services";
+        }
+    }
+
+    async Task LoadCommunityTasks(int communityId)
+    {
+        taskFlag = "community";
+        utilityTasks = null;
+
+        var response = await Http.GetFromJsonAsync<List<UtilityTaskReturnDTO>>($"/Community/Tasks/{communityId}");
+
+        if (response != null)
+        {
+            utilityTasks = response;
+        }
+        else
+        {
+            alertMessage = $"There are no Utility Services in community with id: {communityId}";
+        }
+    }
+
+    async Task AddUtilityTaskToCommunity(int communityId, int taskId)
+    {
+        utilityTasks = null;
+        var response = await Http.PostAsJsonAsync<CommunityReturnDTO>($"/Community/AddTask/{communityId}/{taskId}", null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            alertMessage = $"Task with id: {taskId} succesfulyl added";
+        }
+        else
+        {
+            alertMessage = "Failed to add Task";
+        }
+
+        await LoadAllTasks();
+    }
+
+    async Task RemoveUtilityTaskFromCommunity(int communityId, int taskId)
+    {
+        utilityTasks = null;
+        var response = await Http.PostAsJsonAsync<CommunityReturnDTO>($"/Community/RemoveTask/{communityId}/{taskId}", null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            alertMessage = $"Task with id: {taskId} succesfully deleted";
+        }
+        else
+        {
+            alertMessage = "Failed to delete Task";
+        }
+
+        await LoadCommunityTasks(communityId);
     }
 }

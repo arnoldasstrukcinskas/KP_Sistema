@@ -11,7 +11,7 @@ namespace KP_Sistema.BLL.Interfaces
     public interface IAuthenticationService
     {
         Task<LoginResponseDTO?> Login(string username, string password);
-        Task<UserReturnDTO?> Register(UserCreateDTO userCreateDTO);
+        Task<UserReturnDTO> Register(UserCreateDTO userCreateDTO);
         Task<bool> ChangePasword(ChangePasswordDTO changePasswordDTO);
     }
 }

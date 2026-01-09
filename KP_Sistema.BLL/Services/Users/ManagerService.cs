@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
-using KP_Sistema.CONTRACTS.DTO.CommunityDTO;
-using KP_Sistema.CONTRACTS.DTO.UserDTO;
-using KP_Sistema.CONTRACTS.DTO.UtilityTaskDTO;
 using KP_Sistema.BLL.Exceptions.UtilityTasks;
 using KP_Sistema.BLL.Interfaces;
 using KP_Sistema.BLL.Interfaces.Users;
+using KP_Sistema.CONTRACTS.DTO.CommunityDTO;
+using KP_Sistema.CONTRACTS.DTO.UserDTO;
+using KP_Sistema.CONTRACTS.DTO.UtilityTaskDTO;
 using KP_Sistema.DATA.Entities;
 using KP_Sistema.DATA.Repositories.Interfaces;
+using KP_Sistema.DATA.Repositories.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +55,61 @@ namespace KP_Sistema.BLL.Services.Users
             return _mapper.Map<UtilityTaskReturnDTO>(utilityTransferTask);
         }
 
+        public async Task<UtilityTaskReturnDTO> AddUtilityTaskAsync(UtilityTaskCreateDTO utilityTaskCreateDTO)
+        {
+
+            if (utilityTaskCreateDTO == null)
+            {
+                throw new UtilityTaskException("Utility task is empty");
+            }
+
+            var demoTask = await _utilityTaskService.GetUtilityTaskByNameAsync<UtilityTaskReturnDTO>(utilityTaskCreateDTO.Name);
+
+            if (demoTask != null)
+            {
+                throw new UtilityTaskException($"Task with name {utilityTaskCreateDTO.Name} already exists.");
+            }
+
+            var createedUtilityTask = await _utilityTaskService.AddUtilityTaskAsync(utilityTaskCreateDTO);
+
+            return _mapper.Map<UtilityTaskReturnDTO>(createedUtilityTask);
+        }
+
+        public async Task<UtilityTaskReturnDTO> EditUtilityTaskAsync(int id, UtilityTaskEditDTO utilityTaskEditDTO)
+        {
+
+            if (utilityTaskEditDTO == null)
+            {
+                throw new UtilityTaskException("Utility task is empty");
+            }
+
+
+            var utilityTask = await _utilityTaskService.GetUtilityTaskByIdAsync<UtilityTaskReturnDTO>(id);
+
+            if (utilityTask == null)
+            {
+                throw new UtilityTaskNotFoundException(id);
+            }
+
+            var editedUtilityTask = await _utilityTaskService.EditUtilityTaskAsync(id, utilityTaskEditDTO);
+
+            return _mapper.Map<UtilityTaskReturnDTO>(editedUtilityTask);
+        }
+
+        public async Task<UtilityTaskReturnDTO> DeleteUtilityTaskAsync(int id)
+        {
+            var utilityTask = await _utilityTaskService.GetUtilityTaskByIdAsync<UtilityTaskReturnDTO>(id);
+            if (utilityTask == null)
+            {
+                throw new UtilityTaskNotFoundException(id);
+            }
+
+            var deletedUtilityTask = await _utilityTaskService.DeleteUtilityTaskAsync(id);
+
+            return _mapper.Map<UtilityTaskReturnDTO>(deletedUtilityTask);
+        }
+
+        //Helper methods
         private bool IsManager(string role)
         {
             if (!_currentUser.Role.Equals("Manager"))

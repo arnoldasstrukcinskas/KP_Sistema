@@ -1,6 +1,8 @@
 ﻿@inject IJSRuntime JS
 @inject NavigationManager navigation
 @inject AuthenticationService authenticationService
+@inject HttpClient Http
+@attribute [Authorize]
 
 @* <AuthorizeView> *@
 <div class="horizontal-menu">
@@ -41,6 +43,7 @@
     {
         await JS.InvokeVoidAsync("auth.clearUserData");
         authenticationService.NotifyUserLogout();
+        Http.DefaultRequestHeaders.Authorization = null;
         navigation.NavigateTo("/login");
     }
 }

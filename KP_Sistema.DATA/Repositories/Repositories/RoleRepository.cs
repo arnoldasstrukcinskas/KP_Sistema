@@ -51,6 +51,7 @@ namespace KP_Sistema.DATA.Repositories.Repositories
             return roles;
         }
 
+        //Helper methods
         private async Task<Role> GetRoleById(int id)
         {
             var role = await _dbContext.Roles.FirstOrDefaultAsync(role => role.Id == id);

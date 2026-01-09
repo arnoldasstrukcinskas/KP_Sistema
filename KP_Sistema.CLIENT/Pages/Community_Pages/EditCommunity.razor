@@ -1,8 +1,10 @@
 ﻿@page "/communities/edit"
 @inject HttpClient Http
+@attribute [Authorize]
 
 <PageTitle>Edit Community - Community Utility Services</PageTitle>
 
+<AuthorizeView Roles="Admin">
 <!-- Page Header -->
 <div class="bg-custom text-white py-4 mb-4">
     <div class="container">
@@ -284,6 +286,7 @@
         </div>
     </div>
 </div>
+</AuthorizeView>
 
 @code {
     private string input = "";
@@ -388,6 +391,8 @@
         }
 
         await LoadAllUsers();
+
+
     }
 
     async Task RemoveUserFromCommunity(int communityId, int userId)
