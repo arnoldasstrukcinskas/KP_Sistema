@@ -111,18 +111,22 @@ USE kpsistema;
 ```
 
 ## Overall Testing
-(How to connect for testing via front-end)
+(How to connect for testing)
 ### For testing - some demo data is created
-#### 1. Open terminal and check container ID
+#### 1. Links for testing via front/back
 ```bash
-Go to: http://localhost:8081/login or http://localhost:8080/swagger/index.html
-(But there is craeted accounts for testing)
+Front:
+  Go to: http://localhost:8081/login
+  (There are craeted accounts for testing)
+Back:
+  Go to: http://localhost:8080/swagger/index.html
 ```
-#### 2. Connect to database(Enter conainer ID)
+#### 2. Enter to ui with link: http://localhost:8081/login
 ```bash
-Enter:
+Administrator:
   username: admin
   password: admin
+Manager:
   username: manager
   password: manager
 ```
