@@ -92,7 +92,7 @@ dotnet ef database update --project KP_Sistema.DATA --startup-project KP_Sistema
 
 ## Database Testing
 (How to connect for testing via cmd)
-#### 1. Open terminal and chech container ID
+#### 1. Open terminal and check container ID
 ```bash
 docker ps
 ```
@@ -112,6 +112,7 @@ USE kpsistema;
 
 ## Overall Testing
 (How to connect for testing via front-end)
+### For testing - some demo data is created
 #### 1. Open terminal and chech container ID
 ```bash
 Go to: http://localhost:8081/login or http://localhost:8080/swagger/index.html
