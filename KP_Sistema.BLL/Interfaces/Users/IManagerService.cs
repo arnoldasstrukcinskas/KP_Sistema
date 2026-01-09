@@ -9,6 +9,6 @@ namespace KP_Sistema.BLL.Interfaces.Users
 {
     public interface IManagerService
     {
-        Task<UtilityTaskReturnDTO> AddTaskToCommunity(string taskName, string communityName, string currentUser);
+        Task<UtilityTaskReturnDTO> AddTaskToCommunity(string taskName, string communityName);
     }
 }

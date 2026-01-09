@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using KP_Sistema.BLL.Exceptions.Community;
 using KP_Sistema.BLL.Exceptions.UtilityTasks;
 using KP_Sistema.BLL.Interfaces;
 using KP_Sistema.BLL.Interfaces.Users;
@@ -33,28 +34,7 @@ namespace KP_Sistema.BLL.Services.Users
             _communityService = communityService;
             _mapper = mapper;
         }
-        public async Task<UtilityTaskReturnDTO> AddTaskToCommunity(string taskName, string communityName, string currentUser)
-        {
-
-           await InitializeCurrentUserAsync(currentUser);
-
-            var user = await GetUserByUsername(currentUser);
-            if(!IsManager(currentUser))
-            {
-                throw new UtilityTaskUnauthorizedAccessException(user.Id);
-            }
-
-            var community = await _communityService.GetCommunityByNameAsync<CommunityTransferDTO>(communityName);
-
-            var utilityTransferTask = await _utilityTaskService.GetUtilityTaskByNameAsync<UtilityTaskTransferDTO>(taskName);
-
-            community.UtilityTasks.Add(utilityTransferTask);
-
-            //var editedCommunity = await _communityService.EditCommunityAsync(community);
-
-            return _mapper.Map<UtilityTaskReturnDTO>(utilityTransferTask);
-        }
-
+       
         public async Task<UtilityTaskReturnDTO> AddUtilityTaskAsync(UtilityTaskCreateDTO utilityTaskCreateDTO)
         {
 
@@ -109,20 +89,44 @@ namespace KP_Sistema.BLL.Services.Users
             return _mapper.Map<UtilityTaskReturnDTO>(deletedUtilityTask);
         }
 
-        //Helper methods
-        private bool IsManager(string role)
+        public async Task<UtilityTaskReturnDTO> AddTaskToCommunity(string taskName, string communityName)
         {
-            if (!_currentUser.Role.Equals("Manager"))
+            var community = await _communityService.GetCommunityByNameAsync<CommunityTransferDTO>(communityName);
+            if (community == null)
             {
-                return false;
+                throw new CommunityNotFoundException($"Such community with name: {communityName} was not found");
             }
-        return true;
+
+            var utilityTransferTask = await _utilityTaskService.GetUtilityTaskByNameAsync<UtilityTaskTransferDTO>(taskName);
+            if (utilityTransferTask == null)
+            {
+                throw new UtilityTaskNotFoundException($"Such task with name: {taskName} was not found");
+            }
+
+            community.UtilityTasks.Add(utilityTransferTask);
+
+            var editDTO = _mapper.Map<CommunityEditDTO>(community);
+
+            var editedCommunity = await _communityService.EditCommunityAsync(community.Id, editDTO);
+
+            return _mapper.Map<UtilityTaskReturnDTO>(utilityTransferTask);
         }
 
-        private async Task InitializeCurrentUserAsync(string username)
+        public async Task<CommunityReturnDTO> DeleteUtilityTaskFromCommunity(int communityId, int taskId)
         {
-            var user = await GetUserByUsername(username);
-            _currentUser = _mapper.Map<CurrentUserDTO>(user);
+            var community = await _communityService.GetCommunityByIdAsync<CommunityTransferDTO>(communityId);
+            var editedCommunity = new CommunityReturnDTO();
+
+            if (community.UtilityTasks.Any(task => task.Id == taskId))
+            {
+                editedCommunity = await _communityService.DeleteUtilityTaskFromCommunity(communityId, taskId);
+            }
+            else
+            {
+                throw new CommunityException($"There is no such task with id: {taskId}");
+            }
+
+            return _mapper.Map<CommunityReturnDTO>(editedCommunity);
         }
     }
 }
